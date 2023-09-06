@@ -29,13 +29,13 @@ while True:
     terreno()
     pygame.draw.rect(DISPLAYSURF,ROJO,(pos_x, pos_y,100,50))
     pygame.draw.rect(DISPLAYSURF,AZUL,(900, pos_y,100,50))
-
+    #-----implementacion de colision
     if direccion == True:
         if pos_y < (540 - 50):
             pos_y += fuerzaG
         else:
             direccion = False
-
+    #-----implementacion de colision
     for event in pygame.event.get():
         if event.type == QUIT:
             pygame.quit()
