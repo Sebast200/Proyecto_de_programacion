@@ -17,7 +17,7 @@ print(tanque2)
 fuerzaG = 2
 direccion = True
 pos_x, pos_y = 300, 0
-puntos_terreno = [(260,720),(260,540),(410,430),(540,520),(630,590),(670,590),(820,500),(980,600),(1020,620),(1280,720)]
+puntos_terreno = [(200,720),(200,500),(300,450),(400,400),(600,450),(700,500),(800,550),(900,600),(1000,550),(1280,720)]
 
 def terreno():
     pygame.draw.polygon(DISPLAYSURF,verde,puntos_terreno)

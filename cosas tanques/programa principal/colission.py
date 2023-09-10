@@ -17,7 +17,7 @@ tanque2 = pygame.draw.rect(DISPLAYSURF,AZUL,(900,500,100,50))
 print(tanque2)
 fuerzaG = 1
 direccion = True
-pos_x, pos_y = 480, 100
+pos_x, pos_y = 400, 100
 direccion2 = True
 pos_x2, pos_y2 = 700,100
 puntos_terreno = [(260,720),(260,500),(300,450),(400,400),(600,450),(700,500),(800,550),(900,600),(1020,550),(1020,720)]
@@ -70,7 +70,7 @@ while True:
         if (((distancia(pos_x2,puntos_terreno[i][0],puntos_terreno[i][1],pos_y2)) + 
             (distancia(puntos_terreno[i+1][0],pos_x2,pos_y2,puntos_terreno[i+1][1]))) <=
             distancia(puntos_terreno[i][0],puntos_terreno[i+1][0],puntos_terreno[i+1][1],puntos_terreno[i][1])):
-            direccion = False
+            direccion2 = False
         else:
             pos_y2 += fuerzaG
     #-----implementacion de colision
