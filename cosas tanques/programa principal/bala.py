@@ -9,13 +9,13 @@ class Balas (pygame.sprite.Sprite):
         
         
         #porte de la bala
-        self.image = pygame.Surface ((10,10))
+        self.image = pygame.Surface ((5,5))
         
 
         #obtiene el rectangulo (Sprite)
         self.rect = self.image.get_rect()
         self.rect.center = (500,50)
-        self.image.fill(self.vGlobales.BLANCO)
+        self.image.fill(self.vGlobales.celeste)
         self.timepo=0
         self.gravedad= 9.8
 
@@ -36,7 +36,7 @@ class Balas (pygame.sprite.Sprite):
             if (int(self.rect.right) > 1020 or int(self.rect.bottom) > 720):
                 self.rect.centerx = self.Xi-2
                 self.rect.centery = self.Yi-2
-            self.timepo += 0.15
+            self.timepo += 0.12
     
     def disparar (self, _angulo, _velocidad, _posicion):
         self.velx = math.sin(_angulo) * _velocidad

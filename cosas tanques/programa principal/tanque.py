@@ -10,8 +10,8 @@ class Tankes (pygame.sprite.Sprite):
         
         
         #atributos propios
-        self.largo = 50
-        self.alto = 25
+        self.largo = 25
+        self.alto = 15
         self.caida = True
 
         self.image = pygame.Surface ((self.largo,self.alto))

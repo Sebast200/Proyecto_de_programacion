@@ -6,7 +6,7 @@ class Globaless():
     #COSAS DE LA PANTALLA
         self.WIDTH = 1280
         self.HEIGHT = 720
-        self.puntos_terreno = [(260,720),(260,540),(410,430),(540,520),(630,590),(670,590),(820,500),(980,600),(1020,620),(1280,720)]
+        self.puntos_terreno = [(260,720),(260,540),(350,460),(410,430),(500,480),(540,520),(630,590),(670,590),(730,540),(820,500),(920,550),(980,600),(1020,620),(1280,720)]
 
         self.PANTALLA = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
 
@@ -20,7 +20,7 @@ class Globaless():
         self.celeste = (53,197,255)
 
         #FPS
-        self.FPS = (60)
+        self.FPS = (90)
         RELOJ = pygame.time.Clock()
 
     def terreno(self):
