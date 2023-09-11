@@ -1,4 +1,4 @@
-import math, pygame, sys, globales, tanque, bala
+import math, pygame, sys, globales, tanque, bala, random
 from pygame.locals import *
 
 #DECLARACIONES
@@ -9,14 +9,12 @@ RELOJ = pygame.time.Clock()
 #pantalla
 DISPLAYSURF = vGlobales.PANTALLA 
 pygame.display.set_caption("Tanque Volador")
-puntos_terreno = [(0,720),(0,540),(410,430),(540,520),(630,590),(670,590),(820,500),(980,600),(1020,620),(vGlobales.WIDTH,vGlobales.HEIGHT)]
-
 
 #objetos en pantalla
 sprites = pygame.sprite.Group()
-tanque1 = tanque.Tankes(vGlobales.AZUL,300)
-tanque2 = tanque.Tankes(vGlobales.ROJO,700)
-bala1 = bala.Balas(tanque1.rect.center[0], tanque1.rect.center[1])
+tanque1 = tanque.Tankes(vGlobales.AZUL,random.randint(280,620))
+tanque2 = tanque.Tankes(vGlobales.ROJO,random.randint(660,1000))
+bala1 = bala.Balas()
 sprites.add(tanque1)
 sprites.add(tanque2)
 sprites.add(bala1)
@@ -32,14 +30,15 @@ while True:
     pygame.display.update()
 
     #dibujo de la pantalla
-    DISPLAYSURF.fill(vGlobales.BLANCO)
-    pygame.draw.polygon(DISPLAYSURF,vGlobales.verde,puntos_terreno)
+    DISPLAYSURF.fill(vGlobales.celeste)
+    vGlobales.terreno()
 
     #SPRITES
     sprites.update()
     sprites.draw(DISPLAYSURF)
 
-    if (tanque1.caida == False):  #angulo | velocidad
-        bala1.disparar(math.pi/180 * 145, 90,tanque1.rect.center)
+    
+    if event.type == pygame.MOUSEBUTTONUP:
+        bala1.disparar(math.pi/180 * 130, 70,tanque1.rect.midtop)
 
     RELOJ.tick(vGlobales.FPS)
