@@ -32,6 +32,8 @@ while True:
     #dibujo de la pantalla
     DISPLAYSURF.fill(vGlobales.celeste)
     vGlobales.terreno()
+    #Aqui se dibuja la interfaz despues de que se dibuje el terreno
+    vGlobales.interfaz()
 
     #SPRITES
     sprites.update()
