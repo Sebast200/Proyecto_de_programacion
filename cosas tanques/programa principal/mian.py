@@ -9,6 +9,12 @@ RELOJ = pygame.time.Clock()
 #pantalla
 DISPLAYSURF = vGlobales.PANTALLA 
 pygame.display.set_caption("Tanque Volador")
+#icono
+icono = pygame.image.load("imagenes/tanque.png")
+pygame.display.set_icon(icono)
+#fondo
+fondo = pygame.image.load("imagenes/fondo.png")
+DISPLAYSURF.blit(fondo, (0,0))
 
 #objetos en pantalla
 sprites = pygame.sprite.Group()
@@ -30,7 +36,7 @@ while True:
     pygame.display.update()
 
     #dibujo de la pantalla
-    DISPLAYSURF.fill(vGlobales.celeste)
+    DISPLAYSURF.blit(fondo, (0,0))
     vGlobales.terreno()
     #Aqui se dibuja la interfaz despues de que se dibuje el terreno
     vGlobales.interfaz()
