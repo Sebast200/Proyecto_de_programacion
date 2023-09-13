@@ -33,7 +33,7 @@ class Balas (pygame.sprite.Sprite):
             self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.5
 
             #se detiene el movimiento al tocar con algun borde
-            if (int(self.rect.right) > 1020 or int(self.rect.bottom) > 720):
+            if (int(self.rect.right) > 1020 or int(self.rect.bottom) > 720): #cambia numeros
                 self.rect.centerx = self.Xi-2
                 self.rect.centery = self.Yi-2
             self.timepo += 0.12
@@ -71,3 +71,17 @@ class Balas (pygame.sprite.Sprite):
     def distancia (self,x1,x2,y1,y2):
         valor = math.sqrt(((x2-x1)**2) + ((y2-y1)**2))
         return int(valor)
+    
+    def colision_Tanke (self, listaTanke):
+        i=0
+        print("a")
+
+        while i < len(listaTanke):
+            print("b")
+
+            if (self.distancia(self.rect.centerx, listaTanke[i].rect.centerx, self.rect.centery, listaTanke[i].rect.centery) <= listaTanke[i].radio):
+                print("c")
+
+                self.caida = False
+                print("Toco tanque")
+                i = len(listaTanke)
