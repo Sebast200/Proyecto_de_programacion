@@ -18,11 +18,11 @@ class Tankes (pygame.sprite.Sprite):
         self.image = pygame.Surface ((self.largo,self.alto))
         self.image.fill(_color)
         self.rect = self.image.get_rect()
-        self.rect.center = (posicion_inicial, self.vGlobales.HEIGHT//2)
+        self.rect.center = (posicion_inicial, (self.vGlobales.HEIGHT//2)-100)
 
         #actualiza la posicion del tanque
     def update(self):
-        incremento = 5
+        incremento = 3
         self.caida_Tanque()
         if (self.caida):
             self.rect.y += incremento
@@ -34,20 +34,13 @@ class Tankes (pygame.sprite.Sprite):
         return int(valor)
 
     def caida_Tanque(self):
-        i = 1
-        posicion = 0
-        #busca el que rango de puntos se encuentra el centro del tanque con respecto a la matriz del terreno
-        while (i<len(self.pTer)-2):
-            if (self.rect.midbottom[0] >= self.pTer[i][0]) and (self.rect.midbottom[0] <= self.pTer[i+1][0]):
-                posicion = i
-                i=len(self.pTer)+1
-            else:
-                i=i+1
-        i = posicion
+        color = self.vGlobales.PANTALLA.get_at((self.rect.midbottom[0],self.rect.midbottom[1]))
+        color = (color[0], color[1], color[2])
 
-        if (self.distancia(self.rect.midbottom[0], self.pTer[i][0], self.pTer[i][1], self.rect.midbottom[1]) + (self.distancia(self.pTer[i+1][0], self.rect.midbottom[0], self.rect.midbottom[1], self.pTer[i+1][1])) <= self.distancia(self.pTer[i][0], self.pTer[i+1][0], self.pTer[i+1][1], self.pTer[i][1])):
+
+        if (color == self.vGlobales.verde):
             self.caida = False
-
+        
         
         
         

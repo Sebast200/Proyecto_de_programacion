@@ -11,24 +11,25 @@ DISPLAYSURF = vGlobales.PANTALLA
 pygame.display.set_caption("Tanque Volador")
 print("a")
 #icono
-icono = pygame.image.load("imagenes/tanque.png")
+icono = pygame.image.load("cosas tanques/programa principal/imagenes/tanque.png")
 pygame.display.set_icon(icono)
 #fondo
-fondo = pygame.image.load("imagenes/fondo.png")
+fondo = pygame.image.load("cosas tanques/programa principal/imagenes/fondo.png")
 DISPLAYSURF.blit(fondo, (0,0))
 
 #jugador 1
-skin1 = pygame.image.load("imagenes/skin1.png")
-skin2 = pygame.image.load("imagenes/skin2.png")
-
+skin1 = pygame.image.load("cosas tanques/programa principal/imagenes/skin1.png")
+rect1 = skin1.get_rect()
+skin2 = pygame.image.load("cosas tanques/programa principal/imagenes/skin2.png")
 #objetos en pantalla
 sprites = pygame.sprite.Group()
-tanque1 = tanque.Tankes(vGlobales.ROJO,random.randint(280,620))
-tanque2 = tanque.Tankes(vGlobales.AZUL,random.randint(660,1000))
+tanque1 = tanque.Tankes(vGlobales.ROJO,300)
+tanque2 = tanque.Tankes(vGlobales.AZUL,400)
 bala1 = bala.Balas()
 sprites.add(tanque1)
 sprites.add(tanque2)
 sprites.add(bala1)
+
 
 #CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
 textbox_angulo = ""
@@ -89,7 +90,7 @@ while True:
                         print("el numero de angulo es: ", numero_angulo)
                         print("el numero de velocidad inicial es: ", numero_velocidad_inicial)
                         #Voy a colocar por ahora aqui el metodo disparo para simular que el boton cause el disparo y que por ende tambien cambie de color
-                        bala1.disparar(math.pi/180 * numero_angulo + 90, numero_velocidad_inicial,tanque1.rect.midtop)
+                        bala1.disparar(math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,tanque1.rect.midtop)
                         text_boton_jugador = "Recarga"
                         text_boton_jugador_color = vGlobales.ROJO
                         pygame.draw.rect(DISPLAYSURF,text_boton_jugador_color,text_boton_jugador_rect)
@@ -152,15 +153,21 @@ while True:
     vGlobales.terreno()
     #Aqui se dibuja la interfaz despues de que se dibuje el terreno
     vGlobales.interfaz()
-
+   
     #SPRITES
     sprites.update()
     #bala1.colision_Tanke((tanque1, tanque2))
     sprites.draw(DISPLAYSURF)
 
     #Skins
-    DISPLAYSURF.blit(skin1, (tanque1.rect.x,tanque1.rect.y))
-    DISPLAYSURF.blit(skin2, (tanque2.rect.x,tanque2.rect.y))
+    DISPLAYSURF.blit(skin1, (tanque1.rect.x-15,tanque1.rect.y-15))
+    if tanque2.rect.x + tanque2.largo > bala1.rect.x and \
+       tanque2.rect.x < bala1.rect.x + 5 and \
+       tanque2.rect.y + tanque2.alto > bala1.rect.y and \
+       tanque2.rect.y < bala1.rect.y + 5:
+        print("toco tanque")
+        bala1.caida = False
+    DISPLAYSURF.blit(skin2, (tanque2.rect.x-25,tanque2.rect.y-15))
 
     '''
     if event.type == pygame.MOUSEBUTTONUP:
