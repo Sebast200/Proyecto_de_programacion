@@ -10,11 +10,21 @@ RELOJ = pygame.time.Clock()
 DISPLAYSURF = vGlobales.PANTALLA 
 pygame.display.set_caption("Tanque Volador")
 print("a")
+#icono
+icono = pygame.image.load("imagenes/tanque.png")
+pygame.display.set_icon(icono)
+#fondo
+fondo = pygame.image.load("imagenes/fondo.png")
+DISPLAYSURF.blit(fondo, (0,0))
+
+#jugador 1
+skin1 = pygame.image.load("imagenes/skin1.png")
+skin2 = pygame.image.load("imagenes/skin2.png")
 
 #objetos en pantalla
 sprites = pygame.sprite.Group()
-tanque1 = tanque.Tankes(vGlobales.AZUL,random.randint(280,620))
-tanque2 = tanque.Tankes(vGlobales.ROJO,random.randint(660,1000))
+tanque1 = tanque.Tankes(vGlobales.ROJO,random.randint(280,620))
+tanque2 = tanque.Tankes(vGlobales.AZUL,random.randint(660,1000))
 bala1 = bala.Balas()
 sprites.add(tanque1)
 sprites.add(tanque2)
@@ -138,7 +148,7 @@ while True:
     
 
     #dibujo de la pantalla
-    DISPLAYSURF.fill(vGlobales.celeste)
+    DISPLAYSURF.blit(fondo,(0,0))
     vGlobales.terreno()
     #Aqui se dibuja la interfaz despues de que se dibuje el terreno
     vGlobales.interfaz()
@@ -147,6 +157,10 @@ while True:
     sprites.update()
     #bala1.colision_Tanke((tanque1, tanque2))
     sprites.draw(DISPLAYSURF)
+
+    #Skins
+    DISPLAYSURF.blit(skin1, (tanque1.rect.x,tanque1.rect.y))
+    DISPLAYSURF.blit(skin2, (tanque2.rect.x,tanque2.rect.y))
 
     '''
     if event.type == pygame.MOUSEBUTTONUP:
