@@ -82,7 +82,7 @@ class Interfazz():
                 self.textbox_angulo = ""
             else:
                 #Voy a colocar por ahora aqui el metodo disparo para simular que el boton cause el disparo y que por ende tambien cambie de color
-                bala.disparar(math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,pos_tanque)
+                bala.disparar(numero_angulo, math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,pos_tanque)
                 text_boton_jugador = "Recarga"
                 text_boton_jugador_color = self.vGlobales.ROJO
                 pygame.draw.rect(self.vGlobales.PANTALLA,text_boton_jugador_color,self.text_boton_jugador_rect)
