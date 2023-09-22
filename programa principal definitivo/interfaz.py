@@ -4,10 +4,7 @@ from pygame.locals import *
 class Interfazz():
     def __init__(self):
         self.vGlobales = globales.Globaless()
-        #           self.font=self.font = pygame.font.Font(None,36)
-       #Creo que aqui toca dibujar la interfaz
-
-       #CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
+        #CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
         self.textbox_angulo = ""
         #Rectangulo de la caja de texto
         self.textbox_angulo_rect = pygame.Rect(150,180,80,40)
@@ -19,68 +16,50 @@ class Interfazz():
         self.textbox_velocidad_inicial_rect = pygame.Rect(150,355,80,40)
         #Esta variable cambiara de false a true una vez que el jugador le haga click al rectangulo para escribir
         self.textbox_velocidad_inicial_active = False
-        #FIN DE CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
-        #Ahora que lo pienso, quizas tambien tenga que crear en el main el rectangulo que va a decir disparar, ya que asi puedo colocar las condiciones aqui de una forma mas sencilla
-        #Voy a probar a crear el rectangulo aqui, ya que la idea es que el usuario pueda hacerle click al rectangulo en vez de apretar enter
+
+        #Creacion de boton para disparar
         self.text_boton_jugador = "Dispara"
         self.text_boton_jugador_rect = pygame.Rect(20,600,220,80)
         self.text_boton_jugador_color = self.vGlobales.verde
         
+        #Creacion de texto que dira el turno del jugador
         self.text_jugador1 = "Jugador 1"
         self.text_surface_jugador1 = self.vGlobales.font.render(self.text_jugador1, True, self.vGlobales.AZUL)
         self.text_surface_jugador1_rect = self.text_surface_jugador1.get_rect(center = (120,40))
 
-        #CAMBIOS NUEVOS REALIZADOS
-        #----
-        #RECORDATORIO DE CAMBIAR ESTO MAS ADELANTE
+        #Creacion de texto que dira altura maxima
         self.text_altura_maxima = ""
         self.text_surface_altura_maxima = self.vGlobales.font.render(self.text_altura_maxima, True, self.vGlobales.NEGRO)
         self.text_surface_altura_maxima_rect = self.text_surface_altura_maxima.get_rect(center = (120,700))
-        #CAMBIO NUEVO
+        
+        #Creacion de texto que dira game over cuando uno de los tanques muera
         self.text_game_over = ""
         self.text_surface_game_over = self.vGlobales.font.render(self.text_game_over, True, self.vGlobales.rojo_oscuro)
         self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
 
 
     def interfaz(self):
-        #CREACION DE INTERFAZ PARA JUGADOR 1
-
         #Texto que dice Angulo...
         self.text_angulo_jugador1 = "Angulo:"
         self.text_surface_angulo_jugador1 = self.vGlobales.font.render(self.text_angulo_jugador1, True, self.vGlobales.NEGRO)
         self.text_surface_angulo_jugador1_rect = self.text_surface_angulo_jugador1.get_rect(center = (80,200))
 
-        #Forma 2 (posiblemente la mas facil pero pajera(?))
-        #Esta forma consiste en crear dos textos, uno que diga velocidad y otra que diga inicial, para intentar ser un poco mas ordenado xd
+        #Creacion de texto que dice velocidad
         self.text_velocidad_jugador1 = "Velocidad"
         self.text_surface_velocidad_jugador1 = self.vGlobales.font.render(self.text_velocidad_jugador1, True, self.vGlobales.NEGRO)
         self.text_surface_velocidad_jugador1_rect = self.text_surface_velocidad_jugador1.get_rect(center = (80,360))
         
+        #Creacion de texto que dice inicial
         self.text_inicial_jugador1 = "inicial:"
         self.text_surface_inicial_jugador1 = self.vGlobales.font.render(self.text_inicial_jugador1, True, self.vGlobales.NEGRO)
         self.text_surface_inicial_jugador1_rect = self.text_surface_inicial_jugador1.get_rect(center = (80,390))
 
-
+        #Proceso de impresion de textos de la interfaz a la pantalla
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_angulo_jugador1,self.text_surface_angulo_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_velocidad_jugador1,self.text_surface_velocidad_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_inicial_jugador1,self.text_surface_inicial_jugador1_rect)
-        #de aqui a abajo ya no forma parte de la forma 2 xd
-
-        #CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
-        #Rectangulo de la caja de texto
-        self.textbox_angulo_rect = pygame.Rect(150,180,80,40)
-        #Rectangulo de la caja de texto
-        self.textbox_velocidad_inicial_rect = pygame.Rect(150,355,80,40)
-        #FIN DE CREACION DE VARIABLES PARA LAS CAJAS DE TEXTO
-        #Ahora que lo pienso, quizas tambien tenga que crear en el main el rectangulo que va a decir disparar, ya que asi puedo colocar las condiciones aqui de una forma mas sencilla
-        #Voy a probar a crear el rectangulo aqui, ya que la idea es que el usuario pueda hacerle click al rectangulo en vez de apretar enter
-        self.text_boton_jugador = "Dispara"
-        self.text_boton_jugador_rect = pygame.Rect(20,600,220,80)
-        self.text_boton_jugador_color = self.vGlobales.verde
-        #FIN DE CREACION DE INTERFAZ PARA JUGADOR 1
-        #-----
-        #Voy a probar con implementar los cuadros de texto por aqui y ver si sale bien algo o no xddd    
+   
 
     def boton_disparar_click (self, bala, tanque, turno_jugador):
         try:
@@ -90,7 +69,6 @@ class Interfazz():
             if numero_angulo>360:
                 self.textbox_angulo = ""
             else:
-                #Voy a colocar por ahora aqui el metodo disparo para simular que el boton cause el disparo y que por ende tambien cambie de color
                 bala.disparar(numero_angulo, math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,tanque)
                 text_boton_jugador = "Recarga"
                 text_boton_jugador_color = self.vGlobales.ROJO
@@ -113,6 +91,7 @@ class Interfazz():
             self.textbox_velocidad_inicial = ""
 
     def click_mouse(self, posicion_muose,bala,pos_tanque, turno_pasado, turno_jugador):
+        #Condicion de click para el cuadro de angulo
         if self.textbox_angulo_rect.collidepoint( posicion_muose):
             self.textbox_angulo_active = True
         else:
@@ -135,7 +114,7 @@ class Interfazz():
                     self.textbox_angulo = self.textbox_angulo[:-1]
 
                 if evento.unicode.isnumeric():
-                    #Voy a ver si hay una forma de limitar a que solo hayan tres numeros ingresados
+                    #limitacion de tres cifras
                     if len(self.textbox_angulo)<3:
                         self.textbox_angulo += evento.unicode
             #Seccion de codigo de caja de texto de velocidad inicial
@@ -162,12 +141,3 @@ class Interfazz():
         self.vGlobales.PANTALLA.blit(self.textbox_velocidad_inicial_surface,(self.textbox_velocidad_inicial_rect.x + 15, self.textbox_velocidad_inicial_rect.y + 10))
         self.vGlobales.PANTALLA.blit(self.text_boton_jugador_surface, (self.text_boton_jugador_rect.x + 65, self.text_boton_jugador_rect.y + 25))
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
-
-        #CAMBIOS NUEVOS
-        #---
-        #self.vGlobales.PANTALLA.blit(self.text_surface_altura_maxima, self.text_surface_altura_maxima_rect)
-        '''
-        self.text_surface_game_over = self.vGlobales.font.render(self.text_game_over, True, self.vGlobales.rojo_oscuro)
-        self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
-        '''
-        #self.vGlobales.PANTALLA.blit(self.text_surface_game_over, self.text_surface_game_over_rect)

@@ -3,7 +3,7 @@ from pygame.locals import *
 
 class Globaless():
     def __init__(self):
-    #COSAS DE LA PANTALLA
+    #Atributos de pantalla
         self.WIDTH = 1280
         self.HEIGHT = 720
         self.puntos_terreno = [(260,720),(260,540),(350,520),(390,530),(430,560),(460,600),
