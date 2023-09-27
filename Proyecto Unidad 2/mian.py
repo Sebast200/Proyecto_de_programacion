@@ -12,15 +12,15 @@ DISPLAYSURF = vGlobales.PANTALLA
 pygame.display.set_caption("Tanques Lovers Juego")
 
 #imagenes
-icono = pygame.image.load("imagenes/tanque.png")
+icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
 pygame.display.set_icon(icono)
 #fondo
-fondo = pygame.image.load("imagenes/fondo.png")
+fondo = pygame.image.load("Proyecto Unidad 2/imagenes/fondo.png")
 DISPLAYSURF.blit(fondo, (0,0))
 
 #jugador 1
-skin1 = pygame.image.load("imagenes/skin1.png")
-skin2 = pygame.image.load("imagenes/skin2.png")
+skin1 = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
+skin2 = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
 
 #objetos en pantalla
 sprites = pygame.sprite.Group()
