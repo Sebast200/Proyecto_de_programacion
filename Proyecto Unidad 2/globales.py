@@ -41,6 +41,8 @@ class Globaless():
 
         #Fuente
         self.font = pygame.font.Font(None,36)
+        self.font2 = pygame.font.Font(None, 50)
+        self.font3 = pygame.font.Font(None, 100)
 
     def terreno(self):
         pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno)
