@@ -20,7 +20,8 @@ class Balas (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (500,-100)
         self.image.fill(self.vGlobales.celeste)
-
+        self.coord = ()
+        self.i =0
         self.gravedad= 9.8
 
         
@@ -37,7 +38,16 @@ class Balas (pygame.sprite.Sprite):
             self.timepo += 0.12
             self.contador_recorrido+=1
         else:
+            if (self.i==1):
+                contador_circ= 0
+                while (contador_circ <= 2000):
+                    pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
+                    contador_circ +=1
+                if contador_circ == 2000:
+                    self.i = 0
+            
             self.retorno_bala()
+
 
     def disparar (self,_angulo_grados, _angulo, _velocidad, tanque):
         self.velx = math.sin(_angulo) * _velocidad
@@ -63,6 +73,8 @@ class Balas (pygame.sprite.Sprite):
         #Verifica la colision con terreno o panel
         if (color == self.vGlobales.verde or color == self.vGlobales.grisclaro):
             if self.tipo == self.vGlobales.bala_chica:
+                self.i=1
+                self.coord = (self.rect.x,self.rect.y)
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
             self.caida = False
         
@@ -80,6 +92,10 @@ class Balas (pygame.sprite.Sprite):
         tanque_enemigo.rect.y + tanque.alto > self.rect.y and \
         tanque_enemigo.rect.y < self.rect.y + self.alto:
             self.caida = False
+            if self.tipo == self.vGlobales.bala_chica:
+                self.i=1
+                self.coord = (self.rect.x,self.rect.y)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
             if self.tipo == self.vGlobales.bala_chica:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_c
