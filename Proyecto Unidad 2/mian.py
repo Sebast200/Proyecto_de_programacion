@@ -11,7 +11,7 @@ RELOJ = pygame.time.Clock()
 #pantalla
 DISPLAYSURF = vGlobales.PANTALLA 
 #Creacion de variable de imagen de fondo
-IMAGEN_DE_FONDO = pygame.image.load("imagenes/BG_MAIN_MENU.png")
+IMAGEN_DE_FONDO = pygame.image.load("Proyecto Unidad 2/imagenes/BG_MAIN_MENU.png")
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
 def get_font(tamaño):
     return pygame.font.Font(None,tamaño)
@@ -98,15 +98,15 @@ def partida():
     pygame.display.set_caption("Tanques Lovers Juego")
 
     #imagenes
-    icono = pygame.image.load("imagenes/tanque.png")
+    icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
     pygame.display.set_icon(icono)
     #fondo
-    fondo = pygame.image.load("imagenes/fondo.png")
+    fondo = pygame.image.load("Proyecto Unidad 2/imagenes/fondo.png")
     DISPLAYSURF.blit(fondo, (0,0))
 
     #jugador 1
-    skin1 = pygame.image.load("imagenes/skin1.png")
-    skin2 = pygame.image.load("imagenes/skin2.png")
+    skin1 = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
+    skin2 = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
 
     #objetos en pantalla
     sprites = pygame.sprite.Group()
@@ -125,6 +125,13 @@ def partida():
     #Creacion de variables en main (por ahora)
     turno_jugador = 2
     turno_pasado = 0
+    tipo_bala = 1
+
+    def mostrar_altura(tanque1, tanque2, bala):
+        bala.update(tanque1,tanque2)
+        interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
+        interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
+        interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala.coordenadas_altura_max))
 
     while True:
         #Dibujo de la pantalla
@@ -149,14 +156,28 @@ def partida():
                 pygame.quit()
                 sys.exit()
 
-            if bala_c.caida != True:
+            if bala_g.caida != True:
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if turno_jugador == 1:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
-                        recorrido.clear()
+                        if tipo_bala == 1:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
+                            recorrido.clear()
+                        if tipo_bala == 2:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque1, turno_pasado, turno_jugador)
+                            recorrido.clear()
+                        if tipo_bala == 3:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque1, turno_pasado, turno_jugador)
+                            recorrido.clear()
                     else:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_c, tanque2, turno_pasado, turno_jugador)
-                        recorrido.clear()
+                        if tipo_bala == 1:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque2, turno_pasado, turno_jugador)
+                            recorrido.clear()
+                        if tipo_bala == 2:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque2, turno_pasado, turno_jugador)
+                            recorrido.clear()
+                        if tipo_bala == 3:
+                            turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque2, turno_pasado, turno_jugador)
+                            recorrido.clear()
 
             if event.type == pygame.KEYDOWN:
                 interfaz.escribir(event)
@@ -166,26 +187,48 @@ def partida():
         tanque2.update()
 
         if turno_jugador == 1:
-            bala_c.update(tanque1,tanque2)
-            interfaz.text_altura_maxima = str(bala_c.altaura_max) + " metros"
-            interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
-            interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala_c.coordenadas_altura_max))
+            if tipo_bala == 1:
+                mostrar_altura(tanque2, tanque1, bala_c)
+            if tipo_bala == 2:
+                mostrar_altura(tanque2, tanque1, bala_m)
+            if tipo_bala == 3:
+                mostrar_altura(tanque2, tanque1, bala_g)
 
         elif turno_jugador == 2:
-            bala_c.update(tanque2, tanque1)
-            interfaz.text_altura_maxima = str(bala_c.altaura_max) + " metros"
-            interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
-            interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala_c.coordenadas_altura_max))
+            if tipo_bala == 1:
+                mostrar_altura(tanque1, tanque2, bala_c)
+            if tipo_bala == 2:
+                mostrar_altura(tanque1, tanque2, bala_m)
+            if tipo_bala == 3:
+                mostrar_altura(tanque1, tanque2, bala_g)
+
         sprites.draw(DISPLAYSURF)
         
         #Recorrido de la bala
-        if (bala_c.contador_recorrido % 5) == 0 and bala_c.caida == True :
-            recorrido = recorrido + [(bala_c.rect.x, bala_c.rect.y)]
-        i=0
-        while (i<len(recorrido)):
-            pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
-            i+=1
+        if tipo_bala == 1:
+            if (bala_c.contador_recorrido % 5) == 0 and bala_c.caida == True :
+                recorrido = recorrido + [(bala_c.rect.x, bala_c.rect.y)]
+            i=0
+            while (i<len(recorrido)):
+                pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
+                i+=1
 
+        if tipo_bala == 2:
+            if (bala_m.contador_recorrido % 5) == 0 and bala_m.caida == True :
+                recorrido = recorrido + [(bala_m.rect.x, bala_m.rect.y)]
+            i=0
+            while (i<len(recorrido)):
+                pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
+                i+=1
+
+        if tipo_bala == 3:
+            if (bala_g.contador_recorrido % 5) == 0 and bala_g.caida == True :
+                recorrido = recorrido + [(bala_g.rect.x, bala_g.rect.y)]
+            i=0
+            while (i<len(recorrido)):
+                pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
+                i+=1
+        
         #Skins
         DISPLAYSURF.blit(skin1, (tanque1.rect.x-15,tanque1.rect.y-10))
         DISPLAYSURF.blit(skin2, (tanque2.rect.x-25,tanque2.rect.y-10))
