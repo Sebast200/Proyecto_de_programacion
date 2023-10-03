@@ -105,7 +105,7 @@ class Balas (pygame.sprite.Sprite):
             if self.tipo == self.vGlobales.bala_grande:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_grande/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_g
-            print("vida: ", tanque_enemigo.vida)
+            print("vida enemigo: ", tanque_enemigo.vida)
 
         #Colision con el tanque enemigo
         if tanque.rect.x + tanque.largo > self.rect.x and \
@@ -122,7 +122,7 @@ class Balas (pygame.sprite.Sprite):
             if self.tipo == self.vGlobales.bala_grande:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_grande/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_g
-            print("vida enemigo: ", tanque.vida)
+            print("vida: ", tanque.vida)
 
         #Altura maxima
         if self.altaura_max < tanque.rect.y - self.rect.y:
