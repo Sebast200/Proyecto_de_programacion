@@ -127,7 +127,13 @@ class Balas (pygame.sprite.Sprite):
         #Altura maxima
         if self.altaura_max < tanque.rect.y - self.rect.y:
             self.altaura_max = tanque.rect.y - self.rect.y
-            self.coordenadas_altura_max = (self.rect.x, self.rect.y - 10)
+            #Restriccion para que la bala no se salga del rango y
+            if self.rect.y <= 10:
+                self.coordenadas_altura_max = (self.rect.x, 20)
+
+            else:
+                self.coordenadas_altura_max = (self.rect.x, self.rect.y - 10)
+            
 
         if (int(self.rect.right) > self.vGlobales.WIDTH or int(self.rect.bottom) > self.vGlobales.HEIGHT): #cambia numeros
             self.rect.centerx = self.Xi-2

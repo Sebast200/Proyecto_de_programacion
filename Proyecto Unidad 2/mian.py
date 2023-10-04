@@ -1,10 +1,13 @@
 import pygame, sys, globales, tanque, bala, random, interfaz
 from pygame.locals import *
 from boton import Button
-
+from pygame import mixer   
 #DECLARACIONES
 pygame.init()
 interfaz = interfaz.Interfazz()
+#Musica de fondo
+mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
+mixer.music.play(-1)
 #variables globales
 vGlobales = globales.Globaless()
 RELOJ = pygame.time.Clock()
@@ -91,6 +94,9 @@ def menu_principal():
                     pygame.quit()
                     sys.exit()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
+                    mixer.music.fadeout(1500)
+                    mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
+                    mixer.music.play(-1)
                     partida()
         pygame.display.update()
 
