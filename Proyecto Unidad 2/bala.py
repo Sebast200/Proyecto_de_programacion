@@ -1,5 +1,5 @@
 import pygame, sys, globales, math
-
+from pygame import mixer
 class Balas (pygame.sprite.Sprite):
     #Constructor
     def __init__(self, tipo, daño, unidades):
@@ -23,7 +23,7 @@ class Balas (pygame.sprite.Sprite):
         self.coord = ()
         self.i =0
         self.gravedad= 9.8
-
+        self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
         
         self.caida = False
 
@@ -76,14 +76,17 @@ class Balas (pygame.sprite.Sprite):
                 self.i=1
                 self.coord = (self.rect.x,self.rect.y)
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
+            self.shoot_impact.play()
             self.caida = False
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= 0):
+            self.shoot_impact.play()
             self.caida = False
         
         #Verifica suelo
         if (self.rect.x < 0 and self.rect.y > 720):
+            self.shoot_impact.play()
             self.caida = False
         
         #Colision con el tanque propio
@@ -91,6 +94,7 @@ class Balas (pygame.sprite.Sprite):
         tanque_enemigo.rect.x < self.rect.x + self.ancho and \
         tanque_enemigo.rect.y + tanque.alto > self.rect.y and \
         tanque_enemigo.rect.y < self.rect.y + self.alto:
+            self.shoot_impact.play()
             self.caida = False
             if self.tipo == self.vGlobales.bala_chica:
                 self.i=1
@@ -112,6 +116,8 @@ class Balas (pygame.sprite.Sprite):
         tanque.rect.x < self.rect.x + self.ancho and \
         tanque.rect.y + tanque.alto > self.rect.y and \
         tanque.rect.y < self.rect.y + self.alto:
+            #Testeo de sound_effects al inicio del juego tiene que estar atento a cambios 
+            self.shoot_impact.play()
             self.caida = False
             if self.tipo == self.vGlobales.bala_chica:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
@@ -133,7 +139,6 @@ class Balas (pygame.sprite.Sprite):
 
             else:
                 self.coordenadas_altura_max = (self.rect.x, self.rect.y - 10)
-            
 
         if (int(self.rect.right) > self.vGlobales.WIDTH or int(self.rect.bottom) > self.vGlobales.HEIGHT): #cambia numeros
             self.rect.centerx = self.Xi-2

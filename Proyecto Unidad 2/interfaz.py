@@ -1,6 +1,6 @@
 import pygame, sys, globales, math
 from pygame.locals import *
-
+from pygame import mixer
 class Interfazz():
     def __init__(self):
         self.vGlobales = globales.Globaless()
@@ -70,6 +70,9 @@ class Interfazz():
                 self.textbox_angulo = ""
             else:
                 bala.disparar(numero_angulo, math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,tanque)
+                #Testeo de sound_effects al inicio del juego tiene que estar atento a cambios
+                Tank_shoot = mixer.Sound("Proyecto Unidad 2/sonidos_musica/tank_shooting.mp3")
+                Tank_shoot.play()
                 text_boton_jugador = "Recarga"
                 text_boton_jugador_color = self.vGlobales.ROJO
                 pygame.draw.rect(self.vGlobales.PANTALLA,text_boton_jugador_color,self.text_boton_jugador_rect)

@@ -13,6 +13,7 @@ vGlobales = globales.Globaless()
 RELOJ = pygame.time.Clock()
 #pantalla
 DISPLAYSURF = vGlobales.PANTALLA 
+pygame.display.set_caption("Tanques Lovers Juego")
 #Creacion de variable de imagen de fondo
 IMAGEN_DE_FONDO = pygame.image.load("Proyecto Unidad 2/imagenes/BG_MAIN_MENU.png")
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
@@ -94,6 +95,7 @@ def menu_principal():
                     pygame.quit()
                     sys.exit()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
+                    #Testeoaa de musica al inicio del juego tiene que estar atento a cambios
                     mixer.music.fadeout(1500)
                     mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
                     mixer.music.play(-1)
@@ -101,7 +103,6 @@ def menu_principal():
         pygame.display.update()
 
 def partida():
-    pygame.display.set_caption("Tanques Lovers Juego")
 
     #imagenes
     icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
@@ -236,8 +237,8 @@ def partida():
                 i+=1
         
         #Skins
-        DISPLAYSURF.blit(skin1, (tanque1.rect.x-15,tanque1.rect.y-10))
-        DISPLAYSURF.blit(skin2, (tanque2.rect.x-25,tanque2.rect.y-10))
+        DISPLAYSURF.blit(skin1, (tanque1.rect.x-10,tanque1.rect.y-5))
+        DISPLAYSURF.blit(skin2, (tanque2.rect.x-10,tanque2.rect.y-5))
         
         #Game over
         if (tanque1.vida <= 0 or tanque2.vida <= 0):

@@ -9,8 +9,8 @@ class Tankes (pygame.sprite.Sprite):
 
         #Atributos propios
         self.vida = 100
-        self.largo = 25
-        self.alto = 15
+        self.largo = 15
+        self.alto = 10
         self.caida = True
         self.image = pygame.Surface ((self.largo,self.alto))
         self.image.fill(_color)
