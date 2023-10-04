@@ -132,18 +132,22 @@ def partida():
     #Creacion de variables en main (por ahora)
     turno_jugador = 2
     turno_pasado = 0
-    tipo_bala = 1
+    tipo_bala = 1   
 
-    def mostrar_altura(tanque1, tanque2, bala):
+    def mostrar_distancias(tanque1, tanque2, bala):
         bala.update(tanque1,tanque2)
         interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
         interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
         interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala.coordenadas_altura_max))
 
+        interfaz.text_distancia_maxima = str(bala.distancia_max) + "metros"
+        interfaz.text_surface_distancia_maxima = interfaz.vGlobales.font.render(interfaz.text_distancia_maxima, True, interfaz.vGlobales.NEGRO)
+        interfaz.text_surface_distancia_maxima_rect = interfaz.text_surface_distancia_maxima.get_rect(center = (bala.coordenadas_distancia))
+
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
-        vGlobales.terreno()
+        vGlobales.generar_terreno()
         #Interfaz
         interfaz.interfaz()
         
@@ -195,19 +199,19 @@ def partida():
 
         if turno_jugador == 1:
             if tipo_bala == 1:
-                mostrar_altura(tanque2, tanque1, bala_c)
+                mostrar_distancias(tanque2, tanque1, bala_c)
             if tipo_bala == 2:
-                mostrar_altura(tanque2, tanque1, bala_m)
+                mostrar_distancias(tanque2, tanque1, bala_m)
             if tipo_bala == 3:
-                mostrar_altura(tanque2, tanque1, bala_g)
+                mostrar_distancias(tanque2, tanque1, bala_g)
 
         elif turno_jugador == 2:
             if tipo_bala == 1:
-                mostrar_altura(tanque1, tanque2, bala_c)
+                mostrar_distancias(tanque1, tanque2, bala_c)
             if tipo_bala == 2:
-                mostrar_altura(tanque1, tanque2, bala_m)
+                mostrar_distancias(tanque1, tanque2, bala_m)
             if tipo_bala == 3:
-                mostrar_altura(tanque1, tanque2, bala_g)
+                mostrar_distancias(tanque1, tanque2, bala_g)
 
         sprites.draw(DISPLAYSURF)
         
@@ -256,6 +260,7 @@ def partida():
         #Inicio de interfaz
         interfaz.print_interfaz()
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
+        interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
         pygame.display.flip()
         RELOJ.tick(vGlobales.FPS)
 menu_principal()

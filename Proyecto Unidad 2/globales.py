@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, random
 from pygame.locals import *
 
 class Globaless():
@@ -6,14 +6,22 @@ class Globaless():
     #Atributos de pantalla
         self.WIDTH = 1280
         self.HEIGHT = 720
-        self.puntos_terreno = [(260,720),(260,540),(350,520),(390,530),(430,560),(460,600),
-                                    (470,610),(520,650),(550,660),(570,655),(580,650),(600,640),
-                                    (740,400),(770,390),(800,385),(830,390),(850,400),(960,580),
-                                    (980,590),(990,595),(1020,600),(1050,595),(1070,585),(1080,580),
-                                    (1140,480),(1150,470),(1180,465),(1220,465),(1240,470),(1280,480),(1400,800)]
+        self.seleccion_terreno = 0
+        self.puntos_terreno1 = [(260, 720), (260, 390), (350, 370), (390, 380), (430, 410), (460, 450),
+                                    (470, 460), (520, 500), (550, 510), (570, 505), (580, 500), (600, 490),
+                                    (740, 250), (770, 240), (800, 235), (830, 240), (850, 250), (960, 430),
+                                    (980, 440), (990, 445), (1020, 450), (1050, 445), (1070, 435), (1080, 430),
+                                    (1140, 330), (1150, 320), (1180, 315), (1220, 315), (1240, 320), (1280, 330),
+                                    (1400, 800)]
+        self.puntos_terreno2 = [(260, 720), (260, 420), (350, 420), (410, 470), (480, 470), (540, 390),
+                        (620, 390), (660, 395), (760, 280), (830, 280), (880, 400), (960, 400),
+                        (1020, 350), (1090, 350), (1130, 430), (1170, 430), (1200, 350), (1280, 350),
+                        (1400, 800)]
+        self.puntos_terreno3 = [(260, 720), (260, 280), (330,280), (380,370), (420,370), (440,340), (490,340), (570,345), (630,450),
+                        (700,450), (770,200), (910,200), (990,390), (1090,390), (1150,290), (1280,290)
+                        ,(1400, 800)]
         self.PANTALLA = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.ancho_gris = 260
-
         #Atributos balas
         self.bala_chica = 60
         self.bala_mediana = 80
@@ -44,7 +52,14 @@ class Globaless():
         self.font2 = pygame.font.Font(None, 50)
         self.font3 = pygame.font.Font(None, 100)
 
-    def terreno(self):
-        pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno)
+    def generar_terreno(self):
+        if self.seleccion_terreno == 0:
+            self.seleccion_terreno = random.randint(1,3)
+        if (self.seleccion_terreno == 1):
+            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno1)
+        elif (self.seleccion_terreno == 2):
+            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno2)
+        else:
+            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno3)
         pygame.draw.rect(self.PANTALLA,self.grisclaro,(0,0,self.ancho_gris,self.HEIGHT))
 

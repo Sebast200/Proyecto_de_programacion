@@ -31,6 +31,11 @@ class Interfazz():
         self.text_altura_maxima = ""
         self.text_surface_altura_maxima = self.vGlobales.font.render(self.text_altura_maxima, True, self.vGlobales.NEGRO)
         self.text_surface_altura_maxima_rect = self.text_surface_altura_maxima.get_rect(center = (120,700))
+
+        #Creacion de texto que dira distancia maxima
+        self.text_distancia_maxima = ""
+        self.text_surface_distancia_maxima = self.vGlobales.font.render(self.text_distancia_maxima, True, self.vGlobales.NEGRO)
+        self.text_surface_distancia_maxima_rect = self.text_surface_distancia_maxima.get_rect(center = (120,700))
         
         #Creacion de texto que dira game over cuando uno de los tanques muera
         self.text_game_over = ""

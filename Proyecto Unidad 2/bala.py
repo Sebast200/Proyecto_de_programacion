@@ -1,11 +1,13 @@
 import pygame, sys, globales, math
 from pygame import mixer
+from math import sqrt
 class Balas (pygame.sprite.Sprite):
     #Constructor
     def __init__(self, tipo, daño, unidades):
         super().__init__()
         self.vGlobales = globales.Globaless()
         self.altaura_max = 0  
+        self.distancia_max = 0
         self.ancho = 5
         self.alto = 5
         self.tipo = tipo
@@ -13,6 +15,7 @@ class Balas (pygame.sprite.Sprite):
         self.unidades = unidades
         self.contador_recorrido = 1
         self.coordenadas_altura_max = (0,-100)
+        self.coordenadas_distancia = (0,-100)
         #Tamano de la bala
         self.image = pygame.Surface ((self.ancho,self.alto))
 
@@ -60,8 +63,6 @@ class Balas (pygame.sprite.Sprite):
         self.timepo=0
         self.caida = True
         self.altaura_max = 0
-        
-        
 
     def caida_Bala(self, tanque, tanque_enemigo):
         #Toma el color para la colision de la bala 
@@ -139,6 +140,10 @@ class Balas (pygame.sprite.Sprite):
 
             else:
                 self.coordenadas_altura_max = (self.rect.x, self.rect.y - 10)
+        #Distancia Maxima
+        if self.caida == True:
+            self.coordenadas_distancia = (self.rect.x,self.rect.y+20)
+            self.distancia_max = self.distancia(self.rect.x,tanque.rect.x,self.rect.y,tanque.rect.y)
 
         if (int(self.rect.right) > self.vGlobales.WIDTH or int(self.rect.bottom) > self.vGlobales.HEIGHT): #cambia numeros
             self.rect.centerx = self.Xi-2
@@ -146,3 +151,10 @@ class Balas (pygame.sprite.Sprite):
             
     def retorno_bala (self):
         self.rect.center = (500,-100)
+
+    def distancia (self,x1,x2,y1,y2):
+        valor = sqrt(((x2-x1)**2) + ((y2-y1)**2))
+        return int(valor)
+
+    
+    
