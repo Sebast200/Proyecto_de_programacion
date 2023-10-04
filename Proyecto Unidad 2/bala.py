@@ -12,7 +12,8 @@ class Balas (pygame.sprite.Sprite):
         self.alto = 5
         self.tipo = tipo
         self.daño = daño
-        self.unidades = unidades
+        self.unidades_tanque1 = unidades
+        self.unidades_tanque2 = unidades
         self.contador_recorrido = 1
         self.coordenadas_altura_max = (0,-100)
         self.coordenadas_distancia = (0,-100)

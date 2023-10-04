@@ -167,28 +167,51 @@ def partida():
                 pygame.quit()
                 sys.exit()
 
-            if bala_g.caida != True:
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if turno_jugador == 1:
-                        if tipo_bala == 1:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
-                            recorrido.clear()
-                        if tipo_bala == 2:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque1, turno_pasado, turno_jugador)
-                            recorrido.clear()
-                        if tipo_bala == 3:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque1, turno_pasado, turno_jugador)
-                            recorrido.clear()
-                    else:
-                        if tipo_bala == 1:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque2, turno_pasado, turno_jugador)
-                            recorrido.clear()
-                        if tipo_bala == 2:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque2, turno_pasado, turno_jugador)
-                            recorrido.clear()
-                        if tipo_bala == 3:
-                            turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque2, turno_pasado, turno_jugador)
-                            recorrido.clear()
+        
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if turno_jugador == 1:
+                    if tipo_bala == 1 and bala_c.unidades_tanque1 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_c.unidades_tanque1 -= 1
+                            print("balas tanque 1: ", bala_c.unidades_tanque1)
+                        recorrido.clear()
+
+                    if tipo_bala == 2 and bala_m.unidades_tanque1 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque1, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_m.unidades_tanque1 -= 1
+                            print("balas tanque 1: ", bala_m.unidades_tanque1)
+                        recorrido.clear()
+                        
+                    if tipo_bala == 3 and bala_g.unidades_tanque1 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque1, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_g.unidades_tanque1 -= 1
+                            print("balas tanque 1: ", bala_g.unidades_tanque1)
+                        recorrido.clear()
+                        
+                else:
+                    if tipo_bala == 1 and bala_c.unidades_tanque2 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque2, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_c.unidades_tanque2 -= 1
+                            print("balas tanque 2: ", bala_c.unidades_tanque2)
+                        recorrido.clear()
+                        
+                    if tipo_bala == 2 and bala_m.unidades_tanque2 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque2, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_m.unidades_tanque2 -= 1
+                            print("balas tanque 2: ", bala_m.unidades_tanque2)
+                        recorrido.clear()
+                        
+                    if tipo_bala == 3 and bala_g.unidades_tanque2 > 0:
+                        turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque2, turno_pasado, turno_jugador)
+                        if turno_pasado == 0:
+                            bala_g.unidades_tanque2 -= 1
+                            print("balas tanque 2: ", bala_g.unidades_tanque2)
+                        recorrido.clear()
 
             if event.type == pygame.KEYDOWN:
                 interfaz.escribir(event)
