@@ -169,22 +169,24 @@ def partida():
 
         
             if event.type == pygame.MOUSEBUTTONDOWN:
+                interfaz.click_mouse_inventario(event.pos)
                 if turno_jugador == 1:
-                    if tipo_bala == 1 and bala_c.unidades_tanque1 > 0:
+                    #if tipo_bala == 1 and bala_c.unidades_tanque1 > 0
+                    if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_c.unidades_tanque1 -= 1
                             print("balas tanque 1: ", bala_c.unidades_tanque1)
                         recorrido.clear()
-
-                    if tipo_bala == 2 and bala_m.unidades_tanque1 > 0:
+                    #if tipo_bala == 2 and bala_m.unidades_tanque1 > 0
+                    if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque1, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_m.unidades_tanque1 -= 1
                             print("balas tanque 1: ", bala_m.unidades_tanque1)
                         recorrido.clear()
-                        
-                    if tipo_bala == 3 and bala_g.unidades_tanque1 > 0:
+                    #if tipo_bala == 3 and bala_g.unidades_tanque1 > 0    
+                    if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque1, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_g.unidades_tanque1 -= 1
@@ -192,27 +194,28 @@ def partida():
                         recorrido.clear()
                         
                 else:
-                    if tipo_bala == 1 and bala_c.unidades_tanque2 > 0:
+                    #if tipo_bala == 1 and bala_c.unidades_tanque1 > 0
+                    if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque2, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_c.unidades_tanque2 -= 1
                             print("balas tanque 2: ", bala_c.unidades_tanque2)
                         recorrido.clear()
-                        
-                    if tipo_bala == 2 and bala_m.unidades_tanque2 > 0:
+                    #if tipo_bala == 2 and bala_m.unidades_tanque1 > 0                        
+                    if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque2, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_m.unidades_tanque2 -= 1
                             print("balas tanque 2: ", bala_m.unidades_tanque2)
                         recorrido.clear()
-                        
-                    if tipo_bala == 3 and bala_g.unidades_tanque2 > 0:
+                    #if tipo_bala == 3 and bala_g.unidades_tanque1 > 0
+                    if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque1 > 0:
                         turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque2, turno_pasado, turno_jugador)
                         if turno_pasado == 0:
                             bala_g.unidades_tanque2 -= 1
                             print("balas tanque 2: ", bala_g.unidades_tanque2)
                         recorrido.clear()
-
+                        
             if event.type == pygame.KEYDOWN:
                 interfaz.escribir(event)
 
@@ -221,40 +224,54 @@ def partida():
         tanque2.update()
 
         if turno_jugador == 1:
-            if tipo_bala == 1:
+            #if tipo_bala == 1:
+            if interfaz.minibox_bala1_active == True:
                 mostrar_distancias(tanque2, tanque1, bala_c)
-            if tipo_bala == 2:
+            #if tipo_bala == 2:
+            if interfaz.minibox_bala2_active == True:
                 mostrar_distancias(tanque2, tanque1, bala_m)
-            if tipo_bala == 3:
+            #if tipo_bala == 3:
+            if interfaz.minibox_bala3_active == True:
                 mostrar_distancias(tanque2, tanque1, bala_g)
 
         elif turno_jugador == 2:
-            if tipo_bala == 1:
+            #if tipo_bala == 1:
+            if interfaz.minibox_bala1_active == True:
                 mostrar_distancias(tanque1, tanque2, bala_c)
-            if tipo_bala == 2:
+            #if tipo_bala == 2:
+            if interfaz.minibox_bala2_active == True:
                 mostrar_distancias(tanque1, tanque2, bala_m)
-            if tipo_bala == 3:
+            #if tipo_bala == 3:
+            if interfaz.minibox_bala3_active == True:
                 mostrar_distancias(tanque1, tanque2, bala_g)
-
+                
         sprites.draw(DISPLAYSURF)
         
         #Recorrido de la bala
-        if tipo_bala == 1:
+        #if tipo_bala == 1:
+        if interfaz.minibox_bala1_active == True:
             if (bala_c.contador_recorrido % 5) == 0 and bala_c.caida == True :
                 recorrido = recorrido + [(bala_c.rect.x, bala_c.rect.y)]
             i=0
             while (i<len(recorrido)):
                 pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
                 i+=1
-
-        if tipo_bala == 2:
+        #if tipo_bala == 2:
+        if interfaz.minibox_bala2_active == True:
             if (bala_m.contador_recorrido % 5) == 0 and bala_m.caida == True :
                 recorrido = recorrido + [(bala_m.rect.x, bala_m.rect.y)]
             i=0
             while (i<len(recorrido)):
                 pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
                 i+=1
-
+        #if tipo_bala == 3:
+        if interfaz.minibox_bala3_active == True:
+            if (bala_g.contador_recorrido % 5) == 0 and bala_g.caida == True :
+                recorrido = recorrido + [(bala_g.rect.x, bala_g.rect.y)]
+            i=0
+            while (i<len(recorrido)):
+                pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(recorrido[i]),5)
+                i+=1
         if tipo_bala == 3:
             if (bala_g.contador_recorrido % 5) == 0 and bala_g.caida == True :
                 recorrido = recorrido + [(bala_g.rect.x, bala_g.rect.y)]
@@ -294,3 +311,7 @@ menu_principal()
 #1.- SE AGREGARON METODOS NUEVOS PARA HACER EL MENU
 #2.- SE IMPORTO LA CLASE boton en la linea 3
 #3.- Se agregaron dos tipos de fonts a globales
+
+#NUEVOS CAMBIOS
+#1.- SE CAMBIARON LAS CONDICIONES DE LA LINEA 171 HASTA LA 212, de todas formas deje en # las condicionales anteriores por si llega a pasar algo malo
+#2.- SE CAMBIARON LAS CONDICIONES DE LA LINEA 227 HASTA LA 274, de todas formas deje en # las condicionales anteriores por si llega a pasar algo malo
