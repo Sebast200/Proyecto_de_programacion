@@ -103,7 +103,7 @@ def menu_principal():
         pygame.display.update()
 
 def partida():
-
+    pygame.display.set_caption("Partida")
     #imagenes
     icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
     pygame.display.set_icon(icono)
