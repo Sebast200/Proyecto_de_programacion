@@ -42,6 +42,21 @@ class Interfazz():
         self.text_surface_game_over = self.vGlobales.font.render(self.text_game_over, True, self.vGlobales.rojo_oscuro)
         self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
 
+        #Creacion de Caja que va a mostrar tres rectangulos que mostraran las opciones de la bala
+        self.box_armas = pygame.Rect(15,510,225,80)
+        #Creacion de tres rectangulos que mostraran tres tipos de bala
+        self.minibox_bala1 = pygame.Rect(15,510,75,80)
+        self.minibox_bala2 = pygame.Rect(90,510,75,80)
+        self.minibox_bala3 = pygame.Rect(165,510,75,80)
+        #Creacion de verificadores que se les haya hecho click a uno de los tres botones del inventario
+        self.minibox_bala1_active = True
+        self.minibox_bala2_active = False
+        self.minibox_bala3_active = False
+        #Tambien se van a crear variables para que cambien de color a la hora de que se les haga click
+        self.minibox_bala1_color = self.vGlobales.ROJO
+        self.minibox_bala2_color = self.vGlobales.NEGRO
+        self.minibox_bala3_color = self.vGlobales.NEGRO
+    
 
     def interfaz(self):
         #Texto que dice Angulo...
@@ -109,12 +124,53 @@ class Interfazz():
             self.textbox_velocidad_inicial_active = True
         else:
             self.textbox_velocidad_inicial_active = False
-
+        #Condicion de click para el boton de disparo
         if self.text_boton_jugador_rect.collidepoint(posicion_muose):
-            self.boton_disparar_click(bala, pos_tanque, turno_jugador)
-            turno_pasado = 0
-            return turno_pasado
+            #ENCONTRE UN ERROR, VOY A ARREGLARLO
+            #El error consiste en que cuando una persona pone datos invalidos, el turno cambia de todos modos, voy a ver si ya se arreglo o non
+            #Ya lo arregle xd
+            try:
+                numero_angulo = int(self.textbox_angulo)
+                numero_velocidad_inicial = int(self.textbox_velocidad_inicial)
+                #Por ahora la unica condicion sera que el numero del angulo no supere los 360 grados
+                if numero_angulo>360:
+                    self.textbox_angulo = ""
+                else:
+                    self.boton_disparar_click(bala, pos_tanque, turno_jugador)
+                    turno_pasado = 0
+                    return turno_pasado
+            except ValueError:
+                self.textbox_angulo = ""
+                self.textbox_velocidad_inicial = ""
 
+    def click_mouse_inventario(self, posicion_muose):
+        #Condicion de click para la caja de inventario
+        if self.box_armas.collidepoint(posicion_muose):
+            #Condicion de click para el cuadro 1 del inventario
+            if self.minibox_bala1.collidepoint(posicion_muose):
+                self.minibox_bala1_active = True
+                self.minibox_bala1_color = self.vGlobales.ROJO
+                self.minibox_bala2_active = False
+                self.minibox_bala2_color = self.vGlobales.NEGRO
+                self.minibox_bala3_active = False
+                self.minibox_bala3_color = self.vGlobales.NEGRO
+            #Condicion de click para el cuadro 2 del inventario
+            if self.minibox_bala2.collidepoint(posicion_muose):
+                self.minibox_bala2_active = True
+                self.minibox_bala2_color = self.vGlobales.ROJO
+                self.minibox_bala1_active = False
+                self.minibox_bala1_color = self.vGlobales.NEGRO
+                self.minibox_bala3_active = False
+                self.minibox_bala3_color = self.vGlobales.NEGRO
+            #Condicion de click para el cuadro 3 del inventario
+            if self.minibox_bala3.collidepoint(posicion_muose):
+                self.minibox_bala3_active = True
+                self.minibox_bala3_color = self.vGlobales.ROJO
+                self.minibox_bala1_active = False
+                self.minibox_bala1_color = self.vGlobales.NEGRO
+                self.minibox_bala2_active = False
+                self.minibox_bala2_color = self.vGlobales.NEGRO    
+    
     def escribir (self, evento):
         #Seccion de codigo de caja de texto de angulo
             if self.textbox_angulo_active == True:
@@ -144,8 +200,19 @@ class Interfazz():
         pygame.draw.rect(self.vGlobales.PANTALLA, self.text_boton_jugador_color, self.text_boton_jugador_rect)
         self.text_boton_jugador_surface = self.vGlobales.font.render(self.text_boton_jugador, True, self.vGlobales.NEGRO)
 
+        #AQUI SE DIBUJARA Y SE ACTUALIZARA EL INVENTARIO
+        pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.gris, self.box_armas)
+        pygame.draw.rect(self.vGlobales.PANTALLA, self.minibox_bala1_color, self.minibox_bala1, 3)
+        pygame.draw.rect(self.vGlobales.PANTALLA, self.minibox_bala2_color, self.minibox_bala2, 3)
+        pygame.draw.rect(self.vGlobales.PANTALLA, self.minibox_bala3_color, self.minibox_bala3, 3)        
+        
         #NUMEROS MAGICOS
         self.vGlobales.PANTALLA.blit(self.textbox_angulo_surface, (self.textbox_angulo_rect.x + 15, self.textbox_angulo_rect.y + 10))
         self.vGlobales.PANTALLA.blit(self.textbox_velocidad_inicial_surface,(self.textbox_velocidad_inicial_rect.x + 15, self.textbox_velocidad_inicial_rect.y + 10))
         self.vGlobales.PANTALLA.blit(self.text_boton_jugador_surface, (self.text_boton_jugador_rect.x + 65, self.text_boton_jugador_rect.y + 25))
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
+
+        #CAMBIOS REALIZADOS
+        #1.- EN INIT SE CREARON LAS VARIABLES PARA HACER LA CAJA DE INVENTARIO
+        #2.- EN PRINT_INTERFAZ SE AGREGO LOS COMANDOS PARA DIBUJAR Y ACTUALIZAR EL INVENTARIO
+        #3.- SE CREO EL METODO CLICK_MOUSE_INVENTARIO PARA HACER LAS CONDICIONALES DE LA CAJA DEL INVENTARIO DEL JUGADOR
