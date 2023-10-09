@@ -19,6 +19,20 @@ IMAGEN_DE_FONDO = pygame.image.load("Proyecto Unidad 2/imagenes/BG_MAIN_MENU.png
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
 def get_font(tamaño):
     return pygame.font.Font(None,tamaño)
+
+def genera_terreno_pixel(pantalla, matriz):
+    i = vGlobales.ancho_gris
+    while (i < vGlobales.WIDTH):
+        j = 0
+        while (j < vGlobales.HEIGHT):
+            if (pantalla.get_at((i,j)) == vGlobales.verde):
+                matriz[i-vGlobales.ancho_gris][j] = (vGlobales.verde)
+            else:
+                matriz[i-vGlobales.ancho_gris][j] = (0,0,0,0)
+            j+=1
+        i+=1
+
+    return matriz
 def opciones():
     pygame.display.set_caption("Opciones")
 
@@ -134,6 +148,13 @@ def partida():
     turno_pasado = 0
     tipo_bala = 1   
 
+    #generacion del terreno
+    vGlobales.generar_terreno()
+    pantalla_juego = pygame.Surface((vGlobales.WIDTH-vGlobales.ancho_gris,vGlobales.HEIGHT),pygame.SRCALPHA)
+    pixel_array = pygame.PixelArray(pantalla_juego)
+    pixel_array = genera_terreno_pixel(DISPLAYSURF,pixel_array)
+    nueva_superficie = pixel_array.make_surface()
+
     def mostrar_distancias(tanque1, tanque2, bala):
         bala.update(tanque1,tanque2)
         interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
@@ -147,8 +168,11 @@ def partida():
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
-        vGlobales.generar_terreno()
+        #Dibuja el terreno
+        DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
+
         #Interfaz
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
         
         #proceso de cambio de turno
