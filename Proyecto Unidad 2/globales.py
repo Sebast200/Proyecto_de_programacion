@@ -49,8 +49,9 @@ class Globaless():
 
         #Fuente
         self.font = pygame.font.Font(None,36)
-        self.font2 = pygame.font.Font(None, 50)
-        self.font3 = pygame.font.Font(None, 100)
+        self.font2 = pygame.font.Font(None,50)
+        self.font3 = pygame.font.Font(None,100)
+        self.font4 = pygame.font.Font(None,30)
 
     def generar_terreno(self):
         if self.seleccion_terreno == 0:
