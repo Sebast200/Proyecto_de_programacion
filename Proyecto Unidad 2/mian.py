@@ -308,7 +308,7 @@ def partida():
         elif bala_m.explosion == 1:
             animacion_explosion(vGlobales.bala_mediana, bala_m)
         elif bala_g.explosion == 1:
-            animacion_explosion(vGlobales.bala_grande, bala_g)
+            animacion_explosion(vGlobales.bala_grande,bala_g)
         pygame.display.flip()
         RELOJ.tick(vGlobales.FPS)
 menu_principal()

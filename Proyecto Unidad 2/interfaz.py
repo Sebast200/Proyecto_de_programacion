@@ -67,11 +67,11 @@ class Interfazz():
         self.text_surface_municion_bala3 = self.vGlobales.font4.render(self.text_municion_bala3, True,self.vGlobales.NEGRO)
         self.text_surface_municion_bala3_rect = pygame.Rect(165,560,75,40)
         #Creacion de texto temporal que va a tener el inventario, nada revolucionario xdd
-        self.text_bala_c = "c"
+        self.text_bala_c = "C"
         self.text_surface_bala_c = self.vGlobales.font.render(self.text_bala_c,True,self.vGlobales.NEGRO)
-        self.text_bala_m = "m"
+        self.text_bala_m = "M"
         self.text_surface_bala_m = self.vGlobales.font.render(self.text_bala_m,True,self.vGlobales.NEGRO)
-        self.text_bala_g = "g"
+        self.text_bala_g = "G"
         self.text_surface_bala_g = self.vGlobales.font.render(self.text_bala_g,True,self.vGlobales.NEGRO)
         #Voy a usar minibox_bala como los rectangulos de estos textos, despues de todo esto es temporal
 
