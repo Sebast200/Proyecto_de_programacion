@@ -19,7 +19,6 @@ class Balas (pygame.sprite.Sprite):
         self.coordenadas_distancia = (0,-100)
         #Tamano de la bala
         self.image = pygame.Surface ((self.ancho,self.alto))
-
         #obtiene el rectangulo (Sprite)
         self.rect = self.image.get_rect()
         self.rect.center = (500,-100)
@@ -28,7 +27,6 @@ class Balas (pygame.sprite.Sprite):
         self.i =0
         self.gravedad= 9.8
         self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
-        
         self.caida = False
 
     def update(self, tanque, tanque_enemigo):
@@ -42,16 +40,14 @@ class Balas (pygame.sprite.Sprite):
             self.timepo += 0.12
             self.contador_recorrido+=1
         else:
-            if (self.i==1):
-                contador_circ= 0
-                while (contador_circ <= 2000):
-                    pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
-                    contador_circ +=1
-                if contador_circ == 2000:
-                    self.i = 0
-            
+            self.coord = (self.rect.x,self.rect.y)
+            if self.tipo == self.vGlobales.bala_chica:
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
+            if self.tipo == self.vGlobales.bala_mediana:
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
+            if self.tipo == self.vGlobales.bala_grande:
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)    
             self.retorno_bala()
-
 
     def disparar (self,_angulo_grados, _angulo, _velocidad, tanque):
         self.velx = math.sin(_angulo) * _velocidad
@@ -74,10 +70,13 @@ class Balas (pygame.sprite.Sprite):
 
         #Verifica la colision con terreno o panel
         if (color == self.vGlobales.verde or color == self.vGlobales.grisclaro):
+            self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
-                self.i=1
-                self.coord = (self.rect.x,self.rect.y)
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
+            if self.tipo == self.vGlobales.bala_mediana:
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
+            if self.tipo == self.vGlobales.bala_grande:
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
             self.shoot_impact.play()
             self.caida = False
         
@@ -91,29 +90,26 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
         
-        #Colision con el tanque propio
+        #Colision con el tanque enemigo
         if tanque_enemigo.rect.x + tanque_enemigo.largo > self.rect.x and \
         tanque_enemigo.rect.x < self.rect.x + self.ancho and \
         tanque_enemigo.rect.y + tanque.alto > self.rect.y and \
         tanque_enemigo.rect.y < self.rect.y + self.alto:
             self.shoot_impact.play()
             self.caida = False
+            self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
-                self.i=1
-                self.coord = (self.rect.x,self.rect.y)
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
-            if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_c
             if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_mediana/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_grande/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_g
             print("vida enemigo: ", tanque_enemigo.vida)
 
-        #Colision con el tanque enemigo
+        #Colision con el tanque propio
         if tanque.rect.x + tanque.largo > self.rect.x and \
         tanque.rect.x < self.rect.x + self.ancho and \
         tanque.rect.y + tanque.alto > self.rect.y and \
@@ -121,14 +117,15 @@ class Balas (pygame.sprite.Sprite):
             #Testeo de sound_effects al inicio del juego tiene que estar atento a cambios 
             self.shoot_impact.play()
             self.caida = False
+            self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_chica/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_c
             if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_mediana/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.rect.x, self.rect.y),(self.vGlobales.bala_grande/2),0)
+                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_g
             print("vida: ", tanque.vida)
 
@@ -138,14 +135,13 @@ class Balas (pygame.sprite.Sprite):
             #Restriccion para que la bala no se salga del rango y
             if self.rect.y <= 10:
                 self.coordenadas_altura_max = (self.rect.x, 20)
-
             else:
                 self.coordenadas_altura_max = (self.rect.x, self.rect.y - 10)
+        
         #Distancia Maxima
         if self.caida == True:
             self.coordenadas_distancia = (self.rect.x,self.rect.y+20)
             self.distancia_max = self.distancia(self.rect.x,tanque.rect.x,self.rect.y,tanque.rect.y)
-
         if (int(self.rect.right) > self.vGlobales.WIDTH or int(self.rect.bottom) > self.vGlobales.HEIGHT): #cambia numeros
             self.rect.centerx = self.Xi-2
             self.rect.centery = self.Yi-2  
