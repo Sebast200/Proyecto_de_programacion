@@ -44,7 +44,6 @@ def opciones():
         OPCIONES_RECT = TEXTO_OPCIONES.get_rect(center=(640, 100))
         DESCRIPCION_RECT = TEXTO_DESCRIPCION.get_rect(center=(640,400))
 
-
         #Creacion de botones
         BOTON_VOLVER = Button(image=None, pos=(640,550), text_input="VOLVER", font=get_font(75), base_color=vGlobales.ROJO, hovering_color=vGlobales.BLANCO)
         
@@ -173,6 +172,12 @@ def partida():
             bala.unidades_tanque2 -= 1
             print("balas tanque 2: ", bala.unidades_tanque2)
 
+    def destruccion_terreno(bala, pixel_array, nueva_superficie):
+        pixel_array = bala.rompe_terreno(pixel_array,bala.tipo/2,bala.rect.center)
+        nueva_superficie = pixel_array.make_surface()
+        bala.explosion=0
+        return nueva_superficie
+
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
@@ -180,14 +185,15 @@ def partida():
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
         if (bala_c.explosion == 1 and bala_c.caida == False):
-            pixel_array = bala_c.rompe_terreno(pixel_array,bala_c.tipo/2,bala_c.rect.center)
-            nueva_superficie = pixel_array.make_surface()
-            bala_c.explosion=0
+            nueva_superficie = destruccion_terreno(bala_c, pixel_array, nueva_superficie)
+        elif (bala_m.explosion == 1 and bala_m.caida == False):
+            nueva_superficie = destruccion_terreno(bala_m, pixel_array, nueva_superficie)
+        elif (bala_g.explosion == 1 and bala_g.caida == False):
+            nueva_superficie = destruccion_terreno(bala_g, pixel_array, nueva_superficie)
         
         #Interfaz
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
-        
         
         #proceso de cambio de turno
         if turno_jugador == 1 and turno_pasado == 0:
