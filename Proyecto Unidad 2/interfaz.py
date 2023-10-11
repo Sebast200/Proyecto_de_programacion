@@ -43,11 +43,11 @@ class Interfazz():
         self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
 
         #Creacion de Caja que va a mostrar tres rectangulos que mostraran las opciones de la bala
-        self.box_armas = pygame.Rect(15,510,225,80)
+        self.box_armas = pygame.Rect(15,470,225,80)
         #Creacion de tres rectangulos que mostraran tres tipos de bala
-        self.minibox_bala1 = pygame.Rect(15,510,75,80)
-        self.minibox_bala2 = pygame.Rect(90,510,75,80)
-        self.minibox_bala3 = pygame.Rect(165,510,75,80)
+        self.minibox_bala1 = pygame.Rect(15,470,75,80)
+        self.minibox_bala2 = pygame.Rect(90,470,75,80)
+        self.minibox_bala3 = pygame.Rect(165,470,75,80)
         #Creacion de verificadores que se les haya hecho click a uno de los tres botones del inventario
         self.minibox_bala1_active = True
         self.minibox_bala2_active = False
@@ -56,7 +56,24 @@ class Interfazz():
         self.minibox_bala1_color = self.vGlobales.ROJO
         self.minibox_bala2_color = self.vGlobales.NEGRO
         self.minibox_bala3_color = self.vGlobales.NEGRO
-    
+        #Creacion de pequeñas cajas de texto que se van a encargar de mostrar la municion de cada bala
+        self.text_municion_bala1 = ""
+        self.text_surface_municion_bala1 = self.vGlobales.font4.render(self.text_municion_bala1, True,self.vGlobales.NEGRO)
+        self.text_surface_municion_bala1_rect = pygame.Rect(15,560,75,40)
+        self.text_municion_bala2 = ""
+        self.text_surface_municion_bala2 = self.vGlobales.font4.render(self.text_municion_bala2, True,self.vGlobales.NEGRO)
+        self.text_surface_municion_bala2_rect = pygame.Rect(90,560,75,40)
+        self.text_municion_bala3 = ""
+        self.text_surface_municion_bala3 = self.vGlobales.font4.render(self.text_municion_bala3, True,self.vGlobales.NEGRO)
+        self.text_surface_municion_bala3_rect = pygame.Rect(165,560,75,40)
+        #Creacion de texto temporal que va a tener el inventario, nada revolucionario xdd
+        self.text_bala_c = "c"
+        self.text_surface_bala_c = self.vGlobales.font.render(self.text_bala_c,True,self.vGlobales.NEGRO)
+        self.text_bala_m = "m"
+        self.text_surface_bala_m = self.vGlobales.font.render(self.text_bala_m,True,self.vGlobales.NEGRO)
+        self.text_bala_g = "g"
+        self.text_surface_bala_g = self.vGlobales.font.render(self.text_bala_g,True,self.vGlobales.NEGRO)
+        #Voy a usar minibox_bala como los rectangulos de estos textos, despues de todo esto es temporal
 
     def interfaz(self):
         #Texto que dice Angulo...
@@ -189,7 +206,7 @@ class Interfazz():
                     if len(self.textbox_velocidad_inicial)<3:
                         self.textbox_velocidad_inicial += evento.unicode
 
-    def print_interfaz (self):
+    def print_interfaz (self, bala_c, bala_m, bala_g):
         #AQUI SE DIBUJARA Y SE ACTUALIZARA LAS CAJAS DE TEXTO Y EL BOTON DE DISPARO
         pygame.draw.rect(self.vGlobales.PANTALLA ,self.vGlobales.gris, self.textbox_angulo_rect)
         self.textbox_angulo_surface = self.vGlobales.font.render(self.textbox_angulo, True, self.vGlobales.NEGRO)
@@ -212,7 +229,29 @@ class Interfazz():
         self.vGlobales.PANTALLA.blit(self.text_boton_jugador_surface, (self.text_boton_jugador_rect.x + 65, self.text_boton_jugador_rect.y + 25))
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
 
+        #AQUI SE CONSEGUIRAN LOS DATOS PARA LA IMPRESION DE LA MUNICION DE LAS BALAS DEL TANQUE
+        self.text_municion_bala1 = "x" + str(bala_c)
+        self.text_surface_municion_bala1 = self.vGlobales.font4.render(self.text_municion_bala1,True,self.vGlobales.NEGRO)
+        self.text_municion_bala2 = "x" + str(bala_m)
+        self.text_surface_municion_bala2 = self.vGlobales.font4.render(self.text_municion_bala2,True,self.vGlobales.NEGRO)
+        self.text_municion_bala3 = "x" + str(bala_g)
+        self.text_surface_municion_bala3 = self.vGlobales.font4.render(self.text_municion_bala3,True,self.vGlobales.NEGRO)
+        #IMPRESION DE MUNICION DE BALAS
+        self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala1, (self.text_surface_municion_bala1_rect.x + 20, self.text_surface_municion_bala1_rect.y))
+        self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala2, (self.text_surface_municion_bala2_rect.x + 20, self.text_surface_municion_bala2_rect.y))
+        self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala3, (self.text_surface_municion_bala3_rect.x + 20, self.text_surface_municion_bala3_rect.y))
+        #IMPRESION DE TEXTO TEMPORAL
+        self.vGlobales.PANTALLA.blit(self.text_surface_bala_c,(self.minibox_bala1.x + 30, self.minibox_bala1.y + 30))
+        self.vGlobales.PANTALLA.blit(self.text_surface_bala_m,(self.minibox_bala2.x + 30, self.minibox_bala2.y + 30))
+        self.vGlobales.PANTALLA.blit(self.text_surface_bala_g,(self.minibox_bala3.x + 30, self.minibox_bala3.y + 30))
         #CAMBIOS REALIZADOS
         #1.- EN INIT SE CREARON LAS VARIABLES PARA HACER LA CAJA DE INVENTARIO
         #2.- EN PRINT_INTERFAZ SE AGREGO LOS COMANDOS PARA DIBUJAR Y ACTUALIZAR EL INVENTARIO
         #3.- SE CREO EL METODO CLICK_MOUSE_INVENTARIO PARA HACER LAS CONDICIONALES DE LA CAJA DEL INVENTARIO DEL JUGADOR
+
+        #NUEVOS CAMBIOS (FRANCO ARENAS) 11-10-2023
+        #1.- Voy a intentar hacer que se puedan imprimir las cantidades de balas que quedan en el inventario de cada tanque, estaba pensando que tal vez podria usar print_interfaz para que se le pida como tributo un tanque para que se pueda imprimir desde ahi los datos
+        #2.- Linea 59 se agregan variables para las cajas de texto que diran la municion de las armas
+        #3.- Linea 232 aprox se empiezan a conseguir e imprimir la municion de las balas
+        #4.- Linea 69 aprox, se van a crear ciertas cajas de textos que mas adelante se eliminaran para ser reemplazados por imagenes de balas
+        #5.- Linea 243 aprox, se empieza a imprimir el texto temporal
