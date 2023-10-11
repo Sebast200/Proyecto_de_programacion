@@ -31,9 +31,9 @@ class Globaless():
         self.PANTALLA = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.ancho_gris = 260
         #Atributos balas
-        self.bala_chica = 60
-        self.bala_mediana = 80
-        self.bala_grande = 100
+        self.bala_chica = 60         #Radio
+        self.bala_mediana = 80       #Radio  
+        self.bala_grande = 120       #Radio
         self.daño_bala_c = 30
         self.daño_bala_m = 40
         self.daño_bala_g = 50

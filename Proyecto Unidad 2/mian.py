@@ -172,6 +172,19 @@ def partida():
         if turno_pasado == 0:
             bala.unidades_tanque2 -= 1
             print("balas tanque 2: ", bala.unidades_tanque2)
+            
+    def destruccion_terreno(bala, pixel_array, nueva_superficie):
+        pixel_array = bala.rompe_terreno(pixel_array,bala.tipo/2,bala.rect.center)
+        nueva_superficie = pixel_array.make_surface()
+        bala.explosion=0
+        return nueva_superficie
+    
+    def animacion_explosion(radio_bala, bala):
+        i = 0
+        while i < radio_bala:
+            pygame.draw.circle(DISPLAYSURF,'black',(bala.rect.center),i/2)
+            i+=0.5
+            pygame.display.flip()
 
     while True:
         #Dibujo de la pantalla
@@ -180,10 +193,11 @@ def partida():
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
         if (bala_c.explosion == 1 and bala_c.caida == False):
-            pixel_array = bala_c.rompe_terreno(pixel_array,bala_c.tipo/2,bala_c.rect.center)
-            nueva_superficie = pixel_array.make_surface()
-            bala_c.explosion=0
-        
+                nueva_superficie = destruccion_terreno(bala_c, pixel_array, nueva_superficie)
+        elif (bala_m.explosion == 1 and bala_m.caida == False):
+            nueva_superficie = destruccion_terreno(bala_m, pixel_array, nueva_superficie)
+        elif (bala_g.explosion == 1 and bala_g.caida == False):
+            nueva_superficie = destruccion_terreno(bala_g, pixel_array, nueva_superficie)
         #Interfaz
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
@@ -288,6 +302,13 @@ def partida():
             interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
+        ####
+        if bala_c.explosion == 1:
+            animacion_explosion(vGlobales.bala_chica, bala_c)
+        elif bala_m.explosion == 1:
+            animacion_explosion(vGlobales.bala_mediana, bala_m)
+        elif bala_g.explosion == 1:
+            animacion_explosion(vGlobales.bala_grande, bala_g)
         pygame.display.flip()
         RELOJ.tick(vGlobales.FPS)
 menu_principal()

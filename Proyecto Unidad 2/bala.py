@@ -40,13 +40,7 @@ class Balas (pygame.sprite.Sprite):
             self.timepo += 0.12
             self.contador_recorrido+=1
         else:
-            self.coord = (self.rect.x,self.rect.y)
-            if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
-            if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
-            if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)    
+            self.coord = (self.rect.x,self.rect.y)    
             self.retorno_bala()
 
     def disparar (self,_angulo_grados, _angulo, _velocidad, tanque):
@@ -71,12 +65,6 @@ class Balas (pygame.sprite.Sprite):
         #Verifica la colision con terreno o panel
         if (color == self.vGlobales.verde or color == self.vGlobales.grisclaro):
             self.coord = (self.rect.x,self.rect.y)
-            if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
-            if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
-            if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
@@ -101,13 +89,10 @@ class Balas (pygame.sprite.Sprite):
             self.explosion = 1
             self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_c
             if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_g
             print("vida enemigo: ", tanque_enemigo.vida)
 
@@ -122,13 +107,10 @@ class Balas (pygame.sprite.Sprite):
             self.explosion = 1
             self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_c
             if self.tipo == self.vGlobales.bala_mediana:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_mediana/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
-                pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_g
             print("vida: ", tanque.vida)
 
