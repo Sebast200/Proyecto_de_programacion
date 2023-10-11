@@ -274,9 +274,11 @@ def partida():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         pygame.quit()
                         sys.exit()
-                        
         #Inicio de interfaz
-        interfaz.print_interfaz()
+        if turno_jugador == 1:
+            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1)
+        else:
+            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
         pygame.display.flip()
@@ -292,3 +294,6 @@ menu_principal()
 #NUEVOS CAMBIOS
 #1.- SE CAMBIARON LAS CONDICIONES DE LA LINEA 171 HASTA LA 212, de todas formas deje en # las condicionales anteriores por si llega a pasar algo malo
 #2.- SE CAMBIARON LAS CONDICIONES DE LA LINEA 227 HASTA LA 274, de todas formas deje en # las condicionales anteriores por si llega a pasar algo malo
+#NUEVOS CAMBIOS (FRANCO ARENAS) 11-10-2023
+#1.- Voy a hacer que print interfaz pida los datos del tanque para poder imprimir la cantidad de balas que les queda a cada uno
+#2.- Linea 325 aprox (ahora es la linea 277), voy a crear una condicional que preguntara que turno es para ver QUE dato debe de imprimir con respecto al inventario
