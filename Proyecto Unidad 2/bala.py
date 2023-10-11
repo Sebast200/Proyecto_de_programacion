@@ -24,7 +24,7 @@ class Balas (pygame.sprite.Sprite):
         self.rect.center = (500,-100)
         self.image.fill(self.vGlobales.celeste)
         self.coord = ()
-        self.i =0
+        self.explosion =0
         self.gravedad= 9.8
         self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
         self.caida = False
@@ -79,6 +79,7 @@ class Balas (pygame.sprite.Sprite):
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_grande/2),0)
             self.shoot_impact.play()
             self.caida = False
+            self.explosion = 1
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= 0):
@@ -97,6 +98,7 @@ class Balas (pygame.sprite.Sprite):
         tanque_enemigo.rect.y < self.rect.y + self.alto:
             self.shoot_impact.play()
             self.caida = False
+            self.explosion = 1
             self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)
@@ -117,6 +119,7 @@ class Balas (pygame.sprite.Sprite):
             #Testeo de sound_effects al inicio del juego tiene que estar atento a cambios 
             self.shoot_impact.play()
             self.caida = False
+            self.explosion = 1
             self.coord = (self.rect.x,self.rect.y)
             if self.tipo == self.vGlobales.bala_chica:
                 pygame.draw.circle(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.coord),(self.vGlobales.bala_chica/2),0)

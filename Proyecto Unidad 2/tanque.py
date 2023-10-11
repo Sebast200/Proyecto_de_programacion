@@ -23,8 +23,6 @@ class Tankes (pygame.sprite.Sprite):
         self.caida_Tanque()
         if (self.caida):
             self.rect.y += incremento
-        else:
-            self.caida = False
 
     def caida_Tanque(self):
         #Colision con color del terreno
@@ -32,3 +30,5 @@ class Tankes (pygame.sprite.Sprite):
         color = (color[0], color[1], color[2])
         if (color == self.vGlobales.verde):
             self.caida = False
+        else:
+            self.caida = True

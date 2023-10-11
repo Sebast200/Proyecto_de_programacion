@@ -179,11 +179,10 @@ def partida():
 
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
-
-        if (bala_c.i == 1):
+        if (bala_c.explosion == 1 and bala_c.caida == False):
             pixel_array = bala_c.rompe_terreno(pixel_array,bala_c.tipo/2,bala_c.rect.center)
             nueva_superficie = pixel_array.make_surface()
-            bala_c.i=0
+            bala_c.explosion=0
         
         #Interfaz
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
