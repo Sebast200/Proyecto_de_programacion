@@ -152,6 +152,17 @@ class Balas (pygame.sprite.Sprite):
     def distancia (self,x1,x2,y1,y2):
         valor = sqrt(((x2-x1)**2) + ((y2-y1)**2))
         return int(valor)
+    
+    def rompe_terreno(self,terreno,radio,posicion_explosion):
+        i = 0
+        while (i < self.vGlobales.WIDTH-self.vGlobales.ancho_gris):
+            j = 0
+            while (j < self.vGlobales.HEIGHT):
+                if (int(self.distancia(posicion_explosion[0]-self.vGlobales.ancho_gris,i,posicion_explosion[1],j) <= radio)):
+                    terreno[i][j] = (0,0,0,0)
+                j+=1
+            i+=1
+        return terreno
 
     
     

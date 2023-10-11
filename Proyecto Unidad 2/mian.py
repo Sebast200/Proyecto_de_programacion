@@ -176,11 +176,19 @@ def partida():
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
+
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
+
+        if (bala_c.i == 1):
+            pixel_array = bala_c.rompe_terreno(pixel_array,bala_c.tipo/2,bala_c.rect.center)
+            nueva_superficie = pixel_array.make_surface()
+            bala_c.i=0
+        
         #Interfaz
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
+        
         
         #proceso de cambio de turno
         if turno_jugador == 1 and turno_pasado == 0:
