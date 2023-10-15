@@ -202,6 +202,9 @@ def partida():
     pixel_array = genera_terreno_pixel(DISPLAYSURF,pixel_array)
     nueva_superficie = pixel_array.make_surface()
 
+    #Creacion de booleano para ver si se le hizo click al boton de nueva partida (por ahora)
+    nueva_partida = False
+
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
@@ -236,6 +239,13 @@ def partida():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 interfaz.click_mouse_inventario(event.pos)
+                #Condicional para ver si se le hizo click al boton de nueva partida
+                if interfaz.boton_abrir_minimenu_active == True:
+                    if interfaz.boton_nueva_partida_rect.collidepoint(event.pos):
+                        nueva_partida = True
+                    if interfaz.boton_salir_rect.collidepoint(event.pos):
+                        pygame.quit()
+                        sys.exit()
                 
                 if turno_jugador == 1:
                     if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque1 > 0:
@@ -313,6 +323,9 @@ def partida():
             animacion_explosion(vGlobales.bala_mediana, bala_m)
         elif bala_g.explosion == 1:
             animacion_explosion(vGlobales.bala_grande,bala_g)
+        #Creacion de condicional para ver si se debe crear una nueva partida o no
+        if nueva_partida == True:
+            partida()
         pygame.display.flip()
         RELOJ.tick(vGlobales.FPS)
 
@@ -333,3 +346,10 @@ menu_principal()
 #NUEVOS CAMBIOS (FRANCO ARENAS) 11-10-2023
 #1.- Voy a hacer que print interfaz pida los datos del tanque para poder imprimir la cantidad de balas que les queda a cada uno
 #2.- Linea 325 aprox (ahora es la linea 277), voy a crear una condicional que preguntara que turno es para ver QUE dato debe de imprimir con respecto al inventario
+
+#NUEVOS CAMBIOS (FRANCO ARENAS) 12-10-2023
+#1.- Voy a crear la condicional para que se comience una nueva partida, eso si, creo que voy a tener que hacerlo desde el main, POR AHORA, porque estoy seguro que se puede hacer desde la clase pero por ahora no estoy con mucho tiempo xd
+#2.- Linea 205 Creacion de variable booleano que servira para verificar si se le hizo click al boton de nueva partida o no
+#3.- Linea 242 Condicional para ver si se le hizo click al boton de nueva partida o al de salir para cerrar el juego
+#4.- Linea 326 Condicional para ver si se tiene que empezar una nueva partida o no
+#5.- Hay un pequeño error con respecto al texto que imprime el turno del jugador pero mas adelante lo arreglare
