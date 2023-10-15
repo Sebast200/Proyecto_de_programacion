@@ -6,7 +6,7 @@ from pygame import mixer
 pygame.init()
 interfaz = interfaz.Interfazz()
 #Musica de fondo
-mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
+mixer.music.load("sonidos_musica/background.mp3")
 mixer.music.play(-1)
 #variables globales
 vGlobales = globales.Globaless()
@@ -15,8 +15,9 @@ RELOJ = pygame.time.Clock()
 DISPLAYSURF = vGlobales.PANTALLA 
 pygame.display.set_caption("Tanques Lovers Juego")
 #Creacion de variable de imagen de fondo
-IMAGEN_DE_FONDO = pygame.image.load("Proyecto Unidad 2/imagenes/BG_MAIN_MENU.png")
+IMAGEN_DE_FONDO = pygame.image.load("imagenes/BG_MAIN_MENU.png")
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
+#FUNCIONES GENERALES
 def get_font(tamaño):
     return pygame.font.Font(None,tamaño)
 
@@ -33,6 +34,61 @@ def genera_terreno_pixel(pantalla, matriz):
         i+=1
 
     return matriz
+
+def mostrar_distancias(tanque1, tanque2, bala):
+        bala.update(tanque1,tanque2)
+        #Altura bala
+        interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
+        interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
+        interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala.coordenadas_altura_max))
+        #Distancia bala
+        interfaz.text_distancia_maxima = str(bala.distancia_max) + "metros"
+        interfaz.text_surface_distancia_maxima = interfaz.vGlobales.font.render(interfaz.text_distancia_maxima, True, interfaz.vGlobales.NEGRO)
+        interfaz.text_surface_distancia_maxima_rect = interfaz.text_surface_distancia_maxima.get_rect(center = (bala.coordenadas_distancia))
+
+def calcular_recorrido(bala, reco):
+        if (bala.contador_recorrido % 5) == 0 and bala.caida == True :
+            reco = reco + [(bala.rect.x, bala.rect.y)]
+        return reco
+
+def mostrar_recorrido(reco):
+    i=0
+    while (i<len(reco)):
+        pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(reco[i]),5)
+        i+=1
+
+def descuento_balas_tanque1(bala,turno_pasado):
+    if turno_pasado == 0:
+        bala.unidades_tanque1 -= 1
+        print("balas tanque 1: ", bala.unidades_tanque1)
+
+def descuento_balas_tanque2(bala,turno_pasado):
+    if turno_pasado == 0:
+        bala.unidades_tanque2 -= 1
+        print("balas tanque 2: ", bala.unidades_tanque2)
+        
+def destruccion_terreno(bala, pixel_array, nueva_superficie):
+    pixel_array = bala.rompe_terreno(pixel_array,bala.tipo/2,bala.rect.center)
+    nueva_superficie = pixel_array.make_surface()
+    bala.explosion=0
+    return nueva_superficie
+
+def animacion_explosion(radio_bala, bala):
+    i = 0
+    while i < radio_bala:
+        pygame.draw.circle(DISPLAYSURF,'black',(bala.rect.center),i/2)
+        i+=0.5
+        pygame.display.flip()
+
+def disparar_bala(event, bala, turno_pasado, turno_jugador, tanque, recorrido):
+    turno_pasado = interfaz.click_mouse(event, bala, tanque, turno_pasado, turno_jugador)
+    descuento_balas_tanque1(bala, turno_pasado)
+    #limpia recorrido de la bala si no esta en mivimiento
+    if (bala.caida == False):
+        recorrido.clear()
+    return turno_pasado
+
+#FUNCIONES PRINCIPALES
 def opciones():
     pygame.display.set_caption("Opciones")
     while True:
@@ -103,20 +159,20 @@ def menu_principal():
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
                     #Testeoaa de musica al inicio del juego tiene que estar atento a cambios
                     mixer.music.fadeout(1500)
-                    mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
+                    mixer.music.load("sonidos_musica/init_game.mp3")
                     mixer.music.play(-1)
                     partida()
         pygame.display.update()
 
 def partida():
     #Cargar imagenes
-    icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
+    icono = pygame.image.load("imagenes/tanque.png")
     pygame.display.set_icon(icono)
-    fondo = pygame.image.load("Proyecto Unidad 2/imagenes/fondo.png")
+    fondo = pygame.image.load("imagenes/fondo.png")
     DISPLAYSURF.blit(fondo, (0,0))
     #Skin jugadores
-    skin1 = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
-    skin2 = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
+    skin1 = pygame.image.load("imagenes/skin1.png")
+    skin2 = pygame.image.load("imagenes/skin2.png")
 
     #Objetos en pantalla
     sprites = pygame.sprite.Group()
@@ -130,6 +186,7 @@ def partida():
     sprites.add(bala_m)
     sprites.add(bala_c)
     recorrido = []
+    bala_principal = bala_c
 
     #Creacion de variables en main (por ahora)
     turno_jugador = 2
@@ -141,50 +198,6 @@ def partida():
     pixel_array = pygame.PixelArray(pantalla_juego)
     pixel_array = genera_terreno_pixel(DISPLAYSURF,pixel_array)
     nueva_superficie = pixel_array.make_surface()
-
-    def mostrar_distancias(tanque1, tanque2, bala):
-        bala.update(tanque1,tanque2)
-        #Altura bala
-        interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
-        interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
-        interfaz.text_surface_altura_maxima_rect = interfaz.text_surface_altura_maxima.get_rect(center = (bala.coordenadas_altura_max))
-        #Distancia bala
-        interfaz.text_distancia_maxima = str(bala.distancia_max) + "metros"
-        interfaz.text_surface_distancia_maxima = interfaz.vGlobales.font.render(interfaz.text_distancia_maxima, True, interfaz.vGlobales.NEGRO)
-        interfaz.text_surface_distancia_maxima_rect = interfaz.text_surface_distancia_maxima.get_rect(center = (bala.coordenadas_distancia))
-
-    def calcular_recorrido(bala, reco):
-        if (bala.contador_recorrido % 5) == 0 and bala.caida == True :
-            reco = reco + [(bala.rect.x, bala.rect.y)]
-        return reco
-    
-    def mostrar_recorrido(reco):
-        i=0
-        while (i<len(reco)):
-            pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(reco[i]),5)
-            i+=1
-
-    def descuento_balas_tanque1(bala):
-        if turno_pasado == 0:
-            bala.unidades_tanque1 -= 1
-            print("balas tanque 1: ", bala.unidades_tanque1)
-    def descuento_balas_tanque2(bala):
-        if turno_pasado == 0:
-            bala.unidades_tanque2 -= 1
-            print("balas tanque 2: ", bala.unidades_tanque2)
-            
-    def destruccion_terreno(bala, pixel_array, nueva_superficie):
-        pixel_array = bala.rompe_terreno(pixel_array,bala.tipo/2,bala.rect.center)
-        nueva_superficie = pixel_array.make_surface()
-        bala.explosion=0
-        return nueva_superficie
-    
-    def animacion_explosion(radio_bala, bala):
-        i = 0
-        while i < radio_bala:
-            pygame.draw.circle(DISPLAYSURF,'black',(bala.rect.center),i/2)
-            i+=0.5
-            pygame.display.flip()
 
     while True:
         #Dibujo de la pantalla
@@ -220,32 +233,21 @@ def partida():
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 interfaz.click_mouse_inventario(event.pos)
+                
                 if turno_jugador == 1:
                     if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque1 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque1, turno_pasado, turno_jugador)
-                        descuento_balas_tanque1(bala_c)
-                        recorrido.clear()
+                        turno_pasado =disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, tanque1, recorrido)
                     if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque1 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque1, turno_pasado, turno_jugador)
-                        descuento_balas_tanque1(bala_m)
-                        recorrido.clear()   
+                        turno_pasado =disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, tanque1, recorrido)
                     if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque1 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque1, turno_pasado, turno_jugador)
-                        descuento_balas_tanque1(bala_g)
-                        recorrido.clear()      
+                        turno_pasado =disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, tanque1, recorrido)
                 else:
                     if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque2 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_c,tanque2, turno_pasado, turno_jugador)
-                        descuento_balas_tanque2(bala_c)
-                        recorrido.clear()                    
+                        turno_pasado =disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, tanque2, recorrido)                   
                     if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque2 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_m,tanque2, turno_pasado, turno_jugador)
-                        descuento_balas_tanque2(bala_m)
-                        recorrido.clear()
+                        turno_pasado =disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, tanque2, recorrido)
                     if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque2 > 0:
-                        turno_pasado = interfaz.click_mouse(event.pos,bala_g,tanque2, turno_pasado, turno_jugador)
-                        descuento_balas_tanque2(bala_g)
-                        recorrido.clear()
+                        turno_pasado =disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, tanque2, recorrido)
             if event.type == pygame.KEYDOWN:
                 interfaz.escribir(event)
         #SPRITES
@@ -271,14 +273,12 @@ def partida():
         #Recorrido de la bala
         if interfaz.minibox_bala1_active == True:
             recorrido = calcular_recorrido(bala_c, recorrido)
-            mostrar_recorrido(recorrido)
         if interfaz.minibox_bala2_active == True:
             recorrido = calcular_recorrido(bala_m, recorrido)
-            mostrar_recorrido(recorrido)
         if interfaz.minibox_bala3_active == True:
             recorrido = calcular_recorrido(bala_g, recorrido)
-            mostrar_recorrido(recorrido)
-        
+        mostrar_recorrido(recorrido)
+
         #Skins
         DISPLAYSURF.blit(skin1, (tanque1.rect.x-10,tanque1.rect.y-5))
         DISPLAYSURF.blit(skin2, (tanque2.rect.x-10,tanque2.rect.y-5))
@@ -295,6 +295,7 @@ def partida():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         pygame.quit()
                         sys.exit()
+
         #Inicio de interfaz
         if turno_jugador == 1:
             interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1)
@@ -311,7 +312,11 @@ def partida():
             animacion_explosion(vGlobales.bala_grande,bala_g)
         pygame.display.flip()
         RELOJ.tick(vGlobales.FPS)
+
+#EJECUCION
 menu_principal()
+
+
 #Fin de creacion de metodos del menu
 
 #CAMBIOS REALIZADOS
