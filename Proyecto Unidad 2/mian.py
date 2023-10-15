@@ -82,7 +82,10 @@ def animacion_explosion(radio_bala, bala):
 
 def disparar_bala(event, bala, turno_pasado, turno_jugador, tanque, recorrido):
     turno_pasado = interfaz.click_mouse(event, bala, tanque, turno_pasado, turno_jugador)
-    descuento_balas_tanque1(bala, turno_pasado)
+    if (turno_jugador == 1):
+        descuento_balas_tanque1(bala, turno_pasado)
+    else:
+        descuento_balas_tanque2(bala,turno_pasado)
     #limpia recorrido de la bala si no esta en mivimiento
     if (bala.caida == False):
         recorrido.clear()
