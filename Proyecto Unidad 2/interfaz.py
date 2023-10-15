@@ -74,6 +74,26 @@ class Interfazz():
         self.text_bala_g = "G"
         self.text_surface_bala_g = self.vGlobales.font.render(self.text_bala_g,True,self.vGlobales.NEGRO)
         #Voy a usar minibox_bala como los rectangulos de estos textos, despues de todo esto es temporal
+        #Creacion de pequeña caja para desplegar un mini menu
+        self.boton_abrir_minimenu = "+"
+        self.boton_surface_abrir_minimenu = self.vGlobales.font.render(self.boton_abrir_minimenu,True,self.vGlobales.NEGRO)
+        self.boton_abrir_minimenu_rect = pygame.Rect(260,0,40,40)
+        self.boton_abrir_minimenu_color = self.vGlobales.gris
+        #Creacion de booleano que dependiendo de su valor, vera si se debera imprimir el boton para abrir el minimenu o no
+        self.boton_abrir_minimenu_active = False
+        #Creacion de variables de minimenu
+        self.boton_nueva_partida = "Nueva partida"
+        self.boton_surface_nueva_partida = self.vGlobales.font4.render(self.boton_nueva_partida,True,self.vGlobales.NEGRO)
+        self.boton_nueva_partida_rect = pygame.Rect(270,10,150,30)
+        self.boton_nueva_partida_color = self.vGlobales.verde
+        self.boton_salir = "Salir"
+        self.boton_surface_salir = self.vGlobales.font4.render(self.boton_salir,True,self.vGlobales.NEGRO)
+        self.boton_salir_rect = pygame.Rect(430,10,60,30)
+        self.boton_salir_color = self.vGlobales.ROJO
+        self.boton_cerrar_minimenu = "x"
+        self.boton_surface_cerrar_minimenu = self.vGlobales.font.render(self.boton_cerrar_minimenu,True,self.vGlobales.NEGRO)
+        self.boton_cerrar_minimenu_rect = pygame.Rect(500,0,40,50)
+        self.boton_cerrar_minimenu_color = self.vGlobales.grisclaro
 
     def interfaz(self):
         #Texto que dice Angulo...
@@ -159,6 +179,12 @@ class Interfazz():
             except ValueError:
                 self.textbox_angulo = ""
                 self.textbox_velocidad_inicial = ""
+        #Condicion de click para el boton que desplegara el minimenu
+        if self.boton_abrir_minimenu_rect.collidepoint(posicion_muose):
+            self.boton_abrir_minimenu_active = True
+        if self.boton_abrir_minimenu_active == True:
+            if self.boton_cerrar_minimenu_rect.collidepoint(posicion_muose):
+                self.boton_abrir_minimenu_active = False
 
     def click_mouse_inventario(self, posicion_muose):
         #Condicion de click para la caja de inventario
@@ -244,6 +270,18 @@ class Interfazz():
         self.vGlobales.PANTALLA.blit(self.text_surface_bala_c,(self.minibox_bala1.x + 30, self.minibox_bala1.y + 30))
         self.vGlobales.PANTALLA.blit(self.text_surface_bala_m,(self.minibox_bala2.x + 30, self.minibox_bala2.y + 30))
         self.vGlobales.PANTALLA.blit(self.text_surface_bala_g,(self.minibox_bala3.x + 30, self.minibox_bala3.y + 30))
+        #IMPRESION DE BOTON PARA ABRIR EL MINIMENU
+        if self.boton_abrir_minimenu_active == False:
+            pygame.draw.rect(self.vGlobales.PANTALLA, self.boton_abrir_minimenu_color, self.boton_abrir_minimenu_rect)
+            self.vGlobales.PANTALLA.blit(self.boton_surface_abrir_minimenu,(self.boton_abrir_minimenu_rect.x + 10, self.boton_abrir_minimenu_rect.y + 5))
+        else:
+            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris,(260,0,280,50))
+            pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_nueva_partida_color,self.boton_nueva_partida_rect)
+            self.vGlobales.PANTALLA.blit(self.boton_surface_nueva_partida,(self.boton_nueva_partida_rect.x + 5, self.boton_nueva_partida_rect.y + 5))
+            pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_salir_color,self.boton_salir_rect)
+            self.vGlobales.PANTALLA.blit(self.boton_surface_salir,(self.boton_salir_rect.x + 5,self.boton_salir_rect.y + 5))
+            pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_cerrar_minimenu_color,self.boton_cerrar_minimenu_rect)
+            self.vGlobales.PANTALLA.blit(self.boton_surface_cerrar_minimenu,(self.boton_cerrar_minimenu_rect.x + 12, self.boton_cerrar_minimenu_rect.y + 10))
         #CAMBIOS REALIZADOS
         #1.- EN INIT SE CREARON LAS VARIABLES PARA HACER LA CAJA DE INVENTARIO
         #2.- EN PRINT_INTERFAZ SE AGREGO LOS COMANDOS PARA DIBUJAR Y ACTUALIZAR EL INVENTARIO
@@ -255,3 +293,11 @@ class Interfazz():
         #3.- Linea 232 aprox se empiezan a conseguir e imprimir la municion de las balas
         #4.- Linea 69 aprox, se van a crear ciertas cajas de textos que mas adelante se eliminaran para ser reemplazados por imagenes de balas
         #5.- Linea 243 aprox, se empieza a imprimir el texto temporal
+
+        #NUEVOS CAMBIOS (FRANCO ARENAS) 12-10-2023
+        #1.- Voy a intentar hacer que se pueda mostrar una caja con una flecha abajo o algo asi por el estilo para poder imprimir un mini menu en la partida para cuando se quiera reiniciar la partida o salir de esta
+        #2.- Linea 77 Creacion de variables para el boton que desplegara el minimenu
+        #3.- Linea 254 Impresion de boton para abrir el minimenu
+        #4.- Linea 84 Creacion de variables para el boton de nueva partida
+        #5.- Linea 174 Condicion para que se despliegue el minimenu
+        #6.- Linea 264 Condicion para Impresion de minimenu
