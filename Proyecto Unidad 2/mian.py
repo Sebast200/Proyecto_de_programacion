@@ -6,7 +6,7 @@ from pygame import mixer
 pygame.init()
 interfaz = interfaz.Interfazz()
 #Musica de fondo
-mixer.music.load("sonidos_musica/background.mp3")
+mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
 mixer.music.play(-1)
 #variables globales
 vGlobales = globales.Globaless()
@@ -15,7 +15,7 @@ RELOJ = pygame.time.Clock()
 DISPLAYSURF = vGlobales.PANTALLA 
 pygame.display.set_caption("Tanques Lovers Juego")
 #Creacion de variable de imagen de fondo
-IMAGEN_DE_FONDO = pygame.image.load("imagenes/BG_MAIN_MENU.png")
+IMAGEN_DE_FONDO = pygame.image.load("Proyecto unidad 2/imagenes/BG_MAIN_MENU.png")
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
 #FUNCIONES GENERALES
 def get_font(tamaño):
@@ -90,9 +90,28 @@ def disparar_bala(event, bala, turno_pasado, turno_jugador, tanque, recorrido):
     if (bala.caida == False):
         recorrido.clear()
     return turno_pasado
+    
+def soldado_durmiendo_anim(current_sprite,pos_x,pos_y):
+
+    sprite_set = []
+    sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_1.png"))
+    sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_2.png"))
+    sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_3.png"))
+    sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_4.png"))
+    sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_5.png"))
+
+    current_sprite = current_sprite + 0.025
+    if current_sprite < 5:
+        DISPLAYSURF.blit(sprite_set[int(current_sprite)], (pos_x,pos_y))
+    else:
+        DISPLAYSURF.blit(sprite_set[4], (pos_x,pos_y))
+    if current_sprite >= 5:
+        return 0
+    else:
+        return current_sprite
 
 #FUNCIONES PRINCIPALES
-def opciones():
+def opciones(contador_soldado_anim):
     pygame.display.set_caption("Opciones")
     while True:
         #blit es un metodo usado para copiar una superficie ya sea una imagen o texto, en otra superficie
@@ -105,9 +124,10 @@ def opciones():
 
 
         #Creacion de botones
-        BOTON_VOLVER = Button(image=None, pos=(640,550), text_input="VOLVER", font=get_font(75), base_color=vGlobales.ROJO, hovering_color=vGlobales.BLANCO)
+        BOTON_VOLVER = Button(image=None, pos=(640,550), text_input="VOLVER", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
         
         #usamos blit para poner el texto de TEXTO_MENU en la ventana centrado con MENU_RECT
+        contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
         DISPLAYSURF.blit(TEXTO_OPCIONES, OPCIONES_RECT)
         DISPLAYSURF.blit(TEXTO_DESCRIPCION, DESCRIPCION_RECT)
         
@@ -127,18 +147,19 @@ def opciones():
         pygame.display.update()
 
 def menu_principal():
+    contador_soldado_anim = 0
     pygame.display.set_caption("Menu")
     while True:
         #blit es un metodo usado para copiar una superficie ya sea una imagen o texto, en otra superficie
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        TEXTO_MENU = vGlobales.font3.render("MENU PRINCIPAL", True, vGlobales.BLANCO)
+        TEXTO_MENU = vGlobales.font3.render("TANK LOVER'S GAME", True, vGlobales.BLANCO)
         MENU_RECT = TEXTO_MENU.get_rect(center=(640, 100))
-
+        contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
         #Creacion de botones
-        BOTON_JUGAR = Button(image=None, pos=(320,350), text_input="JUGAR", font=get_font(75), base_color=vGlobales.ROJO, hovering_color=vGlobales.BLANCO)
-        BOTON_OPCIONES = Button(image=None, pos=(960,350),text_input="OPCIONES", font=get_font(75), base_color=vGlobales.ROJO, hovering_color=vGlobales.BLANCO)
-        BOTON_SALIR = Button(image= None, pos=(640,550),text_input="SALIR", font=get_font(75), base_color=vGlobales.ROJO,hovering_color=vGlobales.BLANCO)
+        BOTON_JUGAR = Button(image=None, pos=(400,290), text_input="JUGAR", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
+        BOTON_OPCIONES = Button(image=None, pos=(400,415),text_input="OPCIONES", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
+        BOTON_SALIR = Button(image= None, pos=(400,540),text_input="SALIR", font=get_font(75), base_color=vGlobales.verde_oscuro,hovering_color=vGlobales.BLANCO)
 
         #usamos blit para poner el texto de TEXTO_MENU en la ventana centrado con MENU_RECT
         DISPLAYSURF.blit(TEXTO_MENU, MENU_RECT)
@@ -154,7 +175,7 @@ def menu_principal():
             #Cosas que pasaran si ocurren los siguientes eventos
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if BOTON_OPCIONES.checkForInput(MENU_MOUSE_POS):
-                    opciones()
+                    opciones(contador_soldado_anim)
                 if BOTON_SALIR.checkForInput(MENU_MOUSE_POS):
                     #Si la persona le hace click al boton de salir, se cerrara el programa
                     pygame.quit()
@@ -162,20 +183,21 @@ def menu_principal():
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
                     #Testeoaa de musica al inicio del juego tiene que estar atento a cambios
                     mixer.music.fadeout(1500)
-                    mixer.music.load("sonidos_musica/init_game.mp3")
+                    mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
                     mixer.music.play(-1)
                     partida()
         pygame.display.update()
 
 def partida():
     #Cargar imagenes
-    icono = pygame.image.load("imagenes/tanque.png")
+    vGlobales.seleccion_terreno = 0
+    icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
     pygame.display.set_icon(icono)
-    fondo = pygame.image.load("imagenes/fondo.png")
+    fondo = pygame.image.load("Proyecto Unidad 2/imagenes/fondo.png")
     DISPLAYSURF.blit(fondo, (0,0))
     #Skin jugadores
-    skin1 = pygame.image.load("imagenes/skin1.png")
-    skin2 = pygame.image.load("imagenes/skin2.png")
+    skin1 = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
+    skin2 = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
 
     #Objetos en pantalla
     sprites = pygame.sprite.Group()

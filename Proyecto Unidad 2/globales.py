@@ -50,6 +50,7 @@ class Globaless():
         self.celeste = (53,197,255)
         self.grisclaro = (217,217,217)
         self.rojo_oscuro = (189,17,17)
+        self.verde_oscuro = (25,142,13)
 
         #FPS
         self.FPS = (90)
