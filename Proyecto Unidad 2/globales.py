@@ -57,10 +57,10 @@ class Globaless():
         RELOJ = pygame.time.Clock()
 
         #Fuente
-        self.font = pygame.font.Font(None,36)
-        self.font2 = pygame.font.Font(None,50)
-        self.font3 = pygame.font.Font(None,100)
-        self.font4 = pygame.font.Font(None,30)
+        self.font = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",30)
+        self.font2 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",50)
+        self.font3 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",100)
+        self.font4 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",20)
 
     def generar_terreno(self):
         if self.seleccion_terreno == 0:
