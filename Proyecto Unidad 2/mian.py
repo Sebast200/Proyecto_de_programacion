@@ -19,7 +19,7 @@ IMAGEN_DE_FONDO = pygame.image.load("Proyecto unidad 2/imagenes/BG_MAIN_MENU.png
 #Creacion de metodos del menu. estos metodos los podemos intentar tirar a una clase despues si quieren
 #FUNCIONES GENERALES
 def get_font(tamaño):
-    return pygame.font.Font(None,tamaño)
+    return pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",tamaño)
 
 def genera_terreno_pixel(pantalla, matriz):
     i = vGlobales.ancho_gris
