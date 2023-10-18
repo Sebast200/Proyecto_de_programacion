@@ -91,6 +91,11 @@ class Interfazz():
         self.boton_surface_cerrar_minimenu = self.vGlobales.font.render(self.boton_cerrar_minimenu,True,self.vGlobales.NEGRO)
         self.boton_cerrar_minimenu_rect = pygame.Rect(500,0,40,50)
         self.boton_cerrar_minimenu_color = self.vGlobales.grisclaro
+        #Creacion de variables que mostraran la vida de los tanques
+        self.text_vida_jugador1 = ""
+        self.text_vida_jugador1_color = self.vGlobales.rojo_oscuro
+        self.text_vida_jugador2 = ""
+        self.text_vida_jugador2_color = self.vGlobales.rojo_oscuro
 
     def interfaz(self):
         #Texto que dice Angulo...
@@ -134,6 +139,8 @@ class Interfazz():
                 self.textbox_angulo = ""
                 self.textbox_velocidad_inicial = ""
 
+                #Aqui antes se cambiaba de valor text_jugador1, ahora lo borrare
+                '''
                 if turno_jugador == 1:
                     self.text_jugador1 = "Jugador 2"
                     self.text_surface_jugador1 = self.vGlobales.font.render(self.text_jugador1, True, self.vGlobales.ROJO)
@@ -142,6 +149,7 @@ class Interfazz():
                     self.text_jugador1 = "Jugador 1"
                     self.text_surface_jugador1 = self.vGlobales.font.render(self.text_jugador1, True, self.vGlobales.AZUL)
                     self.text_surface_jugador1_rect = self.text_surface_jugador1.get_rect(center = (120,40))
+                '''
 
         except ValueError:
             self.textbox_angulo = ""
@@ -229,7 +237,7 @@ class Interfazz():
                     if len(self.textbox_velocidad_inicial)<3:
                         self.textbox_velocidad_inicial += evento.unicode
 
-    def print_interfaz (self, bala_c, bala_m, bala_g):
+    def print_interfaz (self, bala_c, bala_m, bala_g, tanque1, tanque2):
         #AQUI SE DIBUJARA Y SE ACTUALIZARA LAS CAJAS DE TEXTO Y EL BOTON DE DISPARO
         pygame.draw.rect(self.vGlobales.PANTALLA ,self.vGlobales.gris, self.textbox_angulo_rect)
         self.textbox_angulo_surface = self.vGlobales.font.render(self.textbox_angulo, True, self.vGlobales.NEGRO)
@@ -279,6 +287,13 @@ class Interfazz():
             self.vGlobales.PANTALLA.blit(self.boton_surface_salir,(self.boton_salir_rect.x + 5,self.boton_salir_rect.y + 5))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_cerrar_minimenu_color,self.boton_cerrar_minimenu_rect)
             self.vGlobales.PANTALLA.blit(self.boton_surface_cerrar_minimenu,(self.boton_cerrar_minimenu_rect.x + 12, self.boton_cerrar_minimenu_rect.y + 10))
+        #RECOLECCION DE DATOS E IMPRESION DE VIDA DEBAJO DE LOS TANQUES
+        self.text_vida_jugador1 = str(tanque1.vida)
+        self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
+        self.text_vida_jugador2 = str(tanque2.vida)
+        self.text_surface_vida_jugador2 = self.vGlobales.font4.render(self.text_vida_jugador2,True,self.text_vida_jugador2_color)
+        self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador1,(tanque1.rect.x - 10,tanque1.rect.y + 15))
+        self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador2,(tanque2.rect.x - 5,tanque2.rect.y + 15))
         #CAMBIOS REALIZADOS
         #1.- EN INIT SE CREARON LAS VARIABLES PARA HACER LA CAJA DE INVENTARIO
         #2.- EN PRINT_INTERFAZ SE AGREGO LOS COMANDOS PARA DIBUJAR Y ACTUALIZAR EL INVENTARIO
@@ -298,3 +313,10 @@ class Interfazz():
         #4.- Linea 84 Creacion de variables para el boton de nueva partida
         #5.- Linea 174 Condicion para que se despliegue el minimenu
         #6.- Linea 264 Condicion para Impresion de minimenu
+
+        #NUEVOS CAMBIOS (FRANCO ARENAS) 18-10-2023
+        #1.- Voy a hacer que se vea la vida en los tanques
+        #2.- Linea 235 hice que pida otras cosas adicionales el metodo de print_interfaz()
+        #3.- Linea 97 creacion de variables que mostraran la vida de cada uno de los tanques (en este caso por ahora son solo 2)
+        #4.- Linea 290 recoleccion e impresion de vida de los tanques
+        #5.- Linea 145 se borro la seccion de codigo en la que se cambiaba el valor de text_jugador1 para que mostrara de quien era el turno
