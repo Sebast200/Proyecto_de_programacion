@@ -257,7 +257,7 @@ class Interfazz():
         #NUMEROS MAGICOS
         self.vGlobales.PANTALLA.blit(self.textbox_angulo_surface, (self.textbox_angulo_rect.x + 15, self.textbox_angulo_rect.y + 10))
         self.vGlobales.PANTALLA.blit(self.textbox_velocidad_inicial_surface,(self.textbox_velocidad_inicial_rect.x + 15, self.textbox_velocidad_inicial_rect.y + 10))
-        self.vGlobales.PANTALLA.blit(self.text_boton_jugador_surface, (self.text_boton_jugador_rect.x + 65, self.text_boton_jugador_rect.y + 25))
+        self.vGlobales.PANTALLA.blit(self.text_boton_jugador_surface, (self.text_boton_jugador_rect.x + 55, self.text_boton_jugador_rect.y + 25))
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
 
         #AQUI SE CONSEGUIRAN LOS DATOS PARA LA IMPRESION DE LA MUNICION DE LAS BALAS DEL TANQUE
@@ -282,9 +282,9 @@ class Interfazz():
         else:
             pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris,(260,0,280,50))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_nueva_partida_color,self.boton_nueva_partida_rect)
-            self.vGlobales.PANTALLA.blit(self.boton_surface_nueva_partida,(self.boton_nueva_partida_rect.x + 5, self.boton_nueva_partida_rect.y + 5))
+            self.vGlobales.PANTALLA.blit(self.boton_surface_nueva_partida,(self.boton_nueva_partida_rect.x + 12, self.boton_nueva_partida_rect.y + 7))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_salir_color,self.boton_salir_rect)
-            self.vGlobales.PANTALLA.blit(self.boton_surface_salir,(self.boton_salir_rect.x + 5,self.boton_salir_rect.y + 5))
+            self.vGlobales.PANTALLA.blit(self.boton_surface_salir,(self.boton_salir_rect.x + 10,self.boton_salir_rect.y + 7))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_cerrar_minimenu_color,self.boton_cerrar_minimenu_rect)
             self.vGlobales.PANTALLA.blit(self.boton_surface_cerrar_minimenu,(self.boton_cerrar_minimenu_rect.x + 12, self.boton_cerrar_minimenu_rect.y + 10))
         #RECOLECCION DE DATOS E IMPRESION DE VIDA DEBAJO DE LOS TANQUES
