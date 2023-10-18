@@ -1,5 +1,6 @@
 import pygame, sys, globales, math
 from pygame.locals import *
+from pygame import mixer
 
 class Tankes (pygame.sprite.Sprite):
     #Constructor
@@ -16,6 +17,8 @@ class Tankes (pygame.sprite.Sprite):
         self.image.fill(_color)
         self.rect = self.image.get_rect()
         self.rect.center = (posicion_inicial, 200)
+        self.color = self.vGlobales.BLANCO  #Por si el tanque llegase a salir de la pantalla se crea el self color para 
+                                            #la colision, sujeto a cambios de ser necesario
 
         #actualiza la posicion del tanque
     def update(self):
@@ -26,9 +29,13 @@ class Tankes (pygame.sprite.Sprite):
 
     def caida_Tanque(self):
         #Colision con color del terreno
-        color = self.vGlobales.PANTALLA.get_at((self.rect.midbottom[0],self.rect.midbottom[1]))
-        color = (color[0], color[1], color[2])
-        if (color == self.vGlobales.verde):
+        if self.rect.y < self.vGlobales.HEIGHT - self.alto:
+            self.color = self.vGlobales.PANTALLA.get_at((self.rect.midbottom[0],self.rect.midbottom[1]))
+            self.color = (self.color[0], self.color[1], self.color[2])
+        if (self.color == self.vGlobales.verde):
             self.caida = False
         else:
             self.caida = True
+        if self.rect.y >= 725:
+            self.caida = False
+    

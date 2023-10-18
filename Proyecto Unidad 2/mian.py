@@ -100,15 +100,40 @@ def soldado_durmiendo_anim(current_sprite,pos_x,pos_y):
     sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_4.png"))
     sprite_set.append(pygame.image.load("Proyecto Unidad 2/imagenes/Sleeping_soldier_5.png"))
 
-    current_sprite = current_sprite + 0.025
+    current_sprite = current_sprite + 0.04
     if current_sprite < 5:
         DISPLAYSURF.blit(sprite_set[int(current_sprite)], (pos_x,pos_y))
     else:
-        DISPLAYSURF.blit(sprite_set[4], (pos_x,pos_y))
-    if current_sprite >= 5:
+        DISPLAYSURF.blit(sprite_set[0], (pos_x,pos_y))
+    if current_sprite >= 12:
         return 0
     else:
         return current_sprite
+
+def fatality(fatality_check):
+    if fatality_check == 0:
+        mixer.music.load("Proyecto Unidad 2/sonidos_musica/fatality_bgm_1.mp3")
+        mixer.music.play()
+        mixer.music.queue("Proyecto Unidad 2/sonidos_musica/man_burning.mp3")
+        fatality_check = 1
+    if fatality_check == 1 and mixer.music.get_busy() == False:
+        mixer.music.load("Proyecto Unidad 2/sonidos_musica/fatality_bgm_2.mp3")
+        mixer.music.play(loops=0)
+        burning_sound = mixer.Sound("Proyecto Unidad 2/sonidos_musica/burning_effect.mp3")
+        burning_sound.play()
+        fatality_check = 2
+    elif fatality_check == 2:
+        if mixer.music.get_pos() >= 500:
+            fatality_sound = mixer.Sound("Proyecto Unidad 2/sonidos_musica/fatality_sfx.mp3")
+            fatality_sound.play()
+            fatality_check = 3
+    if fatality_check == 3:
+        fatality = pygame.image.load("Proyecto Unidad 2/imagenes/fatality.png")
+        DISPLAYSURF.blit(fatality, (620,170))
+    if fatality_check == 3 and mixer.music.get_busy() == False:
+        pygame.quit()
+        sys.exit()
+    return fatality_check
 
 #FUNCIONES PRINCIPALES
 def opciones(contador_soldado_anim):
@@ -182,13 +207,12 @@ def menu_principal():
                     sys.exit()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
                     #Testeoaa de musica al inicio del juego tiene que estar atento a cambios
-                    mixer.music.fadeout(1500)
-                    mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
-                    mixer.music.play(-1)
                     partida()
         pygame.display.update()
 
 def partida():
+    mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
+    mixer.music.play(-1)
     #Cargar imagenes
     vGlobales.seleccion_terreno = 0
     icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
@@ -218,19 +242,20 @@ def partida():
     turno_pasado = 0 
 
     #generacion del terreno
-    vGlobales.generar_terreno()
+    #vGlobales.generar_terreno()
     pantalla_juego = pygame.Surface((vGlobales.WIDTH-vGlobales.ancho_gris,vGlobales.HEIGHT),pygame.SRCALPHA)
     pixel_array = pygame.PixelArray(pantalla_juego)
     pixel_array = genera_terreno_pixel(DISPLAYSURF,pixel_array)
     nueva_superficie = pixel_array.make_surface()
 
+    #Test
+    fatality_count = 0
     #Creacion de booleano para ver si se le hizo click al boton de nueva partida (por ahora)
     nueva_partida = False
 
     while True:
         #Dibujo de la pantalla
         DISPLAYSURF.blit(fondo,(0,0))
-
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
         if (bala_c.explosion == 1 and bala_c.caida == False):
@@ -338,6 +363,9 @@ def partida():
             interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
+        #Easter Egg
+        if tanque1.rect.y >= 720:
+            fatality_count = fatality(fatality_count)
         ####
         if bala_c.explosion == 1:
             animacion_explosion(vGlobales.bala_chica, bala_c)
