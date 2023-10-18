@@ -221,8 +221,11 @@ def partida():
     fondo = pygame.image.load("Proyecto Unidad 2/imagenes/fondo.png")
     DISPLAYSURF.blit(fondo, (0,0))
     #Skin jugadores
-    skin1 = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
-    skin2 = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
+    skin1_tanque = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
+    skin2_tanque = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
+    skin_bala_c = pygame.image.load("Proyecto Unidad 2/imagenes/bala_c_img.png")
+    skin_bala_m = pygame.image.load("Proyecto Unidad 2/imagenes/bala_m_img.png")
+    skin_bala_g = pygame.image.load("Proyecto Unidad 2/imagenes/bala_g_img.png")
 
     #Objetos en pantalla
     sprites = pygame.sprite.Group()
@@ -341,8 +344,14 @@ def partida():
         mostrar_recorrido(recorrido)
 
         #Skins
-        DISPLAYSURF.blit(skin1, (tanque1.rect.x-10,tanque1.rect.y-5))
-        DISPLAYSURF.blit(skin2, (tanque2.rect.x-10,tanque2.rect.y-5))
+        DISPLAYSURF.blit(skin1_tanque, (tanque1.rect.x-10,tanque1.rect.y-5))
+        DISPLAYSURF.blit(skin2_tanque, (tanque2.rect.x-10,tanque2.rect.y-5))
+        if interfaz.minibox_bala1_active == True:
+            DISPLAYSURF.blit(skin_bala_c, (bala_c.rect.x-17,bala_c.rect.y-17))
+        if interfaz.minibox_bala2_active == True:
+            DISPLAYSURF.blit(skin_bala_m, (bala_m.rect.x-17,bala_m.rect.y-17))
+        if interfaz.minibox_bala3_active == True:
+            DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
         
         #Game over
         if (tanque1.vida <= 0 or tanque2.vida <= 0):

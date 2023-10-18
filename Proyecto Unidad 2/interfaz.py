@@ -66,13 +66,10 @@ class Interfazz():
         self.text_municion_bala3 = ""
         self.text_surface_municion_bala3 = self.vGlobales.font4.render(self.text_municion_bala3, True,self.vGlobales.NEGRO)
         self.text_surface_municion_bala3_rect = pygame.Rect(165,560,75,40)
-        #Creacion de texto temporal que va a tener el inventario, nada revolucionario xdd
-        self.text_bala_c = "C"
-        self.text_surface_bala_c = self.vGlobales.font.render(self.text_bala_c,True,self.vGlobales.NEGRO)
-        self.text_bala_m = "M"
-        self.text_surface_bala_m = self.vGlobales.font.render(self.text_bala_m,True,self.vGlobales.NEGRO)
-        self.text_bala_g = "G"
-        self.text_surface_bala_g = self.vGlobales.font.render(self.text_bala_g,True,self.vGlobales.NEGRO)
+        #Creacion de las balas del inventario
+        self.bala_g_img = pygame.image.load("Proyecto Unidad 2/imagenes/bala_g_img.png")
+        self.bala_m_img = pygame.image.load("Proyecto Unidad 2/imagenes/bala_m_img.png")
+        self.bala_c_img = pygame.image.load("Proyecto Unidad 2/imagenes/bala_c_img.png")
         #Voy a usar minibox_bala como los rectangulos de estos textos, despues de todo esto es temporal
         #Creacion de pequeña caja para desplegar un mini menu
         self.boton_abrir_minimenu = "+"
@@ -266,10 +263,10 @@ class Interfazz():
         self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala1, (self.text_surface_municion_bala1_rect.x + 20, self.text_surface_municion_bala1_rect.y))
         self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala2, (self.text_surface_municion_bala2_rect.x + 20, self.text_surface_municion_bala2_rect.y))
         self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala3, (self.text_surface_municion_bala3_rect.x + 20, self.text_surface_municion_bala3_rect.y))
-        #IMPRESION DE TEXTO TEMPORAL
-        self.vGlobales.PANTALLA.blit(self.text_surface_bala_c,(self.minibox_bala1.x + 30, self.minibox_bala1.y + 30))
-        self.vGlobales.PANTALLA.blit(self.text_surface_bala_m,(self.minibox_bala2.x + 30, self.minibox_bala2.y + 30))
-        self.vGlobales.PANTALLA.blit(self.text_surface_bala_g,(self.minibox_bala3.x + 30, self.minibox_bala3.y + 30))
+        #IMPRESION DE LAS BALAS A USAR
+        self.vGlobales.PANTALLA.blit(self.bala_g_img,(self.minibox_bala3.x + 17, self.minibox_bala3.y + 17))
+        self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2.x + 17, self.minibox_bala2.y + 17))
+        self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1.x + 17, self.minibox_bala1.y + 17))
         #IMPRESION DE BOTON PARA ABRIR EL MINIMENU
         if self.boton_abrir_minimenu_active == False:
             pygame.draw.rect(self.vGlobales.PANTALLA, self.boton_abrir_minimenu_color, self.boton_abrir_minimenu_rect)
