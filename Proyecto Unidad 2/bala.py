@@ -170,10 +170,8 @@ class Balas (pygame.sprite.Sprite):
         
         if (Distancia1 <= self.tipo/2):
             print (self.daño * math.cos(Distancia1 / (22* math.acos(0))))
-            tanque1.vida = tanque1.vida - self.daño * math.cos(Distancia1 / (22* math.acos(0)))
-            print(tanque1.vida)
+            tanque1.vida = int(tanque1.vida - self.daño * math.cos(Distancia1 / (22* math.acos(0))))
         if (Distancia2 <= self.tipo/2):
             print (self.daño * math.cos(Distancia2 / (22* math.acos(0))))
-            tanque2.vida = tanque2.vida - self.daño * math.cos(Distancia2 / (22* math.acos(0)))
-            print(tanque2.vida)
+            tanque2.vida = int(tanque2.vida - self.daño * math.cos(Distancia2 / (22* math.acos(0))))
     
