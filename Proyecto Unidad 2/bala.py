@@ -29,7 +29,7 @@ class Balas (pygame.sprite.Sprite):
         self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
         self.caida = False
 
-    def update(self, tanque, tanque_enemigo):
+    def update(self, tanque, tanque_enemigo, superficie, pixel_array):
         #solo empezara el disparo si se ejecuto la funcion disparo
         if (self.caida == True):
             self.caida_Bala(tanque, tanque_enemigo)
@@ -39,9 +39,20 @@ class Balas (pygame.sprite.Sprite):
             self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.5
             self.timepo += 0.12
             self.contador_recorrido+=1
+            return superficie
+            
         else:
-            self.coord = (self.rect.x,self.rect.y)    
+            self.coord = (self.rect.x,self.rect.y)
+            if(self.explosion == 1):
+                superficie = self.destruccion_terreno(pixel_array, superficie) 
             self.retorno_bala()
+            return superficie
+
+    def destruccion_terreno(self, pixel_array, nueva_superficie):
+        pixel_array = self.rompe_terreno(pixel_array,self.tipo/2,self.rect.center)
+        nueva_superficie = pixel_array.make_surface()
+        self.explosion=0
+        return nueva_superficie
 
     def disparar (self,_angulo_grados, _angulo, _velocidad, tanque):
         self.velx = math.sin(_angulo) * _velocidad
@@ -68,6 +79,9 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
+            self.colision_explosion_tanque(tanque, tanque_enemigo)
+            #llamar funcion
+        
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= 0):
@@ -148,6 +162,18 @@ class Balas (pygame.sprite.Sprite):
                 j+=1
             i+=1
         return terreno
-
     
+
+    def colision_explosion_tanque (self, tanque1, tanque2):
+        Distancia1 = self.distancia(tanque1.rect.x, self.rect.x, tanque1.rect.y, self.rect.y)
+        Distancia2 = self.distancia(tanque2.rect.x, self.rect.x, tanque2.rect.y, self.rect.y)
+        
+        if (Distancia1 <= self.tipo/2):
+            print (self.daño * math.cos(Distancia1 / (22* math.acos(0))))
+            tanque1.vida = tanque1.vida - self.daño * math.cos(Distancia1 / (22* math.acos(0)))
+            print(tanque1.vida)
+        if (Distancia2 <= self.tipo/2):
+            print (self.daño * math.cos(Distancia2 / (22* math.acos(0))))
+            tanque2.vida = tanque2.vida - self.daño * math.cos(Distancia2 / (22* math.acos(0)))
+            print(tanque2.vida)
     

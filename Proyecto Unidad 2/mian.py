@@ -35,8 +35,8 @@ def genera_terreno_pixel(pantalla, matriz):
 
     return matriz
 
-def mostrar_distancias(tanque1, tanque2, bala):
-        bala.update(tanque1,tanque2)
+def mostrar_distancias(tanque1, tanque2, bala, superfice, pixel_array):
+        superfice = bala.update(tanque1,tanque2, superfice, pixel_array)
         #Altura bala
         interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
         interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
@@ -45,6 +45,7 @@ def mostrar_distancias(tanque1, tanque2, bala):
         interfaz.text_distancia_maxima = str(bala.distancia_max) + "metros"
         interfaz.text_surface_distancia_maxima = interfaz.vGlobales.font.render(interfaz.text_distancia_maxima, True, interfaz.vGlobales.NEGRO)
         interfaz.text_surface_distancia_maxima_rect = interfaz.text_surface_distancia_maxima.get_rect(center = (bala.coordenadas_distancia))
+        return superfice
 
 def calcular_recorrido(bala, reco):
         if (bala.contador_recorrido % 5) == 0 and bala.caida == True :
@@ -67,11 +68,11 @@ def descuento_balas_tanque2(bala,turno_pasado):
         bala.unidades_tanque2 -= 1
         print("balas tanque 2: ", bala.unidades_tanque2)
         
-def destruccion_terreno(bala, pixel_array, nueva_superficie):
+"""def destruccion_terreno(bala, pixel_array, nueva_superficie):
     pixel_array = bala.rompe_terreno(pixel_array,bala.tipo/2,bala.rect.center)
     nueva_superficie = pixel_array.make_surface()
     bala.explosion=0
-    return nueva_superficie
+    return nueva_superficie"""
 
 def animacion_explosion(radio_bala, bala):
     i = 0
@@ -242,7 +243,7 @@ def partida():
     turno_pasado = 0 
 
     #generacion del terreno
-    #vGlobales.generar_terreno()
+    vGlobales.generar_terreno()
     pantalla_juego = pygame.Surface((vGlobales.WIDTH-vGlobales.ancho_gris,vGlobales.HEIGHT),pygame.SRCALPHA)
     pixel_array = pygame.PixelArray(pantalla_juego)
     pixel_array = genera_terreno_pixel(DISPLAYSURF,pixel_array)
@@ -258,12 +259,12 @@ def partida():
         DISPLAYSURF.blit(fondo,(0,0))
         #Dibuja el terreno
         DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
-        if (bala_c.explosion == 1 and bala_c.caida == False):
+        """if (bala_c.explosion == 1 and bala_c.caida == False):
                 nueva_superficie = destruccion_terreno(bala_c, pixel_array, nueva_superficie)
         elif (bala_m.explosion == 1 and bala_m.caida == False):
             nueva_superficie = destruccion_terreno(bala_m, pixel_array, nueva_superficie)
         elif (bala_g.explosion == 1 and bala_g.caida == False):
-            nueva_superficie = destruccion_terreno(bala_g, pixel_array, nueva_superficie)
+            nueva_superficie = destruccion_terreno(bala_g, pixel_array, nueva_superficie)"""
         #Interfaz
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
@@ -316,18 +317,18 @@ def partida():
         #Distancia del disparo
         if turno_jugador == 1:
             if interfaz.minibox_bala1_active == True:
-                mostrar_distancias(tanque2, tanque1, bala_c)
+                nueva_superficie= mostrar_distancias(tanque2, tanque1, bala_c, nueva_superficie, pixel_array)
             if interfaz.minibox_bala2_active == True:
-                mostrar_distancias(tanque2, tanque1, bala_m)
+                nueva_superficie=mostrar_distancias(tanque2, tanque1, bala_m, nueva_superficie, pixel_array)
             if interfaz.minibox_bala3_active == True:
-                mostrar_distancias(tanque2, tanque1, bala_g)
+                nueva_superficie= mostrar_distancias(tanque2, tanque1, bala_g, nueva_superficie, pixel_array)
         elif turno_jugador == 2:
             if interfaz.minibox_bala1_active == True:
-                mostrar_distancias(tanque1, tanque2, bala_c)
+                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_c, nueva_superficie, pixel_array)
             if interfaz.minibox_bala2_active == True:
-                mostrar_distancias(tanque1, tanque2, bala_m)
+                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_m, nueva_superficie, pixel_array)
             if interfaz.minibox_bala3_active == True:
-                mostrar_distancias(tanque1, tanque2, bala_g)     
+                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_g, nueva_superficie, pixel_array)     
         sprites.draw(DISPLAYSURF)
         
         #Recorrido de la bala
