@@ -274,14 +274,19 @@ def partida():
         
         
         #proceso de cambio de turno
+        #Vamos a hacer que se cambien los valores de text_jugador1 aqui para evitar errores con el juego
         if turno_jugador == 1 and turno_pasado == 0:
             turno_jugador = 2
             turno_pasado = 1
             print("Es el turno del jugador 2")
+            interfaz.text_jugador1 = "Jugador 2"
+            interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.ROJO)
         elif turno_jugador == 2 and turno_pasado == 0:
             turno_jugador = 1
             turno_pasado = 1
             print("Es el turno del jugador 1")
+            interfaz.text_jugador1 = "Jugador 1"
+            interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.AZUL)
 
         #bucle para cerrar el juego
         for event in pygame.event.get():
@@ -289,7 +294,9 @@ def partida():
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                interfaz.click_mouse_inventario(event.pos)
+                #Creacion de condicion para que la persona no pueda tocar el inventario mientras la bala siga en el aire
+                if bala_c.caida == False and bala_m.caida == False and bala_g.caida == False:
+                    interfaz.click_mouse_inventario(event.pos)
                 #Condicional para ver si se le hizo click al boton de nueva partida
                 if interfaz.boton_abrir_minimenu_active == True:
                     if interfaz.boton_nueva_partida_rect.collidepoint(event.pos):
@@ -359,6 +366,11 @@ def partida():
                 interfaz.text_game_over = "GAME OVER"
                 interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.rojo_oscuro)
                 interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
+                interfaz.interfaz()
+                if turno_jugador == 1:
+                    interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1,tanque1,tanque2)
+                else:
+                    interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2,tanque1,tanque2)
                 interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
                 pygame.display.flip()
                 for event in pygame.event.get():
@@ -368,9 +380,9 @@ def partida():
 
         #Inicio de interfaz
         if turno_jugador == 1:
-            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1)
+            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1, tanque1, tanque2)
         else:
-            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2)
+            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2, tanque1, tanque2)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
         #Easter Egg
@@ -413,3 +425,10 @@ menu_principal()
 #3.- Linea 242 Condicional para ver si se le hizo click al boton de nueva partida o al de salir para cerrar el juego
 #4.- Linea 326 Condicional para ver si se tiene que empezar una nueva partida o no
 #5.- Hay un pequeño error con respecto al texto que imprime el turno del jugador pero mas adelante lo arreglare
+
+#NUEVOS CAMBIOS (FRANCO ARENAS) 18-10-2023
+#1.- Linea 352 agregue metodos de la interfaz para que cuando uno muera, se vea todo bien
+#2.- Actualizacion de metodo, se agregaron las variables que se piden a modo de tributo o algo asi sjsjs
+#3.- Quiero intentar arreglar el error con el tema de que se imprima correctamente de QUIEN es el turno
+#4.- Linea 273 se hicieron cambios con el tema de la impresion del turno del jugador para evitar errores
+#5.- Linea 294 creacion de condicional para que el usuario no pueda tocar el inventario mientras la bala siga su curso en la partida, esto se hizo con la intencion de prevenir errores posteriores
