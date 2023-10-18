@@ -208,8 +208,19 @@ def menu_principal():
                     sys.exit()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
                     #Testeoaa de musica al inicio del juego tiene que estar atento a cambios
-                    partida()
+                    pre_game()
         pygame.display.update()
+
+def pre_game():
+    pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
+    mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
+    mixer.music.play(-1)
+    while True:
+        DISPLAYSURF.blit(pre_game_img,(0,0))
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                partida()
+        pygame.display.flip()
 
 def partida():
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
