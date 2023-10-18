@@ -3,7 +3,7 @@ from pygame.locals import *
 
 class Globaless():
     def __init__(self):
-    #Atributos de pantalla
+    #ATRIBUTOS DE PANTALLA
         self.WIDTH = 1280
         self.HEIGHT = 720
         self.seleccion_terreno = 0
@@ -26,19 +26,18 @@ class Globaless():
                         (620,450), (640,480), (650,490), (660,495), (670,495), (680,490), (690,480), (700,450), 
                         (770,200), (790,192), (800,190), (820,185), (860,185), (880,190), (890,192), (910,200), 
                         (990,390), (1005,410), (1020,420), (1030,425), (1050,425), (1060,420), (1075,410), (1090,390), 
-                        (1150,290), (1180,285), (1230,290), (1280,305)
-                        ,(1400, 800)]
+                        (1150,290), (1180,285), (1230,290), (1280,305),(1400, 800)]
         self.PANTALLA = pygame.display.set_mode((self.WIDTH, self.HEIGHT))
         self.ancho_gris = 260
-        #Atributos balas
+        #ATRIBUTOS BALAS
         self.bala_chica = 60         #Radio
         self.bala_mediana = 80       #Radio  
         self.bala_grande = 120       #Radio
         self.daño_bala_c = 30
         self.daño_bala_m = 40
         self.daño_bala_g = 50
-        self.unidades_cyg = 3
-        self.unidades_m = 10
+        self.unidades_cyg = 3        #Municion Chica y Grande
+        self.unidades_m = 10         #Municion Mediana
 
         #COLORES
         self.NEGRO = (0,0,0)
@@ -50,13 +49,13 @@ class Globaless():
         self.celeste = (53,197,255)
         self.grisclaro = (217,217,217)
         self.rojo_oscuro = (189,17,17)
-        self.verde_oscuro = (25,142,13)
+        self.verde_oscuro = (20,137,8)
 
         #FPS
         self.FPS = (90)
-        RELOJ = pygame.time.Clock()
 
-        #Fuente
+
+        #FUENTE
         self.font = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",30)
         self.font2 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",50)
         self.font3 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",100)
