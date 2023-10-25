@@ -218,7 +218,7 @@ class Interfazz():
         pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.ROJO, (tanque.rect.x - 17,tanque.rect.y+15,50,15))
         pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.verde_oscuro, (tanque.rect.x - 17,tanque.rect.y+15,50 * ratio,15))
         
-    def print_interfaz (self, bala_c, bala_m, bala_g, tanque1, tanque2):
+    def print_interfaz (self, bala_c, bala_m, bala_g, tanque1, tanque2, lista_tanques_test, num_jugadores):
         #AQUI SE DIBUJARA Y SE ACTUALIZARA LAS CAJAS DE TEXTO Y EL BOTON DE DISPARO
         pygame.draw.rect(self.vGlobales.PANTALLA ,self.vGlobales.gris, self.textbox_angulo_rect)
         self.textbox_angulo_surface = self.vGlobales.font.render(self.textbox_angulo, True, self.vGlobales.NEGRO)
@@ -273,6 +273,8 @@ class Interfazz():
         #RECOLECCION DE DATOS E IMPRESION DE VIDA DEBAJO DE LOS TANQUES
         self.health_bars(tanque1)
         self.health_bars(tanque2)
+        for i in range (num_jugadores):
+            self.health_bars(lista_tanques_test[i])
         self.text_vida_jugador1 = str(tanque1.vida)
         self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
         self.text_vida_jugador2 = str(tanque2.vida)

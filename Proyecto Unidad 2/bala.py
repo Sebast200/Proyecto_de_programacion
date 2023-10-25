@@ -29,14 +29,14 @@ class Balas (pygame.sprite.Sprite):
         self.caida = False
         self.timepo=0
 
-    def update(self, tanque, tanque_enemigo, superficie, pixel_array):
+    def update(self, tanque, tanque_enemigo, superficie, pixel_array, lista_tanques, num_jugadores):
         #Solo empezara el disparo si se ejecuto la funcion disparo
         if (self.caida == True):
-            self.caida_Bala(tanque, tanque_enemigo)
+            self.caida_Bala(tanque, tanque_enemigo, lista_tanques, num_jugadores)
             #Moviemiento de la bala
             self.image.fill (self.vGlobales.NEGRO)
             self.rect.x = self.Xi + (self.velx * self.timepo)*0.5
-            self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.5
+            self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.8
             self.timepo += 0.12
             self.contador_recorrido+=1
             return superficie
@@ -67,7 +67,7 @@ class Balas (pygame.sprite.Sprite):
         self.caida = True
         self.altaura_max = 0
 
-    def caida_Bala(self, tanque, tanque_enemigo):
+    def caida_Bala(self, tanque, tanque_enemigo, lista_tanques, num_jugadores):
         #Toma el color para la colision de la bala 
         color = self.vGlobales.celeste
         if (self.rect.y > 0 and self.rect.x < 1280 ):
@@ -79,7 +79,7 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
-            self.colision_explosion_tanque(tanque, tanque_enemigo)
+            self.colision_explosion_tanque(tanque, tanque_enemigo, lista_tanques, num_jugadores)
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= self.vGlobales.ancho_gris ):
@@ -93,9 +93,9 @@ class Balas (pygame.sprite.Sprite):
         
         #Colision con el tanque enemigo
         if tanque_enemigo.rect.x + tanque_enemigo.largo > self.rect.x and \
-        tanque_enemigo.rect.x < self.rect.x + self.ancho and \
-        tanque_enemigo.rect.y + tanque.alto > self.rect.y and \
-        tanque_enemigo.rect.y < self.rect.y + self.alto:
+            tanque_enemigo.rect.x < self.rect.x + self.ancho and \
+            tanque_enemigo.rect.y + tanque.alto > self.rect.y and \
+            tanque_enemigo.rect.y < self.rect.y + self.alto:
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
@@ -105,6 +105,22 @@ class Balas (pygame.sprite.Sprite):
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
                 tanque_enemigo.vida = tanque_enemigo.vida - self.vGlobales.daño_bala_g
+        
+        #saño a lista
+        for i in range (num_jugadores):
+            if lista_tanques[i].rect.x + lista_tanques[i].largo > self.rect.x and \
+            lista_tanques[i].rect.x < self.rect.x + self.ancho and \
+            lista_tanques[i].rect.y + tanque.alto > self.rect.y and \
+            lista_tanques[i].rect.y < self.rect.y + self.alto:
+                self.shoot_impact.play()
+                self.caida = False
+                self.explosion = 1
+                if self.tipo == self.vGlobales.bala_chica:
+                    lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_c
+                if self.tipo == self.vGlobales.bala_mediana:
+                    lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_m
+                if self.tipo == self.vGlobales.bala_grande:
+                    lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_g
 
         #Colision con el tanque propio
         if tanque.rect.x + tanque.largo > self.rect.x and \
@@ -120,7 +136,7 @@ class Balas (pygame.sprite.Sprite):
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_m
             if self.tipo == self.vGlobales.bala_grande:
                 tanque.vida = tanque.vida - self.vGlobales.daño_bala_g
-
+        
         #Altura maxima
         if self.altaura_max < tanque.rect.y - self.rect.y:
             self.altaura_max = tanque.rect.y - self.rect.y
@@ -159,10 +175,18 @@ class Balas (pygame.sprite.Sprite):
         return terreno
     
     #Daño producido por la explosion de bala
-    def colision_explosion_tanque (self, tanque1, tanque2):
+    def colision_explosion_tanque (self, tanque1, tanque2, lista_tanques, num_jugadores):
         Distancia1 = self.distancia(tanque1.rect.x, self.rect.x, tanque1.rect.y, self.rect.y)
         Distancia2 = self.distancia(tanque2.rect.x, self.rect.x, tanque2.rect.y, self.rect.y)
+        Distancias  = []
+        for i in range (num_jugadores):
+            Distancias.append(self.distancia(lista_tanques[i].rect.x, self.rect.x, lista_tanques[i].rect.y, self.rect.y))
+        
         if (Distancia1 <= self.tipo/2):
             tanque1.vida = int(tanque1.vida - self.daño * math.cos(Distancia1 / (22* math.acos(0))))
         if (Distancia2 <= self.tipo/2):
             tanque2.vida = int(tanque2.vida - self.daño * math.cos(Distancia2 / (22* math.acos(0))))
+        
+        for i in range (num_jugadores):
+            if (Distancias[i] <= self.tipo/2):
+                lista_tanques[i].vida = int(lista_tanques[i].vida - self.daño * math.cos(Distancias[i] / (22* math.acos(0))))

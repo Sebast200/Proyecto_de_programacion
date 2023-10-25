@@ -39,8 +39,8 @@ def genera_terreno_pixel(pantalla, matriz): #Retorna una copia del terreno para 
 
     return matriz
 
-def mostrar_distancias(tanque1, tanque2, bala, superfice, pixel_array): 
-        superfice = bala.update(tanque1,tanque2, superfice, pixel_array)
+def mostrar_distancias(tanque1, tanque2, bala, superfice, pixel_array, lista_tanques, num_jugadores): 
+        superfice = bala.update(tanque1,tanque2, superfice, pixel_array, lista_tanques, num_jugadores)
         #Altura bala
         interfaz.text_altura_maxima = str(bala.altaura_max) + " metros"
         interfaz.text_surface_altura_maxima = interfaz.vGlobales.font.render(interfaz.text_altura_maxima, True, interfaz.vGlobales.NEGRO)
@@ -62,11 +62,14 @@ def mostrar_recorrido(reco):
         pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(reco[i]),5)
         i+=1
 
-def descuento_balas_tanque(bala,turno_pasado, turno_jugador):
-    if (turno_jugador == 1 and turno_pasado == 0):
-        bala.unidades_tanque1 -= 1
-    elif (turno_jugador == 2 and turno_pasado == 0):
-        bala.unidades_tanque2 -=1
+def descuento_balas_tanque(bala,turno_pasado, turno_jugador,tanque):
+    if bala.tipo == vGlobales.bala_chica and turno_pasado == 0:
+        tanque.unidades_c -= 1
+    if bala.tipo == vGlobales.bala_mediana and turno_pasado == 0:
+        tanque.unidades_m -= 1
+    if bala.tipo == vGlobales.bala_grande and turno_pasado == 0:
+        tanque.unidades_g -= 1
+    #turno_pasado == 0
         
 def animacion_explosion(radio_bala, bala):
     i = 0
@@ -78,7 +81,7 @@ def animacion_explosion(radio_bala, bala):
 #Inicia el proceso para disparar la bala
 def disparar_bala(event, bala, turno_pasado, turno_jugador, tanque, recorrido):
     turno_pasado = interfaz.click_mouse(event, bala, tanque, turno_pasado) #Permite pasar al siguiente turno
-    descuento_balas_tanque(bala, turno_pasado, turno_jugador)
+    descuento_balas_tanque(bala, turno_pasado, turno_jugador, tanque)
     #limpia recorrido de la bala si no esta en mivimiento
     if (bala.caida == False):
         recorrido.clear()
@@ -220,7 +223,7 @@ def partida():
     #Musica de la partida
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
     mixer.music.play(-1)
-
+    
     #Cargar imagenes
     vGlobales.seleccion_terreno = 0
     icono = pygame.image.load("Proyecto Unidad 2/imagenes/tanque.png")
@@ -229,20 +232,41 @@ def partida():
     DISPLAYSURF.blit(fondo, (0,0))
 
     #Skines
+    skins_tanque = []
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png"))
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png"))
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin3.png"))
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin4.png"))
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin5.png"))
+    skins_tanque.append(pygame.image.load("Proyecto Unidad 2/imagenes/skin6.png"))
     skin1_tanque = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
     skin2_tanque = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
     skin_bala_c = pygame.image.load("Proyecto Unidad 2/imagenes/bala_c_img.png")
     skin_bala_m = pygame.image.load("Proyecto Unidad 2/imagenes/bala_m_img.png")
     skin_bala_g = pygame.image.load("Proyecto Unidad 2/imagenes/bala_g_img.png")
+    
 
+
+    #Test cantidad de tanques
+    num_jugadores = 6
+    lista_tanques_OG = []
+    lista_tanques = []
+    lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100)))
+    for i in range (num_jugadores-1):
+        lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30)))
+
+    
     #Objetos en pantalla
     sprites = pygame.sprite.Group()
     tanque1 = tanque.Tankes(vGlobales.AZUL,random.randint(vGlobales.ancho_gris + 10,(vGlobales.WIDTH - vGlobales.ancho_gris)/2 + vGlobales.ancho_gris ))
     tanque2 = tanque.Tankes(vGlobales.ROJO,random.randint((vGlobales.WIDTH- vGlobales.ancho_gris)/2 + tanque1.rect.x, vGlobales.WIDTH - 10))    
+    lista_tanques = [tanque1, tanque2]
     bala_g = bala.Balas(vGlobales.bala_grande, vGlobales.daño_bala_g, vGlobales.unidades_cyg)
     bala_m = bala.Balas(vGlobales.bala_mediana, vGlobales.daño_bala_m, vGlobales.unidades_m)
     bala_c = bala.Balas(vGlobales.bala_chica, vGlobales.daño_bala_c, vGlobales.unidades_cyg)
-    sprites.add(tanque1), sprites.add(tanque2)
+    sprites.add(lista_tanques[0]), sprites.add(lista_tanques[1]), sprites.add(lista_tanques_OG[0])
+    for i in range (num_jugadores):
+        sprites.add(lista_tanques_OG[i])
     sprites.add(bala_g)
     sprites.add(bala_m)
     sprites.add(bala_c)
@@ -277,17 +301,12 @@ def partida():
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
         interfaz.interfaz()
         
-        #proceso de cambio de turno
-        if turno_jugador == 1 and turno_pasado == 0:
-            turno_jugador = 2
+        #proceso de cambio de turno 
+        if turno_pasado == 0:
+            turno_jugador = random.randint(1,6)
             turno_pasado = 1
-            interfaz.text_jugador1 = "Jugador 2"
+            interfaz.text_jugador1 = "Jugador " + str(turno_jugador)
             interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.ROJO)
-        elif turno_jugador == 2 and turno_pasado == 0:
-            turno_jugador = 1
-            turno_pasado = 1
-            interfaz.text_jugador1 = "Jugador 1"
-            interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.AZUL)
 
         #bucle de eventos
         for event in pygame.event.get():
@@ -305,85 +324,65 @@ def partida():
                     if interfaz.boton_salir_rect.collidepoint(event.pos):
                         pygame.quit()
                         sys.exit()
-                #disparo de bala con jugador 1
-                if turno_jugador == 1:
-                    if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque1 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, tanque1, recorrido)
-                    if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque1 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, tanque1, recorrido)
-                    if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque1 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, tanque1, recorrido)
-                #disparo de bala con jugador 2
-                else:
-                    if interfaz.minibox_bala1_active == True and bala_c.unidades_tanque2 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, tanque2, recorrido)                   
-                    if interfaz.minibox_bala2_active == True and bala_m.unidades_tanque2 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, tanque2, recorrido)
-                    if interfaz.minibox_bala3_active == True and bala_g.unidades_tanque2 > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, tanque2, recorrido)
-            
+                #disparo de bala
+                if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0:
+                    turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido)
+                if interfaz.minibox_bala2_active == True and lista_tanques_OG[turno_jugador-1].unidades_m > 0:
+                    turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido)
+                if interfaz.minibox_bala3_active == True and lista_tanques_OG[turno_jugador-1].unidades_g> 0:
+                    turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido)
+
             if event.type == pygame.KEYDOWN:
                 interfaz.escribir(event)
                 
         #Movimiento de tanques
-        tanque1.update()
-        tanque2.update()
-
+        lista_tanques[0].update()
+        lista_tanques[1].update()
+        for i in range (num_jugadores):
+            lista_tanques_OG[i].update()
         #Evento al seleccionar la municion
-        if turno_jugador == 1:
-            if interfaz.minibox_bala1_active == True:
-                nueva_superficie= mostrar_distancias(tanque2, tanque1, bala_c, nueva_superficie, pixel_array)
-                recorrido = calcular_recorrido(bala_c, recorrido)
-                DISPLAYSURF.blit(skin_bala_c, (bala_c.rect.x-17,bala_c.rect.y-17))
+        if interfaz.minibox_bala1_active == True:
+            nueva_superficie= mostrar_distancias(lista_tanques_OG[turno_jugador-1], lista_tanques[0], bala_c, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores)
+            recorrido = calcular_recorrido(bala_c, recorrido)
+            DISPLAYSURF.blit(skin_bala_c, (bala_c.rect.x-17,bala_c.rect.y-17))
 
-            if interfaz.minibox_bala2_active == True:
-                nueva_superficie=mostrar_distancias(tanque2, tanque1, bala_m, nueva_superficie, pixel_array)
-                recorrido = calcular_recorrido(bala_m, recorrido)
-                DISPLAYSURF.blit(skin_bala_m, (bala_m.rect.x-17,bala_m.rect.y-17))
-            
-            if interfaz.minibox_bala3_active == True:
-                nueva_superficie= mostrar_distancias(tanque2, tanque1, bala_g, nueva_superficie, pixel_array)
-                recorrido = calcular_recorrido(bala_g, recorrido)
-                DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
+        if interfaz.minibox_bala2_active == True:
+            nueva_superficie=mostrar_distancias(lista_tanques_OG[turno_jugador-1], lista_tanques[0], bala_m, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores)
+            recorrido = calcular_recorrido(bala_m, recorrido)
+            DISPLAYSURF.blit(skin_bala_m, (bala_m.rect.x-17,bala_m.rect.y-17))
         
-        elif turno_jugador == 2:
-            if interfaz.minibox_bala1_active == True:
-                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_c, nueva_superficie, pixel_array)
-                recorrido = calcular_recorrido(bala_c, recorrido)
-                DISPLAYSURF.blit(skin_bala_c, (bala_c.rect.x-17,bala_c.rect.y-17))
-                
-            if interfaz.minibox_bala2_active == True:
-                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_m, nueva_superficie, pixel_array)
-                recorrido = calcular_recorrido(bala_m, recorrido)
-                DISPLAYSURF.blit(skin_bala_m, (bala_m.rect.x-17,bala_m.rect.y-17))
-                
-            if interfaz.minibox_bala3_active == True:
-                nueva_superficie= mostrar_distancias(tanque1, tanque2, bala_g, nueva_superficie, pixel_array)   
-                recorrido = calcular_recorrido(bala_g, recorrido)  
-                DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
+        if interfaz.minibox_bala3_active == True:
+            nueva_superficie= mostrar_distancias(lista_tanques_OG[turno_jugador-1], lista_tanques[0], bala_g, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores)
+            recorrido = calcular_recorrido(bala_g, recorrido)
+            DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
         
         sprites.draw(DISPLAYSURF)
         mostrar_recorrido(recorrido)
 
         #Dibujo de skins
-        DISPLAYSURF.blit(skin1_tanque, (tanque1.rect.x-10,tanque1.rect.y-5))
-        DISPLAYSURF.blit(skin2_tanque, (tanque2.rect.x-10,tanque2.rect.y-5))
+        for i in range (num_jugadores):
+            if i % 2 == 0:
+                DISPLAYSURF.blit(skins_tanque[i], (lista_tanques_OG[i].rect.x-10,lista_tanques_OG[i].rect.y-5))
+            else:
+                DISPLAYSURF.blit(pygame.transform.flip(skins_tanque[i],True,False), (lista_tanques_OG[i].rect.x-10,lista_tanques_OG[i].rect.y-5))
+        DISPLAYSURF.blit(skin1_tanque, (lista_tanques[0].rect.x-10,lista_tanques[0].rect.y-5))
+        DISPLAYSURF.blit(skin2_tanque, (lista_tanques[1].rect.x-10,lista_tanques[1].rect.y-5))
         
         #Easter Egg jiji
-        if tanque1.rect.y >= 720:
+        if lista_tanques[0].rect.y >= 720:
             fatality_count = fatality(fatality_count)
             
         #Game over
-        if (tanque1.vida <= 0 or tanque2.vida <= 0):
+        if (lista_tanques[0].vida <= 0 or lista_tanques[1].vida <= 0):
             while True:
                 interfaz.text_game_over = "GAME OVER"
                 interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.rojo_oscuro)
                 interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
                 interfaz.interfaz()
                 if turno_jugador == 1:
-                    interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1,tanque1,tanque2)
+                    interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1,lista_tanques[0],lista_tanques[1],lista_tanques_OG,num_jugadores)
                 else:
-                    interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2,tanque1,tanque2)
+                    interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2,lista_tanques[0],lista_tanques[1],lista_tanques_OG,num_jugadores)
                 interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
                 pygame.display.flip()
                 for event in pygame.event.get():
@@ -396,9 +395,9 @@ def partida():
                         
         #Inicio de interfaz
         if turno_jugador == 1:
-            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1, tanque1, tanque2)
+            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1, lista_tanques[0], lista_tanques[1],lista_tanques_OG,num_jugadores)
         else:
-            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2, tanque1, tanque2)
+            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2, lista_tanques[0], lista_tanques[1],lista_tanques_OG,num_jugadores)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
 
