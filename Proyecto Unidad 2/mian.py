@@ -1,7 +1,8 @@
 import pygame, sys, globales, tanque, bala, random, interfaz
 from pygame.locals import *
 from boton import Button
-from pygame import mixer   
+from pygame import mixer 
+  
 
 #DECLARACIONES
 pygame.init()
@@ -380,9 +381,9 @@ def partida():
                 interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
                 interfaz.interfaz()
                 if turno_jugador == 1:
-                    interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1,lista_tanques[0],lista_tanques[1],lista_tanques_OG,num_jugadores)
+                    interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1,lista_tanques_OG,num_jugadores)
                 else:
-                    interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2,lista_tanques[0],lista_tanques[1],lista_tanques_OG,num_jugadores)
+                    interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2,lista_tanques_OG,num_jugadores)
                 interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
                 pygame.display.flip()
                 for event in pygame.event.get():
@@ -394,10 +395,12 @@ def partida():
                         sys.exit()
                         
         #Inicio de interfaz
-        if turno_jugador == 1:
-            interfaz.print_interfaz(bala_c.unidades_tanque1,bala_m.unidades_tanque1,bala_g.unidades_tanque1, lista_tanques[0], lista_tanques[1],lista_tanques_OG,num_jugadores)
-        else:
-            interfaz.print_interfaz(bala_c.unidades_tanque2,bala_m.unidades_tanque2,bala_g.unidades_tanque2, lista_tanques[0], lista_tanques[1],lista_tanques_OG,num_jugadores)
+        i = 0
+        while i<len(lista_tanques_OG):
+            if i==turno_jugador-1:
+                interfaz.print_interfaz(lista_tanques_OG[i].unidades_c,lista_tanques_OG[i].unidades_m,lista_tanques_OG[i].unidades_g,lista_tanques_OG,num_jugadores)
+            i+=1
+        #undo
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
         interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
 
