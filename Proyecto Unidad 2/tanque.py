@@ -20,9 +20,9 @@ class Tankes (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (posicion_inicial, 100)
         self.color = self.vGlobales.BLANCO  #Por si el tanque llegase a salir de la pantalla se crea el self color para la colision
-        self.unidades_c = self.vGlobales.unidades_cyg
-        self.unidades_m = self.vGlobales.unidades_m
-        self.unidades_g = self.vGlobales.unidades_cyg
+        self.unidades_c = 3
+        self.unidades_m = 10
+        self.unidades_g = 3
     #actualiza la posicion del tanque
     def update(self):
         incremento = 3
