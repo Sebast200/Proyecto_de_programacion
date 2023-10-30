@@ -309,6 +309,7 @@ def partida():
         if turno_pasado == 0:
             if len(ronda) >= 6:
                 ronda = []
+                turno_jugador = random.randint(1,6)
             turno_jugador = random.randint(1,6)
             while turno_jugador in ronda:
                 turno_jugador = random.randint(1,6)
