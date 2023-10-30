@@ -118,6 +118,8 @@ class Interfazz():
         self.text_surface_inicial_jugador1_rect = self.text_surface_inicial_jugador1.get_rect(center = (80,390))
 
         #Proceso de impresion de textos de la interfaz a la pantalla
+        #IMPRESION DE RECTANGULO PEQUEÑO QUE ESTARA DEBAJO DEL TEXTO DEL JUGADOR
+        #pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.gris,(50,20,140,35))
         self.vGlobales.PANTALLA.blit(self.text_surface_jugador1,self.text_surface_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_angulo_jugador1,self.text_surface_angulo_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_velocidad_jugador1,self.text_surface_velocidad_jugador1_rect)
@@ -277,3 +279,7 @@ class Interfazz():
             self.text_vida_jugador1 = str(lista_tanques_test[i].vida)
             self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
             self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador1,(lista_tanques_test[i].rect.x - 10,lista_tanques_test[i].rect.y + 15))
+
+#NUEVOS CAMBIOS
+#1.- QUIERO AGREGAR UN CUADRO NEGRO EN LA PARTE EN LA QUE SE IMPRIME EL TURNO DEL JUGADOR
+#2.- Linea 122 se agrego un rectangulo gris para que se vean algunos textos del jugador
