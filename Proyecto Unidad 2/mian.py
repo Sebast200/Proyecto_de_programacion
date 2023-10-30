@@ -290,6 +290,9 @@ def partida():
     #Variable para generar la nueva partida
     nueva_partida = False
 
+    #Arreglo de turnos por ronda
+    ronda = []
+
     while True:
 
         #Dibujo de la pantalla
@@ -304,10 +307,27 @@ def partida():
         
         #proceso de cambio de turno 
         if turno_pasado == 0:
+            if len(ronda) >= 6:
+                ronda = []
             turno_jugador = random.randint(1,6)
+            while turno_jugador in ronda:
+                turno_jugador = random.randint(1,6)
+            ronda.append(turno_jugador)
             turno_pasado = 1
             interfaz.text_jugador1 = "Jugador " + str(turno_jugador)
-            interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.ROJO)
+            if turno_jugador == 1:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.AZUL)
+            if turno_jugador == 2:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.ROJO)
+            if turno_jugador == 3:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.amarillo)
+            if turno_jugador == 4:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.celeste)
+            if turno_jugador == 5:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.morado)
+            if turno_jugador == 6:
+                interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.naranjo)
+
 
         #bucle de eventos
         for event in pygame.event.get():
@@ -420,3 +440,7 @@ def partida():
 
 #EJECUCION
 menu_principal()
+
+#NUEVOS CAMBIOS (FRANCO ARENAS) 29-10-2023
+#1.- SE AGREGARON LOS COLORES EN GLOBALES Y EN MIAN
+#2.- linea 308 se cambio el sistema de turno y ahora es funcional (creo)
