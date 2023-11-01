@@ -307,6 +307,7 @@ class Interfazz():
             self.health_bars(lista_tanques_test[i])
         for i in range (num_jugadores):
             self.text_vida_jugador1 = str(lista_tanques_test[i].vida)
+            if lista_tanques_test[i].vida < 0: self.text_vida_jugador1 = str(0)
             self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
             self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador1,(lista_tanques_test[i].rect.x - 10,lista_tanques_test[i].rect.y + 15))
     def print_tienda(self, tanque,event):
