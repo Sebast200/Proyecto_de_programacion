@@ -38,6 +38,9 @@ class Globaless():
         self.daño_bala_g = 50
         self.unidades_cyg = 3        #Municion Chica y Grande
         self.unidades_m = 10         #Municion Mediana
+        self.costo_bala_c = 1000
+        self.costo_bala_m = 2500
+        self.costo_bala_g = 4000
 
         #COLORES
         self.NEGRO = (0,0,0)
@@ -54,6 +57,7 @@ class Globaless():
         self.celeste = (56,212,240)
         self.morado = (202,47,243)
         self.naranjo = (233,132,24)
+        self.gris_oscuro = (84,84,84)
 
         #FPS
         self.FPS = (90)
