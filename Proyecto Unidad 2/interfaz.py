@@ -125,15 +125,15 @@ class Interfazz():
         self.vGlobales.PANTALLA.blit(self.text_surface_velocidad_jugador1,self.text_surface_velocidad_jugador1_rect)
         self.vGlobales.PANTALLA.blit(self.text_surface_inicial_jugador1,self.text_surface_inicial_jugador1_rect)
    
-    def boton_disparar_click (self, bala, tanque, numero_angulo, numero_velocidad_inicial):
-        bala.disparar(numero_angulo, math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,tanque)
+    def boton_disparar_click (self, bala, tanque, numero_angulo, numero_velocidad_inicial, viento):
+        bala.disparar(numero_angulo, math.pi/180 * (numero_angulo + 90), numero_velocidad_inicial,tanque, viento)
         #Se reproduce el sonido de disparo
         Tank_shoot = mixer.Sound("Proyecto Unidad 2/sonidos_musica/tank_shooting.mp3")
         Tank_shoot.play()
         self.textbox_angulo = ""
         self.textbox_velocidad_inicial = ""
 
-    def click_mouse(self, posicion_muose,bala,pos_tanque, turno_pasado):
+    def click_mouse(self, posicion_muose,bala,pos_tanque, turno_pasado, viento):
         #Condicion de click para el cuadro de angulo
         if self.textbox_angulo_rect.collidepoint(posicion_muose):
             self.textbox_angulo_active = True
@@ -153,7 +153,7 @@ class Interfazz():
                 if numero_angulo>360:
                     self.textbox_angulo = ""
                 else:
-                    self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial)
+                    self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial, viento)
                     turno_pasado = 0
                     return turno_pasado
             except ValueError:

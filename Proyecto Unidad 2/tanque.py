@@ -4,7 +4,7 @@ from pygame import mixer
 
 class Tankes (pygame.sprite.Sprite):
     #Constructor
-    def __init__(self, _color,posicion_inicial):
+    def __init__(self, _color,posicion_inicial, gravedad):
         super().__init__()
         self.vGlobales = globales.Globaless()
 
@@ -23,12 +23,15 @@ class Tankes (pygame.sprite.Sprite):
         self.unidades_c = 3
         self.unidades_m = 10
         self.unidades_g = 3
+        self.gravedad = gravedad
+        self.timepo = 0
+        self.Yi = 100
     #actualiza la posicion del tanque
     def update(self):
-        incremento = 3
         self.caida_Tanque()
         if (self.caida):
-            self.rect.y += incremento
+            self.rect.y = self.Yi + 0.5 * self.gravedad * self.timepo**2
+            self.timepo += 0.12
         else:
             self.vida = self.vida - self.distancia_caida
             self.distancia_caida = 0
@@ -37,6 +40,10 @@ class Tankes (pygame.sprite.Sprite):
         if self.rect.y < self.vGlobales.HEIGHT - self.alto:
             self.color = self.vGlobales.PANTALLA.get_at((self.rect.midbottom[0],self.rect.midbottom[1]))
             self.color = (self.color[0], self.color[1], self.color[2])
+
+        if self.caida == False and self.color != self.vGlobales.verde:
+            self.Yi = self.rect.y
+            self.timepo = 0
         #Colision con color del terreno
         if (self.color == self.vGlobales.verde or self.rect.y >= self.vGlobales.HEIGHT):
             self.caida = False
