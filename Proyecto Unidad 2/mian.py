@@ -287,6 +287,9 @@ def partida():
     ronda = []
     viento = -1
     jugadores_vivos = num_jugadores
+
+    #Variable booleana que definira si se debe mostrar la tienda o no
+    compraron_todos = False
     while True:
 
         #Dibujo de la pantalla
@@ -432,7 +435,59 @@ def partida():
             animacion_explosion(vGlobales.bala_mediana, bala_m)
         elif bala_g.explosion == 1:
             animacion_explosion(vGlobales.bala_grande,bala_g)
-            
+        #Proceso de impresion de tienda
+        contadortienda = 0
+        while compraron_todos == False:
+            if contadortienda<num_jugadores:
+                #RECOLECCION DE DATOS
+                interfaz.text_tienda = "Tienda de jugador " + str(contadortienda + 1)
+                interfaz.text_tienda_surface = vGlobales.font.render(interfaz.text_tienda,True,vGlobales.BLANCO)
+                interfaz.text_tienda_surface_rect = interfaz.text_tienda_surface.get_rect(center=(760,125))
+                #PROCESO DE IMPRESION
+                #IMPRESION DE TIENDA
+                pygame.draw.rect(vGlobales.PANTALLA,vGlobales.gris_oscuro,(vGlobales.ancho_gris + 200,100,600,500))
+                #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
+                pygame.draw.rect(vGlobales.PANTALLA,vGlobales.verde,(565,395,100,30))
+                pygame.draw.rect(vGlobales.PANTALLA,vGlobales.verde,(715,395,100,30))
+                pygame.draw.rect(vGlobales.PANTALLA,vGlobales.verde,(865,395,100,30))
+                #Dibujo de rectangulo rojo para el boton Volver
+                pygame.draw.rect(vGlobales.PANTALLA,vGlobales.rojo_oscuro,(700,550,120,40))
+                for boton in [interfaz.boton_volver_tienda, interfaz.boton_comprar_bala_c, interfaz.boton_comprar_bala_m, interfaz.boton_comprar_bala_g]:
+                    boton.update(vGlobales.PANTALLA)
+                pygame.draw.rect(vGlobales.PANTALLA, vGlobales.NEGRO, interfaz.minibox_bala1_tienda, 3)
+                pygame.draw.rect(vGlobales.PANTALLA, vGlobales.NEGRO, interfaz.minibox_bala2_tienda, 3)
+                pygame.draw.rect(vGlobales.PANTALLA, vGlobales.NEGRO, interfaz.minibox_bala3_tienda, 3)
+                vGlobales.PANTALLA.blit(interfaz.bala_g_img,(interfaz.minibox_bala3_tienda.x + 17, interfaz.minibox_bala3_tienda.y + 17))
+                vGlobales.PANTALLA.blit(interfaz.bala_m_img,(interfaz.minibox_bala2_tienda.x + 17, interfaz.minibox_bala2_tienda.y + 17))
+                vGlobales.PANTALLA.blit(interfaz.bala_c_img,(interfaz.minibox_bala1_tienda.x + 17, interfaz.minibox_bala1_tienda.y + 17))
+                #IMPRESION DE SALDO DE JUGADOR
+                interfaz.text_saldo = "$"+str(lista_tanques_OG[contadortienda].saldo)
+                interfaz.text_saldo_surface = vGlobales.font.render(interfaz.text_saldo,True,interfaz.text_saldo_color)
+                interfaz.text_saldo_surface_rect = interfaz.text_saldo_surface.get_rect(center=(1000,125))
+                vGlobales.PANTALLA.blit(interfaz.text_saldo_surface,interfaz.text_saldo_surface_rect)   
+                #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
+                vGlobales.PANTALLA.blit(interfaz.text_tienda_surface,interfaz.text_tienda_surface_rect)  
+                #IMPRESION DE TEXTO QUE MUESTRA LOS COSTOS DE LAS BALAS
+                vGlobales.PANTALLA.blit(interfaz.text_costo_bala_c_surface,interfaz.text_costo_bala_c_surface_rect)
+                vGlobales.PANTALLA.blit(interfaz.text_costo_bala_m_surface,interfaz.text_costo_bala_m_surface_rect)
+                vGlobales.PANTALLA.blit(interfaz.text_costo_bala_g_surface,interfaz.text_costo_bala_g_surface_rect)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        #Condicionales de botones
+                        if interfaz.boton_volver_tienda.checkForInput(event.pos):
+                            contadortienda += 1
+                        if interfaz.boton_comprar_bala_c.checkForInput(event.pos):
+                            lista_tanques_OG[contadortienda].comprar_bala(bala_c)
+                        if interfaz.boton_comprar_bala_m.checkForInput(event.pos):
+                            lista_tanques_OG[contadortienda].comprar_bala(bala_m)
+                        if interfaz.boton_comprar_bala_g.checkForInput(event.pos):
+                            lista_tanques_OG[contadortienda].comprar_bala(bala_g)
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                pygame.display.flip()
+            else:
+                compraron_todos = True       
         #Creacion de condicional para ver si se debe crear una nueva partida o no
         if nueva_partida == True:
             partida()
