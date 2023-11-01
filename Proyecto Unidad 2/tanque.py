@@ -26,6 +26,7 @@ class Tankes (pygame.sprite.Sprite):
         self.gravedad = gravedad
         self.timepo = 0
         self.Yi = 100
+        self.saldo = 10000
     #actualiza la posicion del tanque
     def update(self):
         self.caida_Tanque()
@@ -52,3 +53,16 @@ class Tankes (pygame.sprite.Sprite):
             self.caida = True
             if not(self.inmune):
                 self.distancia_caida += 0.5
+    def comprar_bala(self, bala):
+        if bala.tipo == self.vGlobales.bala_chica and self.saldo >= self.vGlobales.costo_bala_c:
+            self.unidades_c += 1
+            self.saldo = self.saldo - self.vGlobales.costo_bala_c
+            print("saldo: ", self.saldo)
+
+        if bala.tipo == self.vGlobales.bala_mediana and self.saldo >= self.vGlobales.costo_bala_m:
+            self.unidades_m += 1
+            self.saldo = self.saldo - self.vGlobales.costo_bala_m
+
+        if bala.tipo == self.vGlobales.bala_grande and self.saldo >= self.vGlobales.costo_bala_g:
+            self.unidades_g += 1
+            self.saldo = self.saldo - self.vGlobales.costo_bala_g
