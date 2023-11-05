@@ -105,7 +105,7 @@ class Interfazz():
         self.boton_abrir_tienda = Button(image=None, pos=(1260,20), text_input="$", font=self.vGlobales.font, base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         self.boton_abrir_tienda_active = False
         #Creacion de boton para volver(cerrar) de la tienda
-        self.boton_volver_tienda = Button(image=None, pos=(760,570), text_input="Volver",font=self.vGlobales.font,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
+        self.boton_finalizar_tienda = Button(image=None, pos=(760,570), text_input="Finalizar",font=self.vGlobales.font,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         #Creacion de vitrinas de balas 
         self.minibox_bala1_tienda = pygame.Rect(575,300,75,80)
         self.minibox_bala2_tienda = pygame.Rect(725,300,75,80)
@@ -310,43 +310,61 @@ class Interfazz():
             if lista_tanques_test[i].vida < 0: self.text_vida_jugador1 = str(0)
             self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
             self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador1,(lista_tanques_test[i].rect.x - 10,lista_tanques_test[i].rect.y + 15))
-    def print_tienda(self, tanque,event):
-        self.contador1 = 0
-        while self.contador1<1:
-            #RECOLECCION DE DATOS
-            self.text_tienda = "Tienda de jugador" + str(self.contador1 + 1)
-            self.text_tienda_surface = self.vGlobales.font.render(self.text_tienda,True,self.vGlobales.BLANCO)
-            self.text_tienda_surface_rect = self.text_tienda_surface.get_rect(center=(760,125))
-            if event == pygame.MOUSEBUTTONDOWN:
-                self.contador1 += 1              
-            #PROCESO DE IMPRESION
-            #IMPRESION DE TIENDA
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris_oscuro,(self.vGlobales.ancho_gris + 200,100,600,500))
-            #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(865,395,100,30))
-            #Dibujo de rectangulo rojo para el boton Volver
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.rojo_oscuro,(700,550,120,40))
-            for boton in [self.boton_volver_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g]:
-                boton.update(self.vGlobales.PANTALLA)
-            pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala1_tienda, 3)
-            pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala2_tienda, 3)
-            pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala3_tienda, 3)
-            self.vGlobales.PANTALLA.blit(self.bala_g_img,(self.minibox_bala3_tienda.x + 17, self.minibox_bala3_tienda.y + 17))
-            self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2_tienda.x + 17, self.minibox_bala2_tienda.y + 17))
-            self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1_tienda.x + 17, self.minibox_bala1_tienda.y + 17))
-            #IMPRESION DE SALDO DE JUGADOR
-            self.text_saldo = "$"+str(tanque.saldo)
-            self.text_saldo_surface = self.vGlobales.font.render(self.text_saldo,True,self.text_saldo_color)
-            self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(1000,125))
-            self.vGlobales.PANTALLA.blit(self.text_saldo_surface,self.text_saldo_surface_rect)   
-            #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
-            self.vGlobales.PANTALLA.blit(self.text_tienda_surface,self.text_tienda_surface_rect)  
-            #IMPRESION DE TEXTO QUE MUESTRA LOS COSTOS DE LAS BALAS
-            self.vGlobales.PANTALLA.blit(self.text_costo_bala_c_surface,self.text_costo_bala_c_surface_rect)
-            self.vGlobales.PANTALLA.blit(self.text_costo_bala_m_surface,self.text_costo_bala_m_surface_rect)
-            self.vGlobales.PANTALLA.blit(self.text_costo_bala_g_surface,self.text_costo_bala_g_surface_rect)
+
+    def print_tienda(self,lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g):
+        #Proceso de impresion de tienda
+        self.contadortienda = 0
+        while compraron_todos == False:
+            if self.contadortienda<num_jugadores:
+                #RECOLECCION DE DATOS
+                self.text_tienda = "Tienda de jugador " + str(self.contadortienda + 1)
+                self.text_tienda_surface = self.vGlobales.font.render(self.text_tienda,True,self.vGlobales.BLANCO)
+                self.text_tienda_surface_rect = self.text_tienda_surface.get_rect(center=(760,125))
+                #PROCESO DE IMPRESION
+                #IMPRESION DE TIENDA
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris_oscuro,(self.vGlobales.ancho_gris + 200,100,600,500))
+                #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(865,395,100,30))
+                #Dibujo de rectangulo rojo para el boton Volver
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.rojo_oscuro,(690,550,140,40))
+                for boton in [self.boton_finalizar_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g]:
+                    boton.update(self.vGlobales.PANTALLA)
+                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala1_tienda, 3)
+                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala2_tienda, 3)
+                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala3_tienda, 3)
+                self.vGlobales.PANTALLA.blit(self.bala_g_img,(self.minibox_bala3_tienda.x + 17, self.minibox_bala3_tienda.y + 17))
+                self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2_tienda.x + 17, self.minibox_bala2_tienda.y + 17))
+                self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1_tienda.x + 17, self.minibox_bala1_tienda.y + 17))
+                #IMPRESION DE SALDO DE JUGADOR
+                self.text_saldo = "$"+str(lista_tanques_OG[self.contadortienda].saldo)
+                self.text_saldo_surface = self.vGlobales.font.render(self.text_saldo,True,self.text_saldo_color)
+                self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(1000,125))
+                self.vGlobales.PANTALLA.blit(self.text_saldo_surface,self.text_saldo_surface_rect)   
+                #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
+                self.vGlobales.PANTALLA.blit(self.text_tienda_surface,self.text_tienda_surface_rect)  
+                #IMPRESION DE TEXTO QUE MUESTRA LOS COSTOS DE LAS BALAS
+                self.vGlobales.PANTALLA.blit(self.text_costo_bala_c_surface,self.text_costo_bala_c_surface_rect)
+                self.vGlobales.PANTALLA.blit(self.text_costo_bala_m_surface,self.text_costo_bala_m_surface_rect)
+                self.vGlobales.PANTALLA.blit(self.text_costo_bala_g_surface,self.text_costo_bala_g_surface_rect)
+                for event in pygame.event.get():
+                    if event.type == pygame.MOUSEBUTTONDOWN:
+                        #Condicionales de botones
+                        if self.boton_finalizar_tienda.checkForInput(event.pos):
+                            self.contadortienda += 1
+                        if self.boton_comprar_bala_c.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_c)
+                        if self.boton_comprar_bala_m.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_m)
+                        if self.boton_comprar_bala_g.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_g)
+                    if event.type == pygame.QUIT:
+                        pygame.quit()
+                        sys.exit()
+                pygame.display.flip()
+            else:                
+                return True       
 #NUEVOS CAMBIOS
 #1.- QUIERO AGREGAR UN CUADRO NEGRO EN LA PARTE EN LA QUE SE IMPRIME EL TURNO DEL JUGADOR
 #2.- Linea 122 se agrego un rectangulo gris para que se vean algunos textos del jugador
