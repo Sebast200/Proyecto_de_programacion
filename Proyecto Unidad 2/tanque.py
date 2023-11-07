@@ -57,7 +57,6 @@ class Tankes (pygame.sprite.Sprite):
         if bala.tipo == self.vGlobales.bala_chica and self.saldo >= self.vGlobales.costo_bala_c:
             self.unidades_c += 1
             self.saldo = self.saldo - self.vGlobales.costo_bala_c
-            print("saldo: ", self.saldo)
 
         if bala.tipo == self.vGlobales.bala_mediana and self.saldo >= self.vGlobales.costo_bala_m:
             self.unidades_m += 1
@@ -66,3 +65,16 @@ class Tankes (pygame.sprite.Sprite):
         if bala.tipo == self.vGlobales.bala_grande and self.saldo >= self.vGlobales.costo_bala_g:
             self.unidades_g += 1
             self.saldo = self.saldo - self.vGlobales.costo_bala_g
+    
+    def vender_bala(self, bala):
+        if bala.tipo == self.vGlobales.bala_chica and self.unidades_c >= 1:
+            self.unidades_c -= 1
+            self.saldo = self.saldo + self.vGlobales.costo_bala_c
+
+        if bala.tipo == self.vGlobales.bala_mediana and self.unidades_m >= 1:
+            self.unidades_m -= 1
+            self.saldo = self.saldo + self.vGlobales.costo_bala_m
+
+        if bala.tipo == self.vGlobales.bala_grande and self.unidades_g >= 1:
+            self.unidades_g -= 1
+            self.saldo = self.saldo + self.vGlobales.costo_bala_g
