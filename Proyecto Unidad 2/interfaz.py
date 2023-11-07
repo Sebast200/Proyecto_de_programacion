@@ -82,10 +82,10 @@ class Interfazz():
         self.boton_abrir_minimenu_active = False
         #Creacion de variables de minimenu
         #Boton que dira nueva partida
-        self.boton_nueva_partida = "Nueva partida"
-        self.boton_surface_nueva_partida = self.vGlobales.font4.render(self.boton_nueva_partida,True,self.vGlobales.NEGRO)
-        self.boton_nueva_partida_rect = pygame.Rect(270,10,150,30)
-        self.boton_nueva_partida_color = self.vGlobales.verde
+        self.boton_pasar_turno = "Pasar Turno"
+        self.boton_surface_pasar_turno = self.vGlobales.font4.render(self.boton_pasar_turno,True,self.vGlobales.NEGRO)
+        self.boton_pasar_turno_rect = pygame.Rect(270,10,150,30)
+        self.boton_pasar_turno_color = self.vGlobales.verde
         #Boton que dira salir
         self.boton_salir = "Salir"
         self.boton_surface_salir = self.vGlobales.font4.render(self.boton_salir,True,self.vGlobales.NEGRO)
@@ -107,15 +107,15 @@ class Interfazz():
         #Creacion de boton para volver(cerrar) de la tienda
         self.boton_finalizar_tienda = Button(image=None, pos=(760,570), text_input="Finalizar",font=self.vGlobales.font,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         #Creacion de vitrinas de balas 
-        self.minibox_bala1_tienda = pygame.Rect(575,300,75,80)
-        self.minibox_bala2_tienda = pygame.Rect(725,300,75,80)
-        self.minibox_bala3_tienda = pygame.Rect(875,300,75,80)
+        self.minibox_bala1_tienda = pygame.Rect(575,280,75,80)
+        self.minibox_bala2_tienda = pygame.Rect(725,280,75,80)
+        self.minibox_bala3_tienda = pygame.Rect(875,280,75,80)
         #Creacion de botones para comprar balas
         self.boton_comprar_bala_c = Button(image=None, pos=(612,410), text_input="Comprar",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         self.boton_comprar_bala_m = Button(image=None, pos=(762,410), text_input="Comprar",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         self.boton_comprar_bala_g = Button(image=None, pos=(912,410), text_input="Comprar",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO, hovering_color=self.vGlobales.BLANCO)
         #Creacion de Texto que mostrara el saldo del jugador
-        self.text_saldo = "$"
+        self.text_saldo = "Saldo: $"
         self.text_saldo_color = self.vGlobales.verde
         #Creacion de Texto que mostrara el titulo "Tienda"
         self.text_tienda = "Tienda de jugador"
@@ -128,9 +128,16 @@ class Interfazz():
         self.text_costo_bala_c_surface = self.vGlobales.font4.render(self.text_costo_bala_c,True,self.vGlobales.BLANCO)
         self.text_costo_bala_m_surface = self.vGlobales.font4.render(self.text_costo_bala_m,True,self.vGlobales.BLANCO)
         self.text_costo_bala_g_surface = self.vGlobales.font4.render(self.text_costo_bala_g,True,self.vGlobales.BLANCO)
-        self.text_costo_bala_c_surface_rect = self.text_costo_bala_c_surface.get_rect(center=(610,280))
-        self.text_costo_bala_m_surface_rect = self.text_costo_bala_m_surface.get_rect(center=(760,280))
-        self.text_costo_bala_g_surface_rect = self.text_costo_bala_g_surface.get_rect(center=(910,280))
+        self.text_costo_bala_c_surface_rect = self.text_costo_bala_c_surface.get_rect(center=(610,260))
+        self.text_costo_bala_m_surface_rect = self.text_costo_bala_m_surface.get_rect(center=(760,260))
+        self.text_costo_bala_g_surface_rect = self.text_costo_bala_g_surface.get_rect(center=(910,260))
+        #Creacion de botones para vender balas
+        self.boton_vender_bala_c = Button(image=None, pos=(612,450), text_input="Vender",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO,hovering_color=self.vGlobales.BLANCO)
+        self.boton_vender_bala_m = Button(image=None, pos=(762,450), text_input="Vender",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO,hovering_color=self.vGlobales.BLANCO)
+        self.boton_vender_bala_g = Button(image=None, pos=(912,450), text_input="Vender",font=self.vGlobales.font4,base_color=self.vGlobales.NEGRO,hovering_color=self.vGlobales.BLANCO)
+        #Creacion de Texto que mostrara la cantidad de balas que posee el jugador
+        #Creo que no es necesario crearlo aqui xd
+
     def interfaz(self):
         #Texto que dice Angulo...
         self.text_angulo_jugador1 = "Angulo:"
@@ -296,8 +303,8 @@ class Interfazz():
             #Se entra a este else cuando el booleano es True (osea, cuando se le haya dado click al boton para abrir el minimenu)
             #IMPRESION DE MINIMENU
             pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris,(260,0,280,50))
-            pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_nueva_partida_color,self.boton_nueva_partida_rect)
-            self.vGlobales.PANTALLA.blit(self.boton_surface_nueva_partida,(self.boton_nueva_partida_rect.x + 12, self.boton_nueva_partida_rect.y + 7))
+            pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_pasar_turno_color,self.boton_pasar_turno_rect)
+            self.vGlobales.PANTALLA.blit(self.boton_surface_pasar_turno,(self.boton_pasar_turno_rect.x + 22, self.boton_pasar_turno_rect.y + 7))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_salir_color,self.boton_salir_rect)
             self.vGlobales.PANTALLA.blit(self.boton_surface_salir,(self.boton_salir_rect.x + 10,self.boton_salir_rect.y + 7))
             pygame.draw.rect(self.vGlobales.PANTALLA,self.boton_cerrar_minimenu_color,self.boton_cerrar_minimenu_rect)
@@ -327,9 +334,13 @@ class Interfazz():
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(865,395,100,30))
+                #Dibujo de rectangulos amarillos que van a estar debajo de los botones para vender
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(565,435,100,30))
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(715,435,100,30))
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(865,435,100,30))
                 #Dibujo de rectangulo rojo para el boton Volver
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.rojo_oscuro,(690,550,140,40))
-                for boton in [self.boton_finalizar_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g]:
+                for boton in [self.boton_finalizar_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g, self.boton_vender_bala_c, self.boton_vender_bala_m, self.boton_vender_bala_g]:
                     boton.update(self.vGlobales.PANTALLA)
                 pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala1_tienda, 3)
                 pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala2_tienda, 3)
@@ -338,9 +349,9 @@ class Interfazz():
                 self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2_tienda.x + 17, self.minibox_bala2_tienda.y + 17))
                 self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1_tienda.x + 17, self.minibox_bala1_tienda.y + 17))
                 #IMPRESION DE SALDO DE JUGADOR
-                self.text_saldo = "$"+str(lista_tanques_OG[self.contadortienda].saldo)
+                self.text_saldo = "Saldo: $"+str(lista_tanques_OG[self.contadortienda].saldo)
                 self.text_saldo_surface = self.vGlobales.font.render(self.text_saldo,True,self.text_saldo_color)
-                self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(1000,125))
+                self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(760,165))
                 self.vGlobales.PANTALLA.blit(self.text_saldo_surface,self.text_saldo_surface_rect)   
                 #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
                 self.vGlobales.PANTALLA.blit(self.text_tienda_surface,self.text_tienda_surface_rect)  
@@ -348,6 +359,19 @@ class Interfazz():
                 self.vGlobales.PANTALLA.blit(self.text_costo_bala_c_surface,self.text_costo_bala_c_surface_rect)
                 self.vGlobales.PANTALLA.blit(self.text_costo_bala_m_surface,self.text_costo_bala_m_surface_rect)
                 self.vGlobales.PANTALLA.blit(self.text_costo_bala_g_surface,self.text_costo_bala_g_surface_rect)
+                #creacion e impresion de pequeñas cajas de texto que se van a encargar de mostrar la municion de cada bala
+                self.text_municion_bala1_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_c)
+                self.text_surface_municion_bala1_tienda = self.vGlobales.font4.render(self.text_municion_bala1_tienda, True,self.vGlobales.BLANCO)
+                self.text_surface_municion_bala1_tienda_rect = pygame.Rect(605,365,75,40)
+                self.text_municion_bala2_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_m)
+                self.text_surface_municion_bala2_tienda = self.vGlobales.font4.render(self.text_municion_bala2_tienda, True,self.vGlobales.BLANCO)
+                self.text_surface_municion_bala2_tienda_rect = pygame.Rect(745,365,75,40)
+                self.text_municion_bala3_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_g)
+                self.text_surface_municion_bala3_tienda = self.vGlobales.font4.render(self.text_municion_bala3_tienda, True,self.vGlobales.BLANCO)
+                self.text_surface_municion_bala3_tienda_rect = pygame.Rect(905,365,75,40)
+                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala1_tienda,self.text_surface_municion_bala1_tienda_rect)
+                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala2_tienda,self.text_surface_municion_bala2_tienda_rect)
+                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala3_tienda,self.text_surface_municion_bala3_tienda_rect)
                 for event in pygame.event.get():
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         #Condicionales de botones
@@ -359,6 +383,12 @@ class Interfazz():
                             lista_tanques_OG[self.contadortienda].comprar_bala(bala_m)
                         if self.boton_comprar_bala_g.checkForInput(event.pos):
                             lista_tanques_OG[self.contadortienda].comprar_bala(bala_g)
+                        if self.boton_vender_bala_c.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].vender_bala(bala_c)
+                        if self.boton_vender_bala_m.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].vender_bala(bala_m)
+                        if self.boton_vender_bala_g.checkForInput(event.pos):
+                            lista_tanques_OG[self.contadortienda].vender_bala(bala_g)
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         sys.exit()
