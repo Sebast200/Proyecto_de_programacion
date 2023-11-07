@@ -282,6 +282,8 @@ def partida(num_rondas):
         #Variable para generar la nueva partida
         nueva_partida = False
 
+        #Variable para verificar si se le hizo click a pasar turno al final del codigo (si se verifica antes no funciona asi que por ahora se hara de este modo que es un poco feo :c )
+        pasar_turno = False
         #Arreglo de turnos por ronda
         ronda = []
         viento = -1
@@ -290,7 +292,6 @@ def partida(num_rondas):
         #Variable booleana que definira si se debe mostrar la tienda o no
         compraron_todos = False
         while True:
-
             #Dibujo de la pantalla
             DISPLAYSURF.blit(fondo,(0,0))
             
@@ -349,10 +350,11 @@ def partida(num_rondas):
                     #bloquea el inventario mientras se ejectua el disparo
                     if bala_c.caida == False and bala_m.caida == False and bala_g.caida == False:
                         interfaz.click_mouse_inventario(event.pos)
-                    #click en "Nueva Partida"
+                    #click en "Pasar Turno"
                     if interfaz.boton_abrir_minimenu_active == True:
-                        if interfaz.boton_nueva_partida_rect.collidepoint(event.pos):
-                            nueva_partida = True
+                        if interfaz.boton_pasar_turno_rect.collidepoint(event.pos):
+                            pasar_turno = True
+                            # nueva_partida = True
                         if interfaz.boton_salir_rect.collidepoint(event.pos):
                             menu_principal()
                     #disparo de bala
@@ -446,6 +448,10 @@ def partida(num_rondas):
             #Creacion de condicional para ver si se debe crear una nueva partida o no
             if nueva_partida == True:
                 partida(num_rondas)
+            #Creacion de condicional para ver si se debe pasar el turno o no
+            if pasar_turno == True:
+                turno_pasado = 0
+                pasar_turno = False
             pygame.display.flip()
             RELOJ.tick(vGlobales.FPS)
     else:
