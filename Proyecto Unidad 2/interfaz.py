@@ -170,7 +170,7 @@ class Interfazz():
         self.textbox_angulo = ""
         self.textbox_velocidad_inicial = ""
 
-    def click_mouse(self, posicion_muose,bala,pos_tanque, turno_pasado, viento):
+    def click_mouse(self, posicion_muose, bala, pos_tanque, turno_pasado, viento):
         #Condicion de click para el cuadro de angulo
         if self.textbox_angulo_rect.collidepoint(posicion_muose):
             self.textbox_angulo_active = True

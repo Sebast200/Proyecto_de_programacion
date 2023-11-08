@@ -81,7 +81,7 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
-            self.colision_explosion_tanque(lista_tanques, num_jugadores)
+            self.colision_explosion_tanque(lista_tanques, num_jugadores, turno_jugador)
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= self.vGlobales.ancho_gris ):
@@ -104,10 +104,13 @@ class Balas (pygame.sprite.Sprite):
                 self.explosion = 1
                 if self.tipo == self.vGlobales.bala_chica:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_c
+                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
                 if self.tipo == self.vGlobales.bala_mediana:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_m
+                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
                 if self.tipo == self.vGlobales.bala_grande:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_g
+                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
 
         #Altura maxima
         if self.altaura_max < lista_tanques[turno_jugador].rect.y - self.rect.y:
@@ -147,7 +150,7 @@ class Balas (pygame.sprite.Sprite):
         return terreno
     
     #Daño producido por la explosion de bala
-    def colision_explosion_tanque (self, lista_tanques, num_jugadores):
+    def colision_explosion_tanque (self, lista_tanques, num_jugadores, turno_jugador):
         
         Distancias  = []
         for i in range (num_jugadores):
@@ -156,4 +159,5 @@ class Balas (pygame.sprite.Sprite):
         for i in range (num_jugadores):
             if (Distancias[i] <= self.tipo/2):
                 lista_tanques[i].vida = int(lista_tanques[i].vida - self.daño * (-Distancias[i]/60 +1))
+                if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
                 

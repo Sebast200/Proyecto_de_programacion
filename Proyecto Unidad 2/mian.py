@@ -62,7 +62,7 @@ def mostrar_recorrido(reco):
         pygame.draw.circle(DISPLAYSURF, vGlobales.NEGRO,(reco[i]),5)
         i+=1
 
-def descuento_balas_tanque(bala,turno_pasado, turno_jugador,tanque):
+def descuento_balas_tanque(bala,turno_pasado,tanque):
     if bala.tipo == vGlobales.bala_chica and turno_pasado == 0:
         tanque.unidades_c -= 1
     if bala.tipo == vGlobales.bala_mediana and turno_pasado == 0:
@@ -79,9 +79,9 @@ def animacion_explosion(radio_bala, bala):
         pygame.display.flip()
 
 #Inicia el proceso para disparar la bala
-def disparar_bala(event, bala, turno_pasado, turno_jugador, tanque, recorrido, viento):
+def disparar_bala(event, bala, turno_pasado, tanque, recorrido, viento):
     turno_pasado = interfaz.click_mouse(event, bala, tanque, turno_pasado, viento) #Permite pasar al siguiente turno
-    descuento_balas_tanque(bala, turno_pasado, turno_jugador, tanque)
+    descuento_balas_tanque(bala, turno_pasado, tanque)
     #limpia recorrido de la bala si no esta en mivimiento
     if (bala.caida == False):
         recorrido.clear()
@@ -169,6 +169,7 @@ def opciones(contador_soldado_anim):
 def menu_principal():
     contador_soldado_anim = 0
     num_rondas = 2
+    num_jugadores = 4
     pygame.display.set_caption("Menu")
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
@@ -201,12 +202,12 @@ def menu_principal():
                     sys.exit()
 
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):#Pantalla con instrucciones
-                    pre_game(num_rondas) 
+                    pre_game(num_rondas, num_jugadores) 
 
         pygame.display.update()
 
 #Pantalla de instrucciones
-def pre_game(num_rondas):
+def pre_game(num_rondas, num_jugadores):
     pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
     mixer.music.play(-1)
@@ -214,11 +215,11 @@ def pre_game(num_rondas):
         DISPLAYSURF.blit(pre_game_img,(0,0))
         for event in pygame.event.get():#Comenzar el juego
             if event.type == pygame.MOUSEBUTTONDOWN:
-                partida(num_rondas)
+                partida(num_rondas, num_jugadores)
         pygame.display.flip()
 
 #Pantalla del juego
-def partida(num_rondas):
+def partida(num_rondas, num_jugadores):
     if num_rondas > 0:
         print("Ronda n° ",num_rondas)
         pygame.display.set_caption("Partida")
@@ -246,7 +247,7 @@ def partida(num_rondas):
         skin_bala_g = pygame.image.load("Proyecto Unidad 2/imagenes/bala_g_img.png")
 
         #Test cantidad de tanques
-        num_jugadores = 3
+        num_jugadores = num_jugadores
         gravedad = 10
         lista_tanques_OG = []
         lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
@@ -340,7 +341,8 @@ def partida(num_rondas):
                 if turno_jugador == 6:
                     interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.naranjo)
 
-
+            if lista_tanques_OG[turno_jugador-1].vida <= 0:
+                pasar_turno = True
             #bucle de eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -358,16 +360,17 @@ def partida(num_rondas):
                         if interfaz.boton_salir_rect.collidepoint(event.pos):
                             menu_principal()
                     #disparo de bala
-                    if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido, viento)
-                    if interfaz.minibox_bala2_active == True and lista_tanques_OG[turno_jugador-1].unidades_m > 0:
-                        turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido, viento)
-                    if interfaz.minibox_bala3_active == True and lista_tanques_OG[turno_jugador-1].unidades_g> 0:
-                        turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, turno_jugador, lista_tanques_OG[turno_jugador-1], recorrido, viento)
-
+                    print("kills = ", lista_tanques_OG[turno_jugador-1].kills)
+                    if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                        turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
+                    if interfaz.minibox_bala2_active == True and lista_tanques_OG[turno_jugador-1].unidades_m > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                        turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
+                    if interfaz.minibox_bala3_active == True and lista_tanques_OG[turno_jugador-1].unidades_g > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                        turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
+                    
                 if event.type == pygame.KEYDOWN:
                     interfaz.escribir(event)
-                    
+            
             #Movimiento de tanques
             for i in range (num_jugadores):
                 lista_tanques_OG[i].update()
@@ -418,7 +421,7 @@ def partida(num_rondas):
                             sys.exit()
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas > 0:
-                                partida(num_rondas)
+                                partida(num_rondas, num_jugadores)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
@@ -447,7 +450,7 @@ def partida(num_rondas):
                 compraron_todos = interfaz.print_tienda(lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g)       
             #Creacion de condicional para ver si se debe crear una nueva partida o no
             if nueva_partida == True:
-                partida(num_rondas)
+                partida(num_rondas, num_jugadores)
             #Creacion de condicional para ver si se debe pasar el turno o no
             if pasar_turno == True:
                 turno_pasado = 0
