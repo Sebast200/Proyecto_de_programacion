@@ -73,10 +73,10 @@ class Globaless():
         if self.seleccion_terreno == 0:
             self.seleccion_terreno = random.randint(1,3)
         if (self.seleccion_terreno == 1):
-            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno1)
+            pygame.draw.polygon(self.PANTALLA,self.grisclaro,self.puntos_terreno1)
         elif (self.seleccion_terreno == 2):
-            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno2)
+            pygame.draw.polygon(self.PANTALLA,self.grisclaro,self.puntos_terreno2)
         else:
-            pygame.draw.polygon(self.PANTALLA,self.verde,self.puntos_terreno3)
+            pygame.draw.polygon(self.PANTALLA,self.grisclaro,self.puntos_terreno3)
         pygame.draw.rect(self.PANTALLA,self.grisclaro,(0,0,self.ancho_gris,self.HEIGHT))
 

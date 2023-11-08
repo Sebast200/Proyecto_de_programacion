@@ -36,7 +36,7 @@ class Balas (pygame.sprite.Sprite):
             #Moviemiento de la bala
             self.image.fill (self.vGlobales.NEGRO)
             self.Xi = self.Xi + self.viento #Movimiento segun el viento
-            self.rect.x = self.Xi + (self.velx * self.timepo)*0.5 #Moviemiento segun el disparo 
+            self.rect.x = self.Xi + (self.velx * self.timepo)*0.5 *0.8#Moviemiento segun el disparo 
             self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)
             self.timepo += 0.12
             self.contador_recorrido+=1
@@ -77,7 +77,7 @@ class Balas (pygame.sprite.Sprite):
             color = (color[0], color[1], color[2])
 
         #Verifica la colision con terreno o panel
-        if (color == self.vGlobales.verde or color == self.vGlobales.grisclaro):
+        if (color == self.vGlobales.grisclaro or color == self.vGlobales.grisclaro):
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1

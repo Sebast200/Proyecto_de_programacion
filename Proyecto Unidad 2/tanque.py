@@ -33,7 +33,7 @@ class Tankes (pygame.sprite.Sprite):
     def update(self):
         self.caida_Tanque()
         if (self.caida):
-            self.rect.y = self.Yi + 0.5 * self.gravedad * self.timepo**2
+            self.rect.y = self.Yi + 0.5 * self.gravedad * self.timepo**2*0.8
             self.timepo += 0.12
         else:
             self.vida = self.vida - self.distancia_caida
@@ -44,11 +44,11 @@ class Tankes (pygame.sprite.Sprite):
             self.color = self.vGlobales.PANTALLA.get_at((self.rect.midbottom[0],self.rect.midbottom[1]))
             self.color = (self.color[0], self.color[1], self.color[2])
 
-        if self.caida == False and self.color != self.vGlobales.verde:
+        if self.caida == False and self.color != self.vGlobales.grisclaro:
             self.Yi = self.rect.y
             self.timepo = 0
         #Colision con color del terreno
-        if (self.color == self.vGlobales.verde or self.rect.y >= self.vGlobales.HEIGHT):
+        if (self.color == self.vGlobales.grisclaro or self.rect.y >= self.vGlobales.HEIGHT):
             self.caida = False
             self.inmune = False
         else:

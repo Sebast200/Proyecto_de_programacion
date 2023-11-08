@@ -1,4 +1,5 @@
 import pygame, sys, globales, tanque, bala, random, interfaz
+from particulas import Particulas
 from pygame.locals import *
 from boton import Button
 from pygame import mixer 
@@ -9,7 +10,7 @@ interfaz = interfaz.Interfazz()
 
 #MUSICA DE FONDO
 mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
-mixer.music.play(-1)
+#mixer.music.play(-1)
 
 #VARIABLES GLOBALES
 vGlobales = globales.Globaless()
@@ -30,8 +31,8 @@ def genera_terreno_pixel(pantalla, matriz): #Retorna una copia del terreno para 
     while (i < vGlobales.WIDTH):
         j = 0
         while (j < vGlobales.HEIGHT):
-            if (pantalla.get_at((i,j)) == vGlobales.verde):
-                matriz[i-vGlobales.ancho_gris][j] = (vGlobales.verde)
+            if (pantalla.get_at((i,j)) == vGlobales.grisclaro):
+                matriz[i-vGlobales.ancho_gris][j] = (vGlobales.grisclaro)
             else:
                 matriz[i-vGlobales.ancho_gris][j] = (0,0,0,0)
             j+=1
@@ -132,6 +133,129 @@ def fatality(fatality_check):
     return fatality_check
 
 #FUNCIONES PRINCIPALES
+#Pantalla de preparacion
+def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
+    #Aqui se dara la opcion a modificar cuantas rondas se quiere jugar asi como cuantos jugadores se quiere que haya en la partida
+    pygame.display.set_caption("Preparacion")
+    #variable para contar la cantidad de rondas y mostrarlas en la pantalla
+    cantidadrondas = 1
+    gravedad_active = False
+    viento_active = False
+    while True:
+        DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
+        MENU_MOUSE_POS = pygame.mouse.get_pos()
+        #Creacion de textos
+        TEXTO_PREPARACION = vGlobales.font3.render("PREPARACION", True, vGlobales.BLANCO)
+        PREPARACION_RECT = TEXTO_PREPARACION.get_rect(center=(400, 100))
+        TEXTO_CUANTOS_JUGADORES = vGlobales.font2.render("Nro. de jugadores:", True, vGlobales.BLANCO)
+        TEXTO_CUANTOS_JUGADORES_RECT = TEXTO_CUANTOS_JUGADORES.get_rect(center=(280,200))
+        #Creacion de texto que dira el numero de jugadores
+        TEXTO_NUM_JUGADORES = vGlobales.font2.render(str(num_jugadores), True, vGlobales.BLANCO)
+        TEXTO_NUM_JUGADORES_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(570,207))
+        #Creacion de texto que preguntara el numero de rondas
+        TEXTO_CUANTAS_RONDAS = vGlobales.font2.render("Nro. de rondas:", True, vGlobales.BLANCO)
+        TEXTO_CUANTAS_RONDAS_RECT = TEXTO_CUANTAS_RONDAS.get_rect(center=(247,270))
+        #Creacion de texto que dira el numero de rondas
+        TEXTO_NUM_RONDAS = vGlobales.font2.render(str(num_rondas), True, vGlobales.BLANCO)
+        TEXTO_NUM_RONDAS_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(505,277))
+        #Creacion de texto que dira Gravedad
+        TEXTO_GRAVEDAD = vGlobales.font2.render("Gravedad:",True, vGlobales.BLANCO)
+        TEXTO_GRAVEDAD_RECT = TEXTO_GRAVEDAD.get_rect(center=(185,340))
+        #Creacion de texto que dira Viento
+        TEXTO_VIENTO = vGlobales.font2.render("Viento:",True, vGlobales.BLANCO)
+        TEXTO_VIENTO_RECT = TEXTO_VIENTO.get_rect(center=(149,410))
+        #Creacion de botones
+        #Boton para volver
+        BOTON_VOLVER = Button(image=None, pos=(240,650), text_input="VOLVER", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
+        #Boton para jugar
+        BOTON_JUGAR = Button(image=None, pos=(1040,650), text_input="JUGAR", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
+        #Boton para restar en num_jugadores
+        BOTON_MENOS1 = Button(image=None,pos=(520,207), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para sumar en num_jugadores
+        BOTON_MAS1 = Button(image=None,pos=(620,207), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para restar en rondas
+        BOTON_MENOS2 = Button(image=None,pos=(455,277), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para sumar en rondas
+        BOTON_MAS2 = Button(image=None,pos=(585,277), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para activar gravedad
+        BOTON_ACTIVAR_GRAVEDAD = Button(image=None,pos=(340,340), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para desactivar gravedad
+        BOTON_DESACTIVAR_GRAVEDAD = Button(image=None,pos=(415,340), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para activar viento
+        BOTON_ACTIVAR_VIENTO = Button(image=None,pos=(265,413), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para desactivar viento
+        BOTON_DESACTIVAR_VIENTO = Button(image=None,pos=(340,413), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        
+        contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
+        #IMPRESION DE RECTANGULOS PARA BOTONES
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(495,175,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(545,175,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(595,175,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(430,245,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(480,245,80,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(560,245,50,50))
+        if gravedad_active == False:
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(310,305,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(380,305,70,60))
+        else:
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,305,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(380,305,70,60))
+        if viento_active == False:
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(235,377,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(305,377,70,60))
+        else:
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(235,377,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(305,377,70,60))
+
+        #IMPRESION DE TEXTOS
+        DISPLAYSURF.blit(TEXTO_PREPARACION, PREPARACION_RECT)
+        DISPLAYSURF.blit(TEXTO_CUANTOS_JUGADORES, TEXTO_CUANTOS_JUGADORES_RECT)
+        DISPLAYSURF.blit(TEXTO_NUM_JUGADORES, TEXTO_NUM_JUGADORES_RECT)
+        DISPLAYSURF.blit(TEXTO_CUANTAS_RONDAS, TEXTO_CUANTAS_RONDAS_RECT)
+        DISPLAYSURF.blit(TEXTO_NUM_RONDAS, TEXTO_NUM_RONDAS_RECT)
+        DISPLAYSURF.blit(TEXTO_GRAVEDAD, TEXTO_GRAVEDAD_RECT)
+        DISPLAYSURF.blit(TEXTO_VIENTO, TEXTO_VIENTO_RECT)
+
+        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_ACTIVAR_GRAVEDAD, BOTON_DESACTIVAR_GRAVEDAD, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
+            boton.changeColor(MENU_MOUSE_POS)
+            boton.update(DISPLAYSURF)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+                
+            if event.type == pygame.MOUSEBUTTONDOWN: #Volver al menu principal
+                if BOTON_VOLVER.checkForInput(MENU_MOUSE_POS):
+                    menu_principal()
+                if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
+                    pre_game(num_rondas,num_jugadores,cantidadrondas)
+                #Creacion de condicionales para los botones de suma y resta de numero de jugadores
+                if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
+                    if num_jugadores > 2:
+                        num_jugadores -= 1
+                if BOTON_MAS1.checkForInput(MENU_MOUSE_POS):
+                    if num_jugadores < 6:
+                        num_jugadores += 1
+                #Creacion de condicionales para los botones de suma y resta de numero de rondas
+                if BOTON_MENOS2.checkForInput(MENU_MOUSE_POS):
+                    if num_rondas > 1:
+                        num_rondas -= 1
+                if BOTON_MAS2.checkForInput(MENU_MOUSE_POS):
+                    if num_rondas < 10:
+                        num_rondas += 1
+                #Creacion de condicionales para los botones para activar o desactivar gravedad
+                if BOTON_ACTIVAR_GRAVEDAD.checkForInput(MENU_MOUSE_POS):
+                    gravedad_active = True
+                if BOTON_DESACTIVAR_GRAVEDAD.checkForInput(MENU_MOUSE_POS):
+                    gravedad_active = False
+                #Creacion de condicionales para los botones para activar o desactivar viento
+                if BOTON_ACTIVAR_VIENTO.checkForInput(MENU_MOUSE_POS):
+                    viento_active = True
+                if BOTON_DESACTIVAR_VIENTO.checkForInput(MENU_MOUSE_POS):
+                    viento_active = False
+
+        pygame.display.update()
 #Pantalla de opciones
 def opciones(contador_soldado_anim):
     pygame.display.set_caption("Opciones")
@@ -202,12 +326,13 @@ def menu_principal():
                     sys.exit()
 
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):#Pantalla con instrucciones
-                    pre_game(num_rondas, num_jugadores) 
+                    preparacion(num_rondas,num_jugadores,contador_soldado_anim)
+                    # pre_game(num_rondas, num_jugadores) 
 
         pygame.display.update()
 
 #Pantalla de instrucciones
-def pre_game(num_rondas, num_jugadores):
+def pre_game(num_rondas, num_jugadores, cantidadrondas):
     pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
     mixer.music.play(-1)
@@ -215,12 +340,20 @@ def pre_game(num_rondas, num_jugadores):
         DISPLAYSURF.blit(pre_game_img,(0,0))
         for event in pygame.event.get():#Comenzar el juego
             if event.type == pygame.MOUSEBUTTONDOWN:
-                partida(num_rondas, num_jugadores)
+                partida(num_rondas, num_jugadores, cantidadrondas)
         pygame.display.flip()
 
 #Pantalla del juego
-def partida(num_rondas, num_jugadores):
+def partida(num_rondas, num_jugadores, cantidadrondas):
     if num_rondas > 0:
+        #RECOLECCION E IMPRESION DE RONDA
+        DISPLAYSURF.fill((0,0,0), (0,0,vGlobales.WIDTH,vGlobales.HEIGHT))
+        text_ronda = vGlobales.font3.render("Ronda n°" + str(cantidadrondas), True, vGlobales.BLANCO)
+        text_ronda_rect = text_ronda.get_rect(center=(vGlobales.WIDTH/2, vGlobales.HEIGHT/2))
+        DISPLAYSURF.blit(text_ronda, text_ronda_rect)
+        pygame.display.flip()
+        pygame.time.delay(600)
+
         print("Ronda n° ",num_rondas)
         pygame.display.set_caption("Partida")
         #Musica de la partida
@@ -290,11 +423,19 @@ def partida(num_rondas, num_jugadores):
         viento = -1
         jugadores_muertos = num_jugadores
 
+        #Variable que controla las particulas
+        particula = Particulas(gravedad)
+
         #Variable booleana que definira si se debe mostrar la tienda o no
         compraron_todos = False
         while True:
             #Dibujo de la pantalla
             DISPLAYSURF.blit(fondo,(0,0))
+
+            #Particulas
+            particula.update(viento)
+            for particulas in particula.particulas:
+                pygame.draw.circle(DISPLAYSURF, vGlobales.BLANCO, (int(particulas['x']), int(particulas['y'])), 2)
             
             #Dibuja el terreno
             DISPLAYSURF.blit(nueva_superficie,(vGlobales.ancho_gris,0))
@@ -407,6 +548,7 @@ def partida(num_rondas, num_jugadores):
             #Game over
             if (jugadores_muertos+1) == num_jugadores:
                 num_rondas = num_rondas - 1
+                cantidadrondas += 1
                 print("rondas restantes: ", num_rondas)
                 while True:
                     interfaz.text_game_over = "GAME OVER"
@@ -421,7 +563,7 @@ def partida(num_rondas, num_jugadores):
                             sys.exit()
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas > 0:
-                                partida(num_rondas, num_jugadores)
+                                partida(num_rondas, num_jugadores, cantidadrondas)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
