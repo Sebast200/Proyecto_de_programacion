@@ -10,7 +10,7 @@ interfaz = interfaz.Interfazz()
 
 #MUSICA DE FONDO
 mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
-#mixer.music.play(-1)
+mixer.music.play(-1)
 
 #VARIABLES GLOBALES
 vGlobales = globales.Globaless()
@@ -145,24 +145,24 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         #Creacion de textos
-        TEXTO_PREPARACION = vGlobales.font3.render("PREPARACION", True, vGlobales.BLANCO)
+        TEXTO_PREPARACION = vGlobales.font3.render("PREPARACION", True, vGlobales.verde_oscuro)
         PREPARACION_RECT = TEXTO_PREPARACION.get_rect(center=(400, 100))
-        TEXTO_CUANTOS_JUGADORES = vGlobales.font2.render("Nro. de jugadores:", True, vGlobales.BLANCO)
+        TEXTO_CUANTOS_JUGADORES = vGlobales.font2.render("Nro. de jugadores:", True, vGlobales.NEGRO)
         TEXTO_CUANTOS_JUGADORES_RECT = TEXTO_CUANTOS_JUGADORES.get_rect(center=(280,200))
         #Creacion de texto que dira el numero de jugadores
-        TEXTO_NUM_JUGADORES = vGlobales.font2.render(str(num_jugadores), True, vGlobales.BLANCO)
+        TEXTO_NUM_JUGADORES = vGlobales.font2.render(str(num_jugadores), True, vGlobales.NEGRO)
         TEXTO_NUM_JUGADORES_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(570,207))
         #Creacion de texto que preguntara el numero de rondas
-        TEXTO_CUANTAS_RONDAS = vGlobales.font2.render("Nro. de rondas:", True, vGlobales.BLANCO)
+        TEXTO_CUANTAS_RONDAS = vGlobales.font2.render("Nro. de rondas:", True, vGlobales.NEGRO)
         TEXTO_CUANTAS_RONDAS_RECT = TEXTO_CUANTAS_RONDAS.get_rect(center=(247,270))
         #Creacion de texto que dira el numero de rondas
-        TEXTO_NUM_RONDAS = vGlobales.font2.render(str(num_rondas), True, vGlobales.BLANCO)
+        TEXTO_NUM_RONDAS = vGlobales.font2.render(str(num_rondas), True, vGlobales.NEGRO)
         TEXTO_NUM_RONDAS_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(505,277))
         #Creacion de texto que dira Gravedad
-        TEXTO_GRAVEDAD = vGlobales.font2.render("Gravedad:",True, vGlobales.BLANCO)
+        TEXTO_GRAVEDAD = vGlobales.font2.render("Gravedad:",True, vGlobales.NEGRO)
         TEXTO_GRAVEDAD_RECT = TEXTO_GRAVEDAD.get_rect(center=(185,340))
         #Creacion de texto que dira Viento
-        TEXTO_VIENTO = vGlobales.font2.render("Viento:",True, vGlobales.BLANCO)
+        TEXTO_VIENTO = vGlobales.font2.render("Viento:",True, vGlobales.NEGRO)
         TEXTO_VIENTO_RECT = TEXTO_VIENTO.get_rect(center=(149,410))
         #Creacion de botones
         #Boton para volver
@@ -262,8 +262,8 @@ def opciones(contador_soldado_anim):
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        TEXTO_OPCIONES = vGlobales.font3.render("OPCIONES", True, vGlobales.BLANCO)
-        TEXTO_DESCRIPCION = vGlobales.font2.render("De momento no tenemos las opciones listas xd", True, vGlobales.BLANCO)
+        TEXTO_OPCIONES = vGlobales.font3.render("OPCIONES", True, vGlobales.NEGRO)
+        TEXTO_DESCRIPCION = vGlobales.font2.render("De momento no tenemos las opciones listas xd", True, vGlobales.NEGRO)
         OPCIONES_RECT = TEXTO_OPCIONES.get_rect(center=(640, 100))
         DESCRIPCION_RECT = TEXTO_DESCRIPCION.get_rect(center=(640,400))
 
@@ -298,13 +298,13 @@ def menu_principal():
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
-        TEXTO_MENU = vGlobales.font3.render("TANK LOVER'S GAME", True, vGlobales.BLANCO)
+        TEXTO_MENU = vGlobales.font3.render("TANK LOVER'S GAME", True, vGlobales.verde_oscuro)
         MENU_RECT = TEXTO_MENU.get_rect(center=(640, 100))
         contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
         #Creacion de botones
-        BOTON_JUGAR = Button(image=None, pos=(400,290), text_input="JUGAR", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
-        BOTON_OPCIONES = Button(image=None, pos=(400,415),text_input="OPCIONES", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
-        BOTON_SALIR = Button(image= None, pos=(400,540),text_input="SALIR", font=get_font(75), base_color=vGlobales.verde_oscuro,hovering_color=vGlobales.BLANCO)
+        BOTON_JUGAR = Button(image=None, pos=(400,290), text_input="JUGAR", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.BLANCO)
+        BOTON_OPCIONES = Button(image=None, pos=(400,415),text_input="OPCIONES", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.BLANCO)
+        BOTON_SALIR = Button(image= None, pos=(400,540),text_input="SALIR", font=get_font(75), base_color=vGlobales.NEGRO,hovering_color=vGlobales.BLANCO)
 
         DISPLAYSURF.blit(TEXTO_MENU, MENU_RECT)
         
@@ -552,7 +552,7 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                 print("rondas restantes: ", num_rondas)
                 while True:
                     interfaz.text_game_over = "GAME OVER"
-                    interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.rojo_oscuro)
+                    interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.verde_oscuro)
                     interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
                     interfaz.interfaz()
                     interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
