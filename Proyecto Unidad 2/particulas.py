@@ -1,9 +1,8 @@
 import random, globales
 class Particulas:
-    def __init__(self, gravedad):
+    def __init__(self):
 
         self.particulas = []
-        self.gravedad = gravedad
         self.vGlobales = globales.Globaless()
 
     def crear_particula(self):

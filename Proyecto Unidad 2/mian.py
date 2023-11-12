@@ -424,7 +424,7 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
         jugadores_muertos = num_jugadores
 
         #Variable que controla las particulas
-        particula = Particulas(gravedad)
+        particula = Particulas()
 
         #Variable booleana que definira si se debe mostrar la tienda o no
         compraron_todos = False
