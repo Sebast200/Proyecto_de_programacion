@@ -190,9 +190,19 @@ class Interfazz():
                 if numero_angulo>360:
                     self.textbox_angulo = ""
                 else:
-                    self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial, viento)
-                    turno_pasado = 0
-                    return turno_pasado
+                    #if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0 and lista_tanques_OG[turno_jugador-1].vida > 0
+                    if self.minibox_bala1_active == True and pos_tanque.unidades_c>0:
+                        self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial, viento)
+                        turno_pasado = 0
+                        return turno_pasado
+                    if self.minibox_bala2_active == True and pos_tanque.unidades_m>0:
+                        self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial, viento)
+                        turno_pasado = 0
+                        return turno_pasado
+                    if self.minibox_bala3_active == True and pos_tanque.unidades_g>0:
+                        self.boton_disparar_click(bala, pos_tanque, numero_angulo, numero_velocidad_inicial, viento)
+                        turno_pasado = 0
+                        return turno_pasado
             except ValueError:
                 self.textbox_angulo = ""
                 self.textbox_velocidad_inicial = ""
@@ -398,3 +408,6 @@ class Interfazz():
 #NUEVOS CAMBIOS
 #1.- QUIERO AGREGAR UN CUADRO NEGRO EN LA PARTE EN LA QUE SE IMPRIME EL TURNO DEL JUGADOR
 #2.- Linea 122 se agrego un rectangulo gris para que se vean algunos textos del jugador
+#NUEVOS CAMBIOS 14-11-2023
+#1.- Linea 193 voy a revisar si puedo cambiar la verificacion de municion para que se compruebe aca en vez de que se compruebe en el mian
+#2.- Funciona PERO el codigo podria estar mejor hecho porque esta verificacion creo que se podria hacer en otra parte para que este mas ordenado :c
