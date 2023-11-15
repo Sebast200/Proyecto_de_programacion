@@ -502,11 +502,12 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                             menu_principal()
                     #disparo de bala
                     print("kills = ", lista_tanques_OG[turno_jugador-1].kills)
-                    if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                    #if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0 and lista_tanques_OG[turno_jugador-1].vida > 0
+                    if interfaz.minibox_bala1_active == True:
                         turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
-                    if interfaz.minibox_bala2_active == True and lista_tanques_OG[turno_jugador-1].unidades_m > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                    if interfaz.minibox_bala2_active == True:
                         turno_pasado = disparar_bala(event.pos, bala_m, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
-                    if interfaz.minibox_bala3_active == True and lista_tanques_OG[turno_jugador-1].unidades_g > 0 and lista_tanques_OG[turno_jugador-1].vida > 0:
+                    if interfaz.minibox_bala3_active == True:
                         turno_pasado = disparar_bala(event.pos, bala_g, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
                     
                 if event.type == pygame.KEYDOWN:
@@ -608,3 +609,5 @@ menu_principal()
 #NUEVOS CAMBIOS (FRANCO ARENAS) 29-10-2023
 #1.- SE AGREGARON LOS COLORES EN GLOBALES Y EN MIAN
 #2.- linea 308 se cambio el sistema de turno y ahora es funcional (creo)
+#NUEVOS CAMBIOS (FRANCO ARENAS) 14-11-2023
+#1.- Linea 505 a 510 se cambiaron las condicionales que estaban antes, ya que estas a pesar de que funcionaban, a la hora de que se acabara la municion de la bala anteriormente seleccionada habia que elegir SI O SI otra con municion, de otra forma el jugador no va a poder hacer nada
