@@ -132,15 +132,30 @@ def fatality(fatality_check):
         sys.exit()
     return fatality_check
 
+def validar_balas(lista_tanques, num_jugadores):
+    todos_sin_balas = False
+    sin_bala = 0
+    for i in range (num_jugadores):
+        if lista_tanques[i].unidades_c == 0 and lista_tanques[i].unidades_m == 0 and lista_tanques[i].unidades_g == 0:
+            sin_bala += 1
+    if sin_bala == num_jugadores:
+        todos_sin_balas = True
+    else: todos_sin_balas = False
+    return todos_sin_balas
+
 #FUNCIONES PRINCIPALES
 #Pantalla de preparacion
 def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
     #Aqui se dara la opcion a modificar cuantas rondas se quiere jugar asi como cuantos jugadores se quiere que haya en la partida
     pygame.display.set_caption("Preparacion")
     #variable para contar la cantidad de rondas y mostrarlas en la pantalla
-    cantidadrondas = 1
+    ronda_actual = 1
+    gravedad = 10
     gravedad_active = False
     viento_active = False
+    lista_tanques_OG = []
+    lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
+    
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
@@ -229,7 +244,7 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                 if BOTON_VOLVER.checkForInput(MENU_MOUSE_POS):
                     menu_principal()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
-                    pre_game(num_rondas,num_jugadores,cantidadrondas)
+                    pre_game(num_rondas,num_jugadores, ronda_actual, lista_tanques_OG, gravedad)
                 #Creacion de condicionales para los botones de suma y resta de numero de jugadores
                 if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores > 2:
@@ -293,7 +308,7 @@ def opciones(contador_soldado_anim):
 def menu_principal():
     contador_soldado_anim = 0
     num_rondas = 2
-    num_jugadores = 4
+    num_jugadores = 2
     pygame.display.set_caption("Menu")
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
@@ -332,23 +347,25 @@ def menu_principal():
         pygame.display.update()
 
 #Pantalla de instrucciones
-def pre_game(num_rondas, num_jugadores, cantidadrondas):
+def pre_game(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, gravedad):
     pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
     mixer.music.play(-1)
+    for i in range (num_jugadores-1):
+        lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad))
     while True:
         DISPLAYSURF.blit(pre_game_img,(0,0))
         for event in pygame.event.get():#Comenzar el juego
             if event.type == pygame.MOUSEBUTTONDOWN:
-                partida(num_rondas, num_jugadores, cantidadrondas)
+                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
         pygame.display.flip()
 
 #Pantalla del juego
-def partida(num_rondas, num_jugadores, cantidadrondas):
+def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG):
     if num_rondas > 0:
         #RECOLECCION E IMPRESION DE RONDA
         DISPLAYSURF.fill((0,0,0), (0,0,vGlobales.WIDTH,vGlobales.HEIGHT))
-        text_ronda = vGlobales.font3.render("Ronda n°" + str(cantidadrondas), True, vGlobales.BLANCO)
+        text_ronda = vGlobales.font3.render("Ronda n°" + str(ronda_actual), True, vGlobales.BLANCO)
         text_ronda_rect = text_ronda.get_rect(center=(vGlobales.WIDTH/2, vGlobales.HEIGHT/2))
         DISPLAYSURF.blit(text_ronda, text_ronda_rect)
         pygame.display.flip()
@@ -381,11 +398,11 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
 
         #Test cantidad de tanques
         num_jugadores = num_jugadores
-        gravedad = 10
+        """gravedad = 10
         lista_tanques_OG = []
         lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
         for i in range (num_jugadores-1):
-            lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad))
+            lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad))"""
 
         #Objetos en pantalla
         sprites = pygame.sprite.Group()
@@ -425,6 +442,9 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
 
         #Variable que controla las particulas
         particula = Particulas()
+
+        #Variable booleana que define si los jugadores tienen balas o no
+        todos_sin_balas = False
 
         #Variable booleana que definira si se debe mostrar la tienda o no
         compraron_todos = False
@@ -481,9 +501,19 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                     interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.morado)
                 if turno_jugador == 6:
                     interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.naranjo)
-
+            
+            #Saltar el turno de los jugadores muertos
             if lista_tanques_OG[turno_jugador-1].vida <= 0:
                 pasar_turno = True
+            
+            #Saltar el turno de los jugadores sin balas
+            #if lista_tanques_OG[turno_jugador-1].unidades_c == 0 and lista_tanques_OG[turno_jugador-1].unidades_m == 0 and lista_tanques_OG[turno_jugador-1].unidades_g == 0:
+            #   pasar_turno = True
+            
+            #Proceso de impresion de tienda
+            while compraron_todos == False:
+                compraron_todos = interfaz.print_tienda(lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g)
+            
             #bucle de eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -501,7 +531,6 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                         if interfaz.boton_salir_rect.collidepoint(event.pos):
                             menu_principal()
                     #disparo de bala
-                    print("kills = ", lista_tanques_OG[turno_jugador-1].kills)
                     #if interfaz.minibox_bala1_active == True and lista_tanques_OG[turno_jugador-1].unidades_c > 0 and lista_tanques_OG[turno_jugador-1].vida > 0
                     if interfaz.minibox_bala1_active == True:
                         turno_pasado = disparar_bala(event.pos, bala_c, turno_pasado, lista_tanques_OG[turno_jugador-1], recorrido, viento)
@@ -533,7 +562,7 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                 DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
             sprites.draw(DISPLAYSURF)
             mostrar_recorrido(recorrido)
-
+            
             #Dibujo de skins
             for i in range (num_jugadores):
                 if i % 2 == 0:
@@ -545,11 +574,11 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
             for i in range (num_jugadores):
                 if lista_tanques_OG[i].rect.y >= 720:
                     fatality_count = fatality(fatality_count)
-                
-            #Game over
-            if (jugadores_muertos+1) == num_jugadores:
+            
+            #Game over o Empate
+            if (jugadores_muertos+1) == num_jugadores or todos_sin_balas == True:
                 num_rondas = num_rondas - 1
-                cantidadrondas += 1
+                ronda_actual += 1
                 print("rondas restantes: ", num_rondas)
                 while True:
                     interfaz.text_game_over = "GAME OVER"
@@ -564,7 +593,18 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                             sys.exit()
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas > 0:
-                                partida(num_rondas, num_jugadores, cantidadrondas)
+                                lista_tanques_OG[0].rect.center=(random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), 100)
+                                for i in range(num_jugadores-1): 
+                                    lista_tanques_OG[i+1].rect.center=(random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), 100)
+                                for i in range(num_jugadores):
+                                    lista_tanques_OG[i].vida = 100
+                                    lista_tanques_OG[i].inmune = True
+                                    lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 10000
+                                    if lista_tanques_OG[i].kills > 0: lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 5000 * lista_tanques_OG[i].kills
+                                    if lista_tanques_OG[i].suicidio == True: 
+                                        lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
+                                        lista_tanques_OG[i].suicidio = False
+                                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
@@ -580,7 +620,7 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
             #undo
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
-
+            
             #Animacion de explosion de las balas
             if bala_c.explosion == 1:
                 animacion_explosion(vGlobales.bala_chica, bala_c)
@@ -588,12 +628,12 @@ def partida(num_rondas, num_jugadores, cantidadrondas):
                 animacion_explosion(vGlobales.bala_mediana, bala_m)
             elif bala_g.explosion == 1:
                 animacion_explosion(vGlobales.bala_grande,bala_g)
-            #Proceso de impresion de tienda
-            while compraron_todos == False:
-                compraron_todos = interfaz.print_tienda(lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g)       
+            #Validacion cantidad de balas de cada jugador
+            if bala_c.caida == False and bala_m.caida == False and bala_g.caida == False:
+                todos_sin_balas = validar_balas(lista_tanques_OG, num_jugadores)
             #Creacion de condicional para ver si se debe crear una nueva partida o no
             if nueva_partida == True:
-                partida(num_rondas, num_jugadores)
+                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
             #Creacion de condicional para ver si se debe pasar el turno o no
             if pasar_turno == True:
                 turno_pasado = 0
