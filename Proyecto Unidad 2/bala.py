@@ -12,8 +12,6 @@ class Balas (pygame.sprite.Sprite):
         self.alto = 5
         self.tipo = tipo          #Id de bala/Diametro de la bala
         self.daño = daño
-        self.unidades_tanque1 = unidades
-        self.unidades_tanque2 = unidades
         self.contador_recorrido = 1
         self.coordenadas_altura_max = (0,-100)
         self.coordenadas_distancia = (0,-100)
@@ -93,7 +91,7 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
         
-        #daño a lista
+        #Daño a lista de Tanques
         for i in range (num_jugadores):
             if lista_tanques[i].rect.x + lista_tanques[i].largo > self.rect.x and \
             lista_tanques[i].rect.x < self.rect.x + self.ancho and \
@@ -104,13 +102,27 @@ class Balas (pygame.sprite.Sprite):
                 self.explosion = 1
                 if self.tipo == self.vGlobales.bala_chica:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_c
-                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
+                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
+                        lista_tanques[turno_jugador].kills += 1
+                        if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
+                            lista_tanques[turno_jugador].suicidio = True
+                            lista_tanques[turno_jugador].kills -= 1
+                        
                 if self.tipo == self.vGlobales.bala_mediana:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_m
-                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
+                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
+                        lista_tanques[turno_jugador].kills += 1
+                        if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
+                            lista_tanques[turno_jugador].suicidio = True
+                            lista_tanques[turno_jugador].kills -= 1
+                            
                 if self.tipo == self.vGlobales.bala_grande:
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_g
-                    if lista_tanques[i].vida <= 0: lista_tanques[turno_jugador].kills += 1
+                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
+                        lista_tanques[turno_jugador].kills += 1
+                        if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
+                            lista_tanques[turno_jugador].suicidio = True
+                            lista_tanques[turno_jugador].kills -= 1
 
         #Altura maxima
         if self.altaura_max < lista_tanques[turno_jugador].rect.y - self.rect.y:
