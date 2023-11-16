@@ -3,7 +3,7 @@ from pygame import mixer
 from math import sqrt
 class Balas (pygame.sprite.Sprite):
     #Constructor
-    def __init__(self, tipo, daño, unidades):
+    def __init__(self, tipo, daño, gravedad):
         super().__init__()
         self.vGlobales = globales.Globaless()
         self.altaura_max = 0  
@@ -22,10 +22,11 @@ class Balas (pygame.sprite.Sprite):
         self.rect.center = (500,-100)
         self.image.fill(self.vGlobales.celeste)
         self.explosion = 0
-        self.gravedad = 9.8
+        self.gravedad = gravedad
         self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
         self.caida = False
         self.timepo=0
+        self.inmune_tank = False
 
     def update(self, superficie, pixel_array, lista_tanques, num_jugadores, turno_jugador):
         #Solo empezara el disparo si se ejecuto la funcion disparo
@@ -35,7 +36,7 @@ class Balas (pygame.sprite.Sprite):
             self.image.fill (self.vGlobales.NEGRO)
             self.Xi = self.Xi + self.viento #Movimiento segun el viento
             self.rect.x = self.Xi + (self.velx * self.timepo)*0.5 *0.8#Moviemiento segun el disparo 
-            self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)
+            self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.7
             self.timepo += 0.12
             self.contador_recorrido+=1
             return superficie
@@ -66,6 +67,7 @@ class Balas (pygame.sprite.Sprite):
         self.caida = True
         self.altaura_max = 0
         self.viento = viento
+        self.inmune_tank = False
 
     def caida_Bala(self, lista_tanques, num_jugadores, turno_jugador):
         #Toma el color para la colision de la bala 
@@ -79,7 +81,8 @@ class Balas (pygame.sprite.Sprite):
             self.shoot_impact.play()
             self.caida = False
             self.explosion = 1
-            self.colision_explosion_tanque(lista_tanques, num_jugadores, turno_jugador)
+            if self.inmune_tank == False:
+                self.colision_explosion_tanque(lista_tanques, num_jugadores, turno_jugador)
         
         #Verifica los rangos de la pantalla
         if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= self.vGlobales.ancho_gris ):
@@ -101,6 +104,7 @@ class Balas (pygame.sprite.Sprite):
                 self.caida = False
                 self.explosion = 1
                 if self.tipo == self.vGlobales.bala_chica:
+                    self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_c
                     if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
                         lista_tanques[turno_jugador].kills += 1
@@ -109,6 +113,7 @@ class Balas (pygame.sprite.Sprite):
                             lista_tanques[turno_jugador].kills -= 1
                         
                 if self.tipo == self.vGlobales.bala_mediana:
+                    self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_m
                     if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
                         lista_tanques[turno_jugador].kills += 1
@@ -117,6 +122,7 @@ class Balas (pygame.sprite.Sprite):
                             lista_tanques[turno_jugador].kills -= 1
                             
                 if self.tipo == self.vGlobales.bala_grande:
+                    self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_g
                     if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
                         lista_tanques[turno_jugador].kills += 1
