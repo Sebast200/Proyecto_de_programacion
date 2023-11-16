@@ -8,10 +8,6 @@ from pygame import mixer
 pygame.init()
 interfaz = interfaz.Interfazz()
 
-#MUSICA DE FONDO
-mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
-mixer.music.play(-1)
-
 #VARIABLES GLOBALES
 vGlobales = globales.Globaless()
 RELOJ = pygame.time.Clock()
@@ -143,6 +139,44 @@ def validar_balas(lista_tanques, num_jugadores):
     else: todos_sin_balas = False
     return todos_sin_balas
 
+def disparo_bot(tanque, turno_pasado, bala_c, bala_m, bala_g, gravedad,viento, recorrido):
+    #seleccion de bala
+    if turno_pasado == 1:
+        turno_pasado =  0
+        balas = [bala_c, bala_m, bala_g]
+        condition = True
+        if tanque.unidades_c == 0 and tanque.unidades_m == 0 and tanque.unidades_g == 0:
+            return 0
+        while condition == True:      
+            i = random.randint(0,2)
+            if i == 0:
+                if tanque.unidades_c > 0:
+                    interfaz.minibox_bala1_active = True
+                    interfaz.minibox_bala2_active = False
+                    interfaz.minibox_bala3_active = False
+                    condition = False
+            if i == 1:
+                if tanque.unidades_m > 0:
+                    interfaz.minibox_bala1_active = False
+                    interfaz.minibox_bala2_active = True
+                    interfaz.minibox_bala3_active = False
+                    condition = False
+            if i == 2:
+                if tanque.unidades_g > 0:
+                    interfaz.minibox_bala1_active = False
+                    interfaz.minibox_bala2_active = False
+                    interfaz.minibox_bala3_active = True
+                    condition = False
+        angulo = 120
+        velocidad = 120
+        Tank_shoot = mixer.Sound("Proyecto Unidad 2/sonidos_musica/tank_shooting.mp3")
+        Tank_shoot.play()
+        balas[i].disparar(angulo,velocidad,tanque,viento)
+        descuento_balas_tanque(balas[i],turno_pasado,tanque)
+        if balas[i].caida == False:
+            recorrido.clear()
+        return turno_pasado
+
 #FUNCIONES PRINCIPALES
 #Pantalla de preparacion
 def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
@@ -150,8 +184,8 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
     pygame.display.set_caption("Preparacion")
     #variable para contar la cantidad de rondas y mostrarlas en la pantalla
     ronda_actual = 1
-    gravedad = 10
-    gravedad_active = False
+    gravedad = 5
+    num_bots = 0
     viento_active = False
     lista_tanques_OG = []
     lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
@@ -176,6 +210,9 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         #Creacion de texto que dira Gravedad
         TEXTO_GRAVEDAD = vGlobales.font2.render("Gravedad:",True, vGlobales.NEGRO)
         TEXTO_GRAVEDAD_RECT = TEXTO_GRAVEDAD.get_rect(center=(185,340))
+        #Creacion de texto que dira el numero de la gravedad
+        TEXTO_NUM_GRAVEDAD = vGlobales.font2.render(str(gravedad), True, vGlobales.NEGRO)
+        TEXTO_NUM_GRAVEDAD_RECT = TEXTO_NUM_GRAVEDAD.get_rect(center=(400,335))
         #Creacion de texto que dira Viento
         TEXTO_VIENTO = vGlobales.font2.render("Viento:",True, vGlobales.NEGRO)
         TEXTO_VIENTO_RECT = TEXTO_VIENTO.get_rect(center=(149,410))
@@ -190,6 +227,10 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         BOTON_MAS1 = Button(image=None,pos=(620,207), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para restar en rondas
         BOTON_MENOS2 = Button(image=None,pos=(455,277), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para restar gravedad
+        BOTON_MENOS3 = Button(image=None,pos=(335,337), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para sumar gravedad
+        BOTON_MAS3 = Button(image=None,pos=(465,337), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para sumar en rondas
         BOTON_MAS2 = Button(image=None,pos=(585,277), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para activar gravedad
@@ -209,12 +250,10 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(430,245,50,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(480,245,80,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(560,245,50,50))
-        if gravedad_active == False:
-            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(310,305,70,60))
-            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(380,305,70,60))
-        else:
-            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,305,70,60))
-            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(380,305,70,60))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,305,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(360,305,80,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(440,305,50,50))
+        
         if viento_active == False:
             pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(235,377,70,60))
             pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(305,377,70,60))
@@ -229,9 +268,10 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         DISPLAYSURF.blit(TEXTO_CUANTAS_RONDAS, TEXTO_CUANTAS_RONDAS_RECT)
         DISPLAYSURF.blit(TEXTO_NUM_RONDAS, TEXTO_NUM_RONDAS_RECT)
         DISPLAYSURF.blit(TEXTO_GRAVEDAD, TEXTO_GRAVEDAD_RECT)
+        DISPLAYSURF.blit(TEXTO_NUM_GRAVEDAD, TEXTO_NUM_GRAVEDAD_RECT)
         DISPLAYSURF.blit(TEXTO_VIENTO, TEXTO_VIENTO_RECT)
 
-        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_ACTIVAR_GRAVEDAD, BOTON_DESACTIVAR_GRAVEDAD, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
+        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_MENOS3, BOTON_MAS3, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
             boton.changeColor(MENU_MOUSE_POS)
             boton.update(DISPLAYSURF)
 
@@ -244,7 +284,7 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                 if BOTON_VOLVER.checkForInput(MENU_MOUSE_POS):
                     menu_principal()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
-                    pre_game(num_rondas,num_jugadores, ronda_actual, lista_tanques_OG, gravedad)
+                    pre_game(num_rondas,num_jugadores, ronda_actual, lista_tanques_OG, gravedad+5, num_bots,viento_active)
                 #Creacion de condicionales para los botones de suma y resta de numero de jugadores
                 if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores > 2:
@@ -259,11 +299,13 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                 if BOTON_MAS2.checkForInput(MENU_MOUSE_POS):
                     if num_rondas < 10:
                         num_rondas += 1
-                #Creacion de condicionales para los botones para activar o desactivar gravedad
-                if BOTON_ACTIVAR_GRAVEDAD.checkForInput(MENU_MOUSE_POS):
-                    gravedad_active = True
-                if BOTON_DESACTIVAR_GRAVEDAD.checkForInput(MENU_MOUSE_POS):
-                    gravedad_active = False
+                #Creacion de botones para aumentar y disminuir la gravedad
+                if BOTON_MENOS3.checkForInput(MENU_MOUSE_POS):
+                    if gravedad > 1:
+                        gravedad -= 1
+                if BOTON_MAS3.checkForInput(MENU_MOUSE_POS):
+                    if gravedad < 10:
+                        gravedad += 1
                 #Creacion de condicionales para los botones para activar o desactivar viento
                 if BOTON_ACTIVAR_VIENTO.checkForInput(MENU_MOUSE_POS):
                     viento_active = True
@@ -306,6 +348,9 @@ def opciones(contador_soldado_anim):
         
 #Pantalla de menu principal
 def menu_principal():
+    #MUSICA DE FONDO
+    mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
+    mixer.music.play(-1)
     contador_soldado_anim = 0
     num_rondas = 2
     num_jugadores = 2
@@ -347,21 +392,24 @@ def menu_principal():
         pygame.display.update()
 
 #Pantalla de instrucciones
-def pre_game(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, gravedad):
+def pre_game(num_rondas, num_personas, ronda_actual, lista_tanques_OG, gravedad, num_bots, viento_active):
     pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
     mixer.music.play(-1)
+    num_jugadores = num_personas + num_bots
+    lista_tanques_OG = []
+    lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
     for i in range (num_jugadores-1):
         lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad))
     while True:
         DISPLAYSURF.blit(pre_game_img,(0,0))
         for event in pygame.event.get():#Comenzar el juego
             if event.type == pygame.MOUSEBUTTONDOWN:
-                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
+                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad)
         pygame.display.flip()
 
 #Pantalla del juego
-def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG):
+def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad):
     if num_rondas > 0:
         #RECOLECCION E IMPRESION DE RONDA
         DISPLAYSURF.fill((0,0,0), (0,0,vGlobales.WIDTH,vGlobales.HEIGHT))
@@ -396,20 +444,12 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG):
         skin_bala_m = pygame.image.load("Proyecto Unidad 2/imagenes/bala_m_img.png")
         skin_bala_g = pygame.image.load("Proyecto Unidad 2/imagenes/bala_g_img.png")
 
-        #Test cantidad de tanques
-        num_jugadores = num_jugadores
-        """gravedad = 10
-        lista_tanques_OG = []
-        lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
-        for i in range (num_jugadores-1):
-            lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad))"""
-
         #Objetos en pantalla
         sprites = pygame.sprite.Group()
-        bala_g = bala.Balas(vGlobales.bala_grande, vGlobales.daño_bala_g, vGlobales.unidades_cyg)
-        bala_m = bala.Balas(vGlobales.bala_mediana, vGlobales.daño_bala_m, vGlobales.unidades_m)
-        bala_c = bala.Balas(vGlobales.bala_chica, vGlobales.daño_bala_c, vGlobales.unidades_cyg)
-        for i in range (num_jugadores):
+        bala_g = bala.Balas(vGlobales.bala_grande, vGlobales.daño_bala_g, gravedad)
+        bala_m = bala.Balas(vGlobales.bala_mediana, vGlobales.daño_bala_m, gravedad)
+        bala_c = bala.Balas(vGlobales.bala_chica, vGlobales.daño_bala_c, gravedad)
+        for i in range (num_jugadores-1):
             sprites.add(lista_tanques_OG[i])
         sprites.add(bala_g)
         sprites.add(bala_m)
@@ -466,7 +506,10 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG):
 
             #proceso de cambio de turno 
             if turno_pasado == 0 and not bala_c.caida and not bala_m.caida and not bala_g.caida:
-                viento = random.randint(-10,10)/10
+                if viento_active == True:
+                    viento = random.randint(-10,10)/10
+                else:
+                    viento = 0
                 jugadores_muertos = num_jugadores
                 for i in range (len(lista_tanques_OG)):
                     if lista_tanques_OG[i].vida >= 0:
