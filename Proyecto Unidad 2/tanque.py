@@ -84,3 +84,5 @@ class Tankes (pygame.sprite.Sprite):
         if bala.tipo == self.vGlobales.bala_grande and self.unidades_g >= 1:
             self.unidades_g -= 1
             self.saldo = self.saldo + self.vGlobales.costo_bala_g
+
+#Correcion de gravedad, Arreglo de bug de daño y proceso de Ia
