@@ -29,14 +29,16 @@ class Tankes (pygame.sprite.Sprite):
         self.timepo = 0
         self.Yi = 100
         self.saldo = 10000
+        self.bot = False
+
     #actualiza la posicion del tanque
     def update(self):
         self.caida_Tanque()
         if (self.caida):
-            self.rect.y = self.Yi + 0.5 * self.gravedad * self.timepo**2*0.8
+            self.rect.y = self.Yi + 0.5 * self.gravedad * self.timepo**2*0.7
             self.timepo += 0.12
         else:
-            self.vida = self.vida - self.distancia_caida
+            self.vida = self.vida - self.distancia_caida*self.gravedad/10
             self.distancia_caida = 0
 
     def caida_Tanque(self):
@@ -55,6 +57,8 @@ class Tankes (pygame.sprite.Sprite):
             self.caida = True
             if not(self.inmune):
                 self.distancia_caida += 0.5
+
+
     def comprar_bala(self, bala):
         if bala.tipo == self.vGlobales.bala_chica and self.saldo >= self.vGlobales.costo_bala_c:
             self.unidades_c += 1
