@@ -58,6 +58,7 @@ class Globaless():
         self.morado = (202,47,243)
         self.naranjo = (233,132,24)
         self.gris_oscuro = (84,84,84)
+        self.negro_azulado = (31,34,44)
 
         #FPS
         self.FPS = (90)
