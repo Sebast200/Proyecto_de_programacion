@@ -129,10 +129,14 @@ def fatality(fatality_check):
     return fatality_check
 
 def validar_balas(lista_tanques, num_jugadores):
+    #Hay que arreglar esto ya que si un tanque muere CON balas, nunca habra empate
     todos_sin_balas = False
     sin_bala = 0
     for i in range (num_jugadores):
         if lista_tanques[i].unidades_c == 0 and lista_tanques[i].unidades_m == 0 and lista_tanques[i].unidades_g == 0:
+            sin_bala += 1
+        #Si se hace esto no deberia de ocurrir este error
+        elif lista_tanques[i].vida<=0:
             sin_bala += 1
     if sin_bala == num_jugadores:
         todos_sin_balas = True
@@ -369,7 +373,7 @@ def opciones(contador_soldado_anim):
 def menu_principal():
     #MUSICA DE FONDO
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/background.mp3")
-    mixer.music.play(-1)
+    #mixer.music.play(-1)
     contador_soldado_anim = 0
     num_rondas = 2
     num_jugadores = 2
@@ -414,7 +418,7 @@ def menu_principal():
 def pre_game(num_rondas, num_personas, ronda_actual, lista_tanques_OG, gravedad, num_bots, viento_active):
     pre_game_img = pygame.image.load("Proyecto Unidad 2/imagenes/pre_game_bg.png")
     mixer.music.load("Proyecto Unidad 2/sonidos_musica/pre_game_bgm.mp3")
-    mixer.music.play(-1)
+    #mixer.music.play(-1)
     num_jugadores = num_personas + num_bots
     lista_tanques_OG = []
     lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
@@ -442,7 +446,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
         pygame.display.set_caption("Partida")
         #Musica de la partida
         mixer.music.load("Proyecto Unidad 2/sonidos_musica/init_game.mp3")
-        mixer.music.play(-1)
+        #mixer.music.play(-1)
 
         #Cargar imagenes
         vGlobales.seleccion_terreno = 0
@@ -571,11 +575,11 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Saltar el turno de los jugadores sin balas
             #if lista_tanques_OG[turno_jugador-1].unidades_c == 0 and lista_tanques_OG[turno_jugador-1].unidades_m == 0 and lista_tanques_OG[turno_jugador-1].unidades_g == 0:
             #   pasar_turno = True
-            
+            '''
             #Proceso de impresion de tienda
             while compraron_todos == False:
                 compraron_todos = interfaz.print_tienda(lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g)
-            
+            '''
             #bucle de eventos
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -642,12 +646,27 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 num_rondas = num_rondas - 1
                 ronda_actual += 1
                 print("rondas restantes: ", num_rondas)
+                for i in range(num_jugadores):
+                    #lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 10000
+                    if lista_tanques_OG[i].kills > 0:
+                        lista_tanques_OG[i].saldo: lista_tanques_OG[i].saldo + 5000 * lista_tanques_OG[i].kills
+
+                    if lista_tanques_OG[i].suicidio == True: 
+                        lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
+                        lista_tanques_OG[i].cantidad_suicidios =+ 1
+                        lista_tanques_OG[i].suicidio = False
+                        if lista_tanques_OG[i].saldo < 0:
+                            lista_tanques_OG[i].saldo = 0
                 while True:
+                    #La idea es que se actualicen los datos de los tanques antes de mostrar la pantalla de resultados. voy a hacer unos cambios
+                    '''
                     interfaz.text_game_over = "GAME OVER"
                     interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.verde_oscuro)
                     interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
                     interfaz.interfaz()
                     interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
+                    '''
+                    interfaz.print_resultados(lista_tanques_OG,i,num_jugadores)
                     pygame.display.flip()
                     for event in pygame.event.get():
                         if event.type == pygame.QUIT:
@@ -661,11 +680,6 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                                 for i in range(num_jugadores):
                                     lista_tanques_OG[i].vida = 100
                                     lista_tanques_OG[i].inmune = True
-                                    lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 10000
-                                    if lista_tanques_OG[i].kills > 0: lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 5000 * lista_tanques_OG[i].kills
-                                    if lista_tanques_OG[i].suicidio == True: 
-                                        lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
-                                        lista_tanques_OG[i].suicidio = False
                                 partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento, gravedad)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
@@ -679,6 +693,9 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 if i==turno_jugador-1:
                     interfaz.print_interfaz(lista_tanques_OG[i].unidades_c,lista_tanques_OG[i].unidades_m,lista_tanques_OG[i].unidades_g,lista_tanques_OG,num_jugadores)
                 i+=1
+            #Proceso de impresion de tienda
+            while compraron_todos == False:
+                compraron_todos = interfaz.print_tienda(lista_tanques_OG,compraron_todos,num_jugadores,bala_c,bala_m,bala_g)
             #undo
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
