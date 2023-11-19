@@ -340,6 +340,7 @@ class Interfazz():
                 #PROCESO DE IMPRESION
                 #IMPRESION DE TIENDA
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris_oscuro,(self.vGlobales.ancho_gris + 200,100,600,500))
+                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.negro_azulado,(self.vGlobales.ancho_gris + 200,100,600,500),5)
                 #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
                 pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
@@ -405,6 +406,214 @@ class Interfazz():
                 pygame.display.flip()
             else:                
                 return True       
+
+    def print_resultados(self,lista_tanques_OG,i,num_jugadores):
+        print("Si")
+        '''
+        self.text_game_over = "GAME OVER"
+        self.text_surface_game_over = self.vGlobales.font.render(self.text_game_over, True, self.vGlobales.verde_oscuro)
+        self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
+        '''
+        #self.vGlobales.PANTALLA.blit(self.text_surface_game_over, self.text_surface_game_over_rect)
+        self.interfaz()
+        self.print_interfaz(lista_tanques_OG[i].unidades_c,lista_tanques_OG[i].unidades_m,lista_tanques_OG[i].unidades_g,lista_tanques_OG,num_jugadores)
+        #Dibujo de rectangulo negro transparente
+        #FALLIDO, por ahora solo imprimire un rectangulo sin transparencia (se va a ver feo :c )
+        pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.negro_azulado,(self.vGlobales.ancho_gris + 70,60,900,600))
+        pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.NEGRO,(self.vGlobales.ancho_gris + 70,60,900,600),10)
+        #Recoleccion de datos e impresion de texto
+        #Texto que dira "Fin de la ronda"
+        self.text_fin_ronda = "Fin de la Ronda"
+        self.text_fin_ronda_surface = self.vGlobales.font2.render(self.text_fin_ronda,True,self.vGlobales.BLANCO)
+        self.text_fin_ronda_rect = self.text_fin_ronda_surface.get_rect(center=(800,120))
+        #Texto que dira quien es el ganador
+        #Aqui se buscara quien es el jugador vivo, si hay mas de uno vivo significa que es empate
+        contador = 0
+        lista_tanques_vivos = []
+        while contador<len(lista_tanques_OG):
+            if lista_tanques_OG[contador].vida>0:
+                lista_tanques_vivos.append(contador + 1)
+            contador += 1
+        if len(lista_tanques_vivos) == 1:
+            self.text_ganador_ronda = "Ganador de esta ronda: Jugador " + str(lista_tanques_vivos[0])
+        else:
+            self.text_ganador_ronda = "Ganador de esta ronda: Empate"
+        self.text_ganador_ronda_surface = self.vGlobales.font4.render(self.text_ganador_ronda,True,self.vGlobales.BLANCO)
+        self.text_ganador_ronda_rect = self.text_ganador_ronda_surface.get_rect(center=(800,170))
+        #Texto que dira "Bajas"
+        self.text_bajas = "Bajas"
+        self.text_bajas_surface = self.vGlobales.font4.render(self.text_bajas,True,self.vGlobales.BLANCO)
+        self.text_bajas_rect = self.text_bajas_surface.get_rect(center=(800,240))
+        #Texto que dira "Suicidios"
+        self.text_suicidios = "Suicidios"
+        self.text_suicidios_surface = self.vGlobales.font4.render(self.text_suicidios,True,self.vGlobales.BLANCO)
+        self.text_suicidios_rect = self.text_suicidios_surface.get_rect(center=(970,240))
+        #Texto que dira "Saldo"
+        self.text_saldo_resultado = "Saldo"
+        self.text_saldo_resultado_surface = self.vGlobales.font4.render(self.text_saldo_resultado,True,self.vGlobales.BLANCO)
+        self.text_saldo_resultado_rect = self.text_saldo_resultado_surface.get_rect(center=(1140,240))
+        #Texto que dira "Jugador 1"
+        self.text_jugador1_resultado = "Jugador 1"
+        self.text_jugador1_resultado_surface = self.vGlobales.font4.render(self.text_jugador1_resultado,True,self.vGlobales.AZUL)
+        self.text_jugador1_resultado_rect = self.text_jugador1_resultado_surface.get_rect(center=(420,300))
+        #Texto que mostrara las kills del jugador 1
+        self.text_kills_jugador1 = str(lista_tanques_OG[0].kills)
+        self.text_kills_jugador1_surface = self.vGlobales.font4.render(self.text_kills_jugador1,True,self.vGlobales.BLANCO)
+        self.text_kills_jugador1_rect = self.text_kills_jugador1_surface.get_rect(center=(800,300))
+        #Texto que mostrara las veces que se mato el jugador 1
+        self.text_suicidios_jugador1 = str(lista_tanques_OG[0].cantidad_suicidios)
+        self.text_suicidios_jugador1_surface = self.vGlobales.font4.render(self.text_suicidios_jugador1,True,self.vGlobales.BLANCO)
+        self.text_suicidios_jugador1_rect = self.text_suicidios_jugador1_surface.get_rect(center=(970,300))
+        #Texto que mostrara el saldo del jugador 1
+        self.text_saldo_jugador1 = "$" + str(lista_tanques_OG[0].saldo)
+        self.text_saldo_jugador1_surface = self.vGlobales.font4.render(self.text_saldo_jugador1,True,self.vGlobales.BLANCO)
+        self.text_saldo_jugador1_rect = self.text_saldo_jugador1_surface.get_rect(center=(1140,300))
+        #Texto que dira "Jugador 2"
+        self.text_jugador2_resultado = "Jugador 2"
+        self.text_jugador2_resultado_surface = self.vGlobales.font4.render(self.text_jugador2_resultado,True,self.vGlobales.ROJO)
+        self.text_jugador2_resultado_rect = self.text_jugador2_resultado_surface.get_rect(center=(420,350))
+        #Texto que mostrara las kills del jugador 2
+        self.text_kills_jugador2 = str(lista_tanques_OG[1].kills)
+        self.text_kills_jugador2_surface = self.vGlobales.font4.render(self.text_kills_jugador2,True,self.vGlobales.BLANCO)
+        self.text_kills_jugador2_rect = self.text_kills_jugador2_surface.get_rect(center=(800,350))
+        #Texto que mostrara las veces que se mato el jugador 2
+        self.text_suicidios_jugador2 = str(lista_tanques_OG[1].cantidad_suicidios)
+        self.text_suicidios_jugador2_surface = self.vGlobales.font4.render(self.text_suicidios_jugador2,True,self.vGlobales.BLANCO)
+        self.text_suicidios_jugador2_rect = self.text_suicidios_jugador2_surface.get_rect(center=(970,350))
+        #Texto que mostrara el saldo del jugador 2
+        self.text_saldo_jugador2 = "$" + str(lista_tanques_OG[1].saldo)
+        self.text_saldo_jugador2_surface = self.vGlobales.font4.render(self.text_saldo_jugador2,True,self.vGlobales.BLANCO)
+        self.text_saldo_jugador2_rect = self.text_saldo_jugador2_surface.get_rect(center=(1140,350))
+        #Proceso de verificacion de impresion de jugadores (para que no se impriman los 6 jugadores en caso de que estan jugando solo 4 o 3, etc)
+        #A pesar de que tengo una ZONA DE IMPRESION, me temo que tendre que imprimir los nombres de los jugadores dentro de estas condicionales, de otro modo, esto no funcionara 
+        if num_jugadores>=3:
+            #Texto que dira "Jugador 3"
+            self.text_jugador3_resultado = "Jugador 3"
+            self.text_jugador3_resultado_surface = self.vGlobales.font4.render(self.text_jugador3_resultado,True,self.vGlobales.amarillo)
+            self.text_jugador3_resultado_rect = self.text_jugador3_resultado_surface.get_rect(center=(420,400))
+            self.vGlobales.PANTALLA.blit(self.text_jugador3_resultado_surface,self.text_jugador3_resultado_rect)
+            #Texto que mostrara las kills del jugador 3
+            self.text_kills_jugador3 = str(lista_tanques_OG[2].kills)
+            self.text_kills_jugador3_surface = self.vGlobales.font4.render(self.text_kills_jugador3,True,self.vGlobales.BLANCO)
+            self.text_kills_jugador3_rect = self.text_kills_jugador3_surface.get_rect(center=(800,400))
+            self.vGlobales.PANTALLA.blit(self.text_kills_jugador3_surface,self.text_kills_jugador3_rect)
+            #Texto que mostrara las veces que se mato el jugador 3
+            self.text_suicidios_jugador3 = str(lista_tanques_OG[2].cantidad_suicidios)
+            self.text_suicidios_jugador3_surface = self.vGlobales.font4.render(self.text_suicidios_jugador3,True,self.vGlobales.BLANCO)
+            self.text_suicidios_jugador3_rect = self.text_suicidios_jugador3_surface.get_rect(center=(970,400))
+            self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador3_surface,self.text_suicidios_jugador3_rect)
+            #Texto que mostrara el saldo del jugador 3
+            self.text_saldo_jugador3 = "$" + str(lista_tanques_OG[2].saldo)
+            self.text_saldo_jugador3_surface = self.vGlobales.font4.render(self.text_saldo_jugador3,True,self.vGlobales.BLANCO)
+            self.text_saldo_jugador3_rect = self.text_saldo_jugador3_surface.get_rect(center=(1140,400))
+            self.vGlobales.PANTALLA.blit(self.text_saldo_jugador3_surface,self.text_saldo_jugador3_rect)
+        if num_jugadores>=4:
+            #Texto que dira "Jugador 4"
+            self.text_jugador4_resultado = "Jugador 4"
+            self.text_jugador4_resultado_surface = self.vGlobales.font4.render(self.text_jugador4_resultado,True,self.vGlobales.celeste)
+            self.text_jugador4_resultado_rect = self.text_jugador4_resultado_surface.get_rect(center=(420,450))                            
+            self.vGlobales.PANTALLA.blit(self.text_jugador4_resultado_surface,self.text_jugador4_resultado_rect)
+            #Texto que mostrara las kills del jugador 4
+            self.text_kills_jugador4 = str(lista_tanques_OG[3].kills)
+            self.text_kills_jugador4_surface = self.vGlobales.font4.render(self.text_kills_jugador4,True,self.vGlobales.BLANCO)
+            self.text_kills_jugador4_rect = self.text_kills_jugador4_surface.get_rect(center=(800,450))
+            self.vGlobales.PANTALLA.blit(self.text_kills_jugador4_surface,self.text_kills_jugador4_rect)
+            #Texto que mostrara las veces que se mato el jugador 4
+            self.text_suicidios_jugador4 = str(lista_tanques_OG[3].cantidad_suicidios)
+            self.text_suicidios_jugador4_surface = self.vGlobales.font4.render(self.text_suicidios_jugador4,True,self.vGlobales.BLANCO)
+            self.text_suicidios_jugador4_rect = self.text_suicidios_jugador4_surface.get_rect(center=(970,450))
+            self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador4_surface,self.text_suicidios_jugador4_rect)
+            #Texto que mostrara el saldo del jugador 4
+            self.text_saldo_jugador4 = "$" + str(lista_tanques_OG[3].saldo)
+            self.text_saldo_jugador4_surface = self.vGlobales.font4.render(self.text_saldo_jugador4,True,self.vGlobales.BLANCO)
+            self.text_saldo_jugador4_rect = self.text_saldo_jugador4_surface.get_rect(center=(1140,450))
+            self.vGlobales.PANTALLA.blit(self.text_saldo_jugador4_surface,self.text_saldo_jugador4_rect)
+        if num_jugadores>=5:
+            #Texto que dira "Jugador 5"
+            self.text_jugador5_resultado = "Jugador 5"
+            self.text_jugador5_resultado_surface = self.vGlobales.font4.render(self.text_jugador5_resultado,True,self.vGlobales.morado)
+            self.text_jugador5_resultado_rect = self.text_jugador5_resultado_surface.get_rect(center=(420,500))            
+            self.vGlobales.PANTALLA.blit(self.text_jugador5_resultado_surface,self.text_jugador5_resultado_rect)
+            #Texto que mostrara las kills del jugador 5
+            self.text_kills_jugador5 = str(lista_tanques_OG[4].kills)
+            self.text_kills_jugador5_surface = self.vGlobales.font4.render(self.text_kills_jugador5,True,self.vGlobales.BLANCO)
+            self.text_kills_jugador5_rect = self.text_kills_jugador5_surface.get_rect(center=(800,500))
+            self.vGlobales.PANTALLA.blit(self.text_kills_jugador5_surface,self.text_kills_jugador5_rect)
+            #Texto que mostrara las veces que se mato el jugador 5
+            self.text_suicidios_jugador5 = str(lista_tanques_OG[4].cantidad_suicidios)
+            self.text_suicidios_jugador5_surface = self.vGlobales.font4.render(self.text_suicidios_jugador5,True,self.vGlobales.BLANCO)
+            self.text_suicidios_jugador5_rect = self.text_suicidios_jugador5_surface.get_rect(center=(970,500))
+            self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador5_surface,self.text_suicidios_jugador5_rect)
+            #Texto que mostrara el saldo del jugador 5
+            self.text_saldo_jugador5 = "$" + str(lista_tanques_OG[4].saldo)
+            self.text_saldo_jugador5_surface = self.vGlobales.font4.render(self.text_saldo_jugador5,True,self.vGlobales.BLANCO)
+            self.text_saldo_jugador5_rect = self.text_saldo_jugador5_surface.get_rect(center=(1140,500))
+            self.vGlobales.PANTALLA.blit(self.text_saldo_jugador5_surface,self.text_saldo_jugador5_rect)
+        if num_jugadores>=6:
+            #Texto que dira "Jugador 6"
+            self.text_jugador6_resultado = "Jugador 6"
+            self.text_jugador6_resultado_surface = self.vGlobales.font4.render(self.text_jugador6_resultado,True,self.vGlobales.naranjo)
+            self.text_jugador6_resultado_rect = self.text_jugador6_resultado_surface.get_rect(center=(420,550))            
+            self.vGlobales.PANTALLA.blit(self.text_jugador6_resultado_surface,self.text_jugador6_resultado_rect)
+            #Texto que mostrara las kills del jugador 6
+            self.text_kills_jugador6 = str(lista_tanques_OG[5].kills)
+            self.text_kills_jugador6_surface = self.vGlobales.font4.render(self.text_kills_jugador6,True,self.vGlobales.BLANCO)
+            self.text_kills_jugador6_rect = self.text_kills_jugador6_surface.get_rect(center=(800,550))
+            self.vGlobales.PANTALLA.blit(self.text_kills_jugador6_surface,self.text_kills_jugador6_rect)
+            #Texto que mostrara las veces que se mato el jugador 6
+            self.text_suicidios_jugador6 = str(lista_tanques_OG[5].cantidad_suicidios)
+            self.text_suicidios_jugador6_surface = self.vGlobales.font4.render(self.text_suicidios_jugador6,True,self.vGlobales.BLANCO)
+            self.text_suicidios_jugador6_rect = self.text_suicidios_jugador6_surface.get_rect(center=(970,550))
+            self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador6_surface,self.text_suicidios_jugador6_rect)
+            #Texto que mostrara el saldo del jugador 6
+            self.text_saldo_jugador6 = "$" + str(lista_tanques_OG[5].saldo)
+            self.text_saldo_jugador6_surface = self.vGlobales.font4.render(self.text_saldo_jugador6,True,self.vGlobales.BLANCO)
+            self.text_saldo_jugador6_rect = self.text_saldo_jugador6_surface.get_rect(center=(1140,550))
+            self.vGlobales.PANTALLA.blit(self.text_saldo_jugador6_surface,self.text_saldo_jugador6_rect)
+        '''
+        #Texto que dira "Jugador 3"
+        self.text_jugador3_resultado = "Jugador 3"
+        self.text_jugador3_resultado_surface = self.vGlobales.font4.render(self.text_jugador3_resultado,True,self.vGlobales.amarillo)
+        self.text_jugador3_resultado_rect = self.text_jugador3_resultado_surface.get_rect(center=(420,400))
+        #Texto que dira "Jugador 4"
+        self.text_jugador4_resultado = "Jugador 4"
+        self.text_jugador4_resultado_surface = self.vGlobales.font4.render(self.text_jugador4_resultado,True,self.vGlobales.celeste)
+        self.text_jugador4_resultado_rect = self.text_jugador4_resultado_surface.get_rect(center=(420,450))
+        #Texto que dira "Jugador 5"
+        self.text_jugador5_resultado = "Jugador 5"
+        self.text_jugador5_resultado_surface = self.vGlobales.font4.render(self.text_jugador5_resultado,True,self.vGlobales.morado)
+        self.text_jugador5_resultado_rect = self.text_jugador5_resultado_surface.get_rect(center=(420,500))
+        #Texto que dira "Jugador 6"
+        self.text_jugador6_resultado = "Jugador 6"
+        self.text_jugador6_resultado_surface = self.vGlobales.font4.render(self.text_jugador6_resultado,True,self.vGlobales.naranjo)
+        self.text_jugador6_resultado_rect = self.text_jugador6_resultado_surface.get_rect(center=(420,550))
+        '''
+        #Texto que dira "Haga Click para Continuar"
+        self.text_click = "Haga Click para Continuar"
+        self.text_click_surface = self.vGlobales.font2.render(self.text_click,True,self.vGlobales.BLANCO)
+        self.text_click_rect = self.text_click_surface.get_rect(center=(800,620))        
+        #ZONA DE IMPRESION
+        self.vGlobales.PANTALLA.blit(self.text_fin_ronda_surface,self.text_fin_ronda_rect)
+        self.vGlobales.PANTALLA.blit(self.text_ganador_ronda_surface,self.text_ganador_ronda_rect)
+        self.vGlobales.PANTALLA.blit(self.text_bajas_surface,self.text_bajas_rect)
+        self.vGlobales.PANTALLA.blit(self.text_suicidios_surface,self.text_suicidios_rect)
+        self.vGlobales.PANTALLA.blit(self.text_saldo_resultado_surface,self.text_saldo_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_jugador1_resultado_surface,self.text_jugador1_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_kills_jugador1_surface,self.text_kills_jugador1_rect)
+        self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador1_surface,self.text_suicidios_jugador1_rect)
+        self.vGlobales.PANTALLA.blit(self.text_saldo_jugador1_surface,self.text_saldo_jugador1_rect)
+        self.vGlobales.PANTALLA.blit(self.text_jugador2_resultado_surface,self.text_jugador2_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_kills_jugador2_surface,self.text_kills_jugador2_rect)
+        self.vGlobales.PANTALLA.blit(self.text_suicidios_jugador2_surface,self.text_suicidios_jugador2_rect)
+        self.vGlobales.PANTALLA.blit(self.text_saldo_jugador2_surface,self.text_saldo_jugador2_rect)
+        '''
+        self.vGlobales.PANTALLA.blit(self.text_jugador3_resultado_surface,self.text_jugador3_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_jugador4_resultado_surface,self.text_jugador4_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_jugador5_resultado_surface,self.text_jugador5_resultado_rect)
+        self.vGlobales.PANTALLA.blit(self.text_jugador6_resultado_surface,self.text_jugador6_resultado_rect)
+        '''
+        self.vGlobales.PANTALLA.blit(self.text_click_surface,self.text_click_rect)
+
 #NUEVOS CAMBIOS
 #1.- QUIERO AGREGAR UN CUADRO NEGRO EN LA PARTE EN LA QUE SE IMPRIME EL TURNO DEL JUGADOR
 #2.- Linea 122 se agrego un rectangulo gris para que se vean algunos textos del jugador
