@@ -189,8 +189,8 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
     viento_active = False
     lista_tanques_OG = []
     lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad))
-    
     while True:
+        suma_jugadores = num_bots + num_jugadores
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         #Creacion de textos
@@ -201,21 +201,26 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         #Creacion de texto que dira el numero de jugadores
         TEXTO_NUM_JUGADORES = vGlobales.font2.render(str(num_jugadores), True, vGlobales.NEGRO)
         TEXTO_NUM_JUGADORES_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(570,207))
+        TEXTO_CUANTOS_BOTS = vGlobales.font2.render("Nro. de bots:", True, vGlobales.NEGRO)
+        TEXTO_CUANTOS_BOTS_RECT = TEXTO_CUANTOS_BOTS.get_rect(center=(217,270))
+        #Creacion de texto que dira el numero de bots
+        TEXTO_NUM_BOTS = vGlobales.font2.render(str(num_bots), True, vGlobales.NEGRO)
+        TEXTO_NUM_BOTS_RECT = TEXTO_NUM_BOTS.get_rect(center=(450,277))
         #Creacion de texto que preguntara el numero de rondas
         TEXTO_CUANTAS_RONDAS = vGlobales.font2.render("Nro. de rondas:", True, vGlobales.NEGRO)
-        TEXTO_CUANTAS_RONDAS_RECT = TEXTO_CUANTAS_RONDAS.get_rect(center=(247,270))
+        TEXTO_CUANTAS_RONDAS_RECT = TEXTO_CUANTAS_RONDAS.get_rect(center=(247,340))
         #Creacion de texto que dira el numero de rondas
         TEXTO_NUM_RONDAS = vGlobales.font2.render(str(num_rondas), True, vGlobales.NEGRO)
-        TEXTO_NUM_RONDAS_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(505,277))
+        TEXTO_NUM_RONDAS_RECT = TEXTO_NUM_JUGADORES.get_rect(center=(505,345))
         #Creacion de texto que dira Gravedad
         TEXTO_GRAVEDAD = vGlobales.font2.render("Gravedad:",True, vGlobales.NEGRO)
-        TEXTO_GRAVEDAD_RECT = TEXTO_GRAVEDAD.get_rect(center=(185,340))
+        TEXTO_GRAVEDAD_RECT = TEXTO_GRAVEDAD.get_rect(center=(185,410))
         #Creacion de texto que dira el numero de la gravedad
         TEXTO_NUM_GRAVEDAD = vGlobales.font2.render(str(gravedad), True, vGlobales.NEGRO)
-        TEXTO_NUM_GRAVEDAD_RECT = TEXTO_NUM_GRAVEDAD.get_rect(center=(400,335))
+        TEXTO_NUM_GRAVEDAD_RECT = TEXTO_NUM_GRAVEDAD.get_rect(center=(400,415))
         #Creacion de texto que dira Viento
         TEXTO_VIENTO = vGlobales.font2.render("Viento:",True, vGlobales.NEGRO)
-        TEXTO_VIENTO_RECT = TEXTO_VIENTO.get_rect(center=(149,410))
+        TEXTO_VIENTO_RECT = TEXTO_VIENTO.get_rect(center=(149,480))
         #Creacion de botones
         #Boton para volver
         BOTON_VOLVER = Button(image=None, pos=(240,650), text_input="VOLVER", font=get_font(75), base_color=vGlobales.verde_oscuro, hovering_color=vGlobales.BLANCO)
@@ -225,53 +230,58 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
         BOTON_MENOS1 = Button(image=None,pos=(520,207), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para sumar en num_jugadores
         BOTON_MAS1 = Button(image=None,pos=(620,207), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para restar en num_bots
+        BOTON_MENOS4 = Button(image=None,pos=(400,277), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para sumar en num_bots
+        BOTON_MAS4 = Button(image=None,pos=(500,277), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para restar en rondas
-        BOTON_MENOS2 = Button(image=None,pos=(455,277), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
-        #Boton para restar gravedad
-        BOTON_MENOS3 = Button(image=None,pos=(335,337), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
-        #Boton para sumar gravedad
-        BOTON_MAS3 = Button(image=None,pos=(465,337), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        BOTON_MENOS2 = Button(image=None,pos=(455,345), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para sumar en rondas
-        BOTON_MAS2 = Button(image=None,pos=(585,277), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
-        #Boton para activar gravedad
-        BOTON_ACTIVAR_GRAVEDAD = Button(image=None,pos=(340,340), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
-        #Boton para desactivar gravedad
-        BOTON_DESACTIVAR_GRAVEDAD = Button(image=None,pos=(415,340), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        BOTON_MAS2 = Button(image=None,pos=(585,345), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para restar gravedad
+        BOTON_MENOS3 = Button(image=None,pos=(335,415), text_input="-", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para sumar gravedad
+        BOTON_MAS3 = Button(image=None,pos=(465,415), text_input="+", font=get_font(75), base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para activar viento
-        BOTON_ACTIVAR_VIENTO = Button(image=None,pos=(265,413), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        BOTON_ACTIVAR_VIENTO = Button(image=None,pos=(265,485), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para desactivar viento
-        BOTON_DESACTIVAR_VIENTO = Button(image=None,pos=(340,413), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        BOTON_DESACTIVAR_VIENTO = Button(image=None,pos=(340,485), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         
         contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
         #IMPRESION DE RECTANGULOS PARA BOTONES
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(495,175,50,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(545,175,50,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(595,175,50,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(430,245,50,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(480,245,80,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(560,245,50,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,305,50,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(360,305,80,50))
-        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(440,305,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(375,245,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(425,245,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(475,245,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(430,315,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(480,315,80,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(560,315,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,385,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(360,385,80,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(440,385,50,50))
         
         if viento_active == False:
-            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(235,377,70,60))
-            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(305,377,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(235,455,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(305,455,70,60))
         else:
-            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(235,377,70,60))
-            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(305,377,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(235,455,70,60))
+            pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(305,455,70,60))
 
         #IMPRESION DE TEXTOS
         DISPLAYSURF.blit(TEXTO_PREPARACION, PREPARACION_RECT)
         DISPLAYSURF.blit(TEXTO_CUANTOS_JUGADORES, TEXTO_CUANTOS_JUGADORES_RECT)
         DISPLAYSURF.blit(TEXTO_NUM_JUGADORES, TEXTO_NUM_JUGADORES_RECT)
+        DISPLAYSURF.blit(TEXTO_CUANTOS_BOTS, TEXTO_CUANTOS_BOTS_RECT)
+        DISPLAYSURF.blit(TEXTO_NUM_BOTS, TEXTO_NUM_BOTS_RECT)
         DISPLAYSURF.blit(TEXTO_CUANTAS_RONDAS, TEXTO_CUANTAS_RONDAS_RECT)
         DISPLAYSURF.blit(TEXTO_NUM_RONDAS, TEXTO_NUM_RONDAS_RECT)
         DISPLAYSURF.blit(TEXTO_GRAVEDAD, TEXTO_GRAVEDAD_RECT)
         DISPLAYSURF.blit(TEXTO_NUM_GRAVEDAD, TEXTO_NUM_GRAVEDAD_RECT)
         DISPLAYSURF.blit(TEXTO_VIENTO, TEXTO_VIENTO_RECT)
-
-        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_MENOS3, BOTON_MAS3, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
+        
+        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_MENOS3, BOTON_MAS3, BOTON_MENOS4, BOTON_MAS4, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
             boton.changeColor(MENU_MOUSE_POS)
             boton.update(DISPLAYSURF)
 
@@ -287,11 +297,20 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                     pre_game(num_rondas,num_jugadores, ronda_actual, lista_tanques_OG, gravedad+5, num_bots,viento_active)
                 #Creacion de condicionales para los botones de suma y resta de numero de jugadores
                 if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
-                    if num_jugadores > 2:
+                    if num_jugadores > 0:
                         num_jugadores -= 1
                 if BOTON_MAS1.checkForInput(MENU_MOUSE_POS):
-                    if num_jugadores < 6:
+                    if num_jugadores < 6 and suma_jugadores < 6:
                         num_jugadores += 1
+                        print(suma_jugadores)
+                #Creacion de condicionales para los botones de suma y resta de numero de bots
+                if BOTON_MENOS4.checkForInput(MENU_MOUSE_POS):
+                    if num_bots > 0:
+                        num_bots -=1
+                if BOTON_MAS4.checkForInput(MENU_MOUSE_POS):
+                    if num_bots < 6 and suma_jugadores < 6:
+                        num_bots += 1
+                        print(suma_jugadores)
                 #Creacion de condicionales para los botones de suma y resta de numero de rondas
                 if BOTON_MENOS2.checkForInput(MENU_MOUSE_POS):
                     if num_rondas > 1:
@@ -647,7 +666,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                                     if lista_tanques_OG[i].suicidio == True: 
                                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
                                         lista_tanques_OG[i].suicidio = False
-                                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
+                                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento, gravedad)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
