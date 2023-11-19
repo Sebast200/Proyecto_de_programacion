@@ -297,7 +297,7 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
             if event.type == pygame.MOUSEBUTTONDOWN: #Volver al menu principal
                 if BOTON_VOLVER.checkForInput(MENU_MOUSE_POS):
                     menu_principal()
-                if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
+                if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS) and suma_jugadores >= 2:
                     pre_game(num_rondas,num_jugadores, ronda_actual, lista_tanques_OG, gravedad+5, num_bots,viento_active)
                 #Creacion de condicionales para los botones de suma y resta de numero de jugadores
                 if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
@@ -306,7 +306,6 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                 if BOTON_MAS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores < 6 and suma_jugadores < 6:
                         num_jugadores += 1
-                        print(suma_jugadores)
                 #Creacion de condicionales para los botones de suma y resta de numero de bots
                 if BOTON_MENOS4.checkForInput(MENU_MOUSE_POS):
                     if num_bots > 0:
@@ -314,7 +313,6 @@ def preparacion(num_rondas, num_jugadores, contador_soldado_anim):
                 if BOTON_MAS4.checkForInput(MENU_MOUSE_POS):
                     if num_bots < 6 and suma_jugadores < 6:
                         num_bots += 1
-                        print(suma_jugadores)
                 #Creacion de condicionales para los botones de suma y resta de numero de rondas
                 if BOTON_MENOS2.checkForInput(MENU_MOUSE_POS):
                     if num_rondas > 1:
