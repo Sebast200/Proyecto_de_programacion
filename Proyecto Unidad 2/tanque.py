@@ -14,6 +14,7 @@ class Tankes (pygame.sprite.Sprite):
         self.alto = 10
         self.kills = 0
         self.suicidio = False
+        self.cantidad_suicidios = 0
         self.caida = True
         self.distancia_caida = 0
         self.inmune = True #inmunidad para caida al spawnear
