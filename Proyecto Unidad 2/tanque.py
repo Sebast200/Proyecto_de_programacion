@@ -4,7 +4,7 @@ from pygame import mixer
 
 class Tankes (pygame.sprite.Sprite):
     #Constructor
-    def __init__(self, _color,posicion_inicial, gravedad):
+    def __init__(self, _color,posicion_inicial, gravedad, es_bot):
         super().__init__()
         self.vGlobales = globales.Globaless()
 
@@ -23,14 +23,14 @@ class Tankes (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (posicion_inicial, 100)
         self.color = self.vGlobales.BLANCO  #Por si el tanque llegase a salir de la pantalla se crea el self color para la colision
-        self.unidades_c = self.vGlobales.unidades_cyg
-        self.unidades_m = self.vGlobales.unidades_m
-        self.unidades_g = self.vGlobales.unidades_cyg
+        self.unidades_c = 0
+        self.unidades_m = 0
+        self.unidades_g = 0
         self.gravedad = gravedad
         self.timepo = 0
         self.Yi = 100
         self.saldo = 10000
-        self.bot = False
+        self.bot = es_bot
 
     #actualiza la posicion del tanque
     def update(self):

@@ -323,7 +323,7 @@ class Interfazz():
         for i in range (num_jugadores):
             self.health_bars(lista_tanques_test[i])
         for i in range (num_jugadores):
-            self.text_vida_jugador1 = str(lista_tanques_test[i].vida)
+            self.text_vida_jugador1 = str(int(lista_tanques_test[i].vida))
             if lista_tanques_test[i].vida < 0: self.text_vida_jugador1 = str(0)
             self.text_surface_vida_jugador1 = self.vGlobales.font4.render(self.text_vida_jugador1,True,self.text_vida_jugador1_color)
             self.vGlobales.PANTALLA.blit(self.text_surface_vida_jugador1,(lista_tanques_test[i].rect.x - 10,lista_tanques_test[i].rect.y + 15))
@@ -408,12 +408,6 @@ class Interfazz():
                 return True       
 
     def print_resultados(self,lista_tanques_OG,i,num_jugadores):
-        print("Si")
-        '''
-        self.text_game_over = "GAME OVER"
-        self.text_surface_game_over = self.vGlobales.font.render(self.text_game_over, True, self.vGlobales.verde_oscuro)
-        self.text_surface_game_over_rect = self.text_surface_game_over.get_rect(center = ((self.vGlobales.WIDTH/2) + 140,(self.vGlobales.HEIGHT/2) - 30))
-        '''
         #self.vGlobales.PANTALLA.blit(self.text_surface_game_over, self.text_surface_game_over_rect)
         self.interfaz()
         self.print_interfaz(lista_tanques_OG[i].unidades_c,lista_tanques_OG[i].unidades_m,lista_tanques_OG[i].unidades_g,lista_tanques_OG,num_jugadores)

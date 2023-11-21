@@ -36,8 +36,6 @@ class Globaless():
         self.daño_bala_c = 30
         self.daño_bala_m = 40
         self.daño_bala_g = 50
-        self.unidades_cyg = 3        #Municion Chica y Grande
-        self.unidades_m = 10         #Municion Mediana
         self.costo_bala_c = 1000
         self.costo_bala_m = 2500
         self.costo_bala_g = 4000
