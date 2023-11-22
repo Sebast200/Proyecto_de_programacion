@@ -23,14 +23,15 @@ class Tankes (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (posicion_inicial, 100)
         self.color = self.vGlobales.BLANCO  #Por si el tanque llegase a salir de la pantalla se crea el self color para la colision
-        self.unidades_c = 0
-        self.unidades_m = 0
-        self.unidades_g = 0
+        self.unidades_c = 1
+        self.unidades_m = 1
+        self.unidades_g = 1
         self.gravedad = gravedad
         self.timepo = 0
         self.Yi = 100
         self.saldo = 10000
         self.bot = es_bot
+        self.muerte_caida = False
 
     #actualiza la posicion del tanque
     def update(self):
@@ -41,6 +42,7 @@ class Tankes (pygame.sprite.Sprite):
         else:
             self.vida = self.vida - self.distancia_caida*self.gravedad/10
             self.distancia_caida = 0
+
 
     def caida_Tanque(self):
         if self.rect.y < self.vGlobales.HEIGHT - self.alto:
@@ -58,6 +60,8 @@ class Tankes (pygame.sprite.Sprite):
             self.caida = True
             if not(self.inmune):
                 self.distancia_caida += 0.5
+
+
 
 
     def comprar_bala(self, bala):

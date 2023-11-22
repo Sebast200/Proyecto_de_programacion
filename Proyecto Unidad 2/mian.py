@@ -157,20 +157,29 @@ def disparo_bot(tanque, turno_pasado, bala_c, bala_m, bala_g, gravedad,viento, r
                     interfaz.minibox_bala1_active = True
                     interfaz.minibox_bala2_active = False
                     interfaz.minibox_bala3_active = False
+                    interfaz.minibox_bala1_color = vGlobales.ROJO
+                    interfaz.minibox_bala2_color = vGlobales.NEGRO
+                    interfaz.minibox_bala3_color = vGlobales.NEGRO
                     condition = False
             if i == 1:
                 if tanque.unidades_m > 0:
                     interfaz.minibox_bala1_active = False
                     interfaz.minibox_bala2_active = True
                     interfaz.minibox_bala3_active = False
+                    interfaz.minibox_bala1_color = vGlobales.NEGRO
+                    interfaz.minibox_bala2_color = vGlobales.ROJO
+                    interfaz.minibox_bala3_color = vGlobales.NEGRO
                     condition = False
             if i == 2:
                 if tanque.unidades_g > 0:
                     interfaz.minibox_bala1_active = False
                     interfaz.minibox_bala2_active = False
                     interfaz.minibox_bala3_active = True
+                    interfaz.minibox_bala1_color = vGlobales.NEGRO
+                    interfaz.minibox_bala2_color = vGlobales.NEGRO
+                    interfaz.minibox_bala3_color = vGlobales.ROJO
                     condition = False
-        angulo = random.randint(30,150)
+        angulo = random.randint(40,140)
         velocidad = random.randint(50,150)
         balas[i].disparar(angulo, math.pi/180 * (angulo + 90),velocidad,tanque,viento)
         turno_pasado = 0
@@ -425,7 +434,8 @@ def pre_game(num_rondas, num_personas, ronda_actual, gravedad, num_bots, viento_
     num_jugadores = num_personas + num_bots
     print("num_jugadores = ",num_jugadores)
     lista_tanques_OG = []
-    lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, False))
+    if num_personas == 0: lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, True))
+    else: lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, False))  
     for i in range (num_jugadores-1):
         if i < num_bots:
             lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad, True))
@@ -449,7 +459,6 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
         DISPLAYSURF.blit(text_ronda, text_ronda_rect)
         pygame.display.flip()
         pygame.time.delay(600)
-
         print("Ronda n° ",num_rondas)
         pygame.display.set_caption("Partida")
         #Musica de la partida
@@ -513,12 +522,19 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
 
         #Variable que controla las particulas
         particula = Particulas()
-
+        
         #Variable booleana que define si los jugadores tienen balas o no
         todos_sin_balas = False
-
+        
         #Variable booleana que definira si se debe mostrar la tienda o no
         compraron_todos = False
+
+        #Variable timer del bot
+        timer_disparo_bot = 0
+
+        tanques_suelo = False
+        
+        turno_anterior = 0
         while True:
             #Dibujo de la pantalla
             DISPLAYSURF.blit(fondo,(0,0))
@@ -534,9 +550,15 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Interfaz
             pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
             interfaz.interfaz()
-
-            #proceso de cambio de turno 
-            if turno_pasado == 0 and not bala_c.caida and not bala_m.caida and not bala_g.caida:
+          
+            #proceso de cambio de turno
+            tanques_suelo = False
+            for i in range (num_jugadores):
+                lista_tanques_OG[i].update()
+                if lista_tanques_OG[i].caida == True:
+                    tanques_suelo = True
+            if turno_pasado == 0 and not bala_c.caida and not bala_m.caida and not bala_g.caida and not tanques_suelo:
+                turno_anterior = turno_jugador
                 if viento_active == True:
                     viento = random.randint(-10,10)/10
                 else:
@@ -578,13 +600,9 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.naranjo)
                 disparo_unico_bot = True
             
-            #Disparo jugadores bot
-            if lista_tanques_OG[turno_jugador-1].bot == True:
-                #disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
-                if disparo_unico_bot == True:
-                    turno_pasado = disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
-                    disparo_unico_bot = False
             
+                    
+            print(turno_anterior)
             #Saltar el turno de los jugadores muertos
             if lista_tanques_OG[turno_jugador-1].vida <= 0:
                 pasar_turno = True
@@ -592,6 +610,12 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Saltar el turno de los jugadores sin balas
             if lista_tanques_OG[turno_jugador-1].unidades_c == 0 and lista_tanques_OG[turno_jugador-1].unidades_m == 0 and lista_tanques_OG[turno_jugador-1].unidades_g == 0:
                 pasar_turno = True
+
+            #Muerte por caida
+            for i in range (num_jugadores):
+                if lista_tanques_OG[i].vida <= lista_tanques_OG[i].distancia_caida*gravedad/10 and not lista_tanques_OG[i].muerte_caida:
+                    lista_tanques_OG[turno_anterior-1].kills +=1
+                    lista_tanques_OG[i].muerte_caida = True
             
             #bucle de eventos
             for event in pygame.event.get():
@@ -620,40 +644,28 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
 
                 if event.type == pygame.KEYDOWN:
                     interfaz.escribir(event)
-            
-            #Otra forma de disparo
-            """bala_active_bot = random.randint(1,3)
-            if bala_active_bot == 1 and lista_tanques_OG[turno_jugador-1].unidades_c > 0:
-                turno_pasado = dispara_bala_bot(bala_c,turno_pasado,lista_tanques_OG[turno_jugador-1],recorrido,viento)
-                disparo_unico_bot = False
-            if bala_active_bot == 2 and lista_tanques_OG[turno_jugador-1].unidades_m > 0:
-                turno_pasado = dispara_bala_bot(bala_m,turno_pasado,lista_tanques_OG[turno_jugador-1],recorrido,viento)
-                disparo_unico_bot = False
-            if bala_active_bot == 3 and lista_tanques_OG[turno_jugador-1].unidades_g > 0:
-                turno_pasado = dispara_bala_bot(bala_g,turno_pasado,lista_tanques_OG[turno_jugador-1],recorrido,viento)
-                disparo_unico_bot = False"""    
 
-            #Movimiento de tanques
-            for i in range (num_jugadores):
-                lista_tanques_OG[i].update()
+            
             
             #Evento al seleccionar la municion
             if interfaz.minibox_bala1_active == True:
                 nueva_superficie= mostrar_distancias(bala_c, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores, turno_jugador-1)
                 recorrido = calcular_recorrido(bala_c, recorrido)
                 DISPLAYSURF.blit(skin_bala_c, (bala_c.rect.x-17,bala_c.rect.y-17))
-
             if interfaz.minibox_bala2_active == True:
                 nueva_superficie=mostrar_distancias(bala_m, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores, turno_jugador-1)
                 recorrido = calcular_recorrido(bala_m, recorrido)
                 DISPLAYSURF.blit(skin_bala_m, (bala_m.rect.x-17,bala_m.rect.y-17))
-            
             if interfaz.minibox_bala3_active == True:
                 nueva_superficie= mostrar_distancias(bala_g, nueva_superficie, pixel_array, lista_tanques_OG, num_jugadores, turno_jugador-1)
                 recorrido = calcular_recorrido(bala_g, recorrido)
                 DISPLAYSURF.blit(skin_bala_g, (bala_g.rect.x-17,bala_g.rect.y-17))
             sprites.draw(DISPLAYSURF)
             mostrar_recorrido(recorrido)
+
+            #Movimiento de tanques
+            '''for i in range (num_jugadores):
+                lista_tanques_OG[i].update()'''
             
             #Dibujo de skins
             for i in range (num_jugadores):
@@ -680,7 +692,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
             
-            #Animacion de explosion de las balas
+            # de explosion de las balas
             if bala_c.explosion == 1:
                 animacion_explosion(vGlobales.bala_chica, bala_c)
             elif bala_m.explosion == 1:
@@ -690,7 +702,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Validacion cantidad de balas de cada jugador
             if bala_c.caida == False and bala_m.caida == False and bala_g.caida == False:
                 todos_sin_balas = validar_balas(lista_tanques_OG, num_jugadores)
-            #Creacion de condicional para ver si se debe crear una nueva partida o no
+            #Creacion de condicional para ver si se debe crear una nueva parAnimaciontida o no
             if nueva_partida == True:
                 partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
             #Creacion de condicional para ver si se debe pasar el turno o no
@@ -698,6 +710,16 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 turno_pasado = 0
                 pasar_turno = False
             pygame.display.flip()
+
+            #Disparo jugadores bot
+            if lista_tanques_OG[turno_jugador-1].bot == True and lista_tanques_OG[turno_jugador-1].caida == False and turno_pasado == 1:
+                #disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
+                timer_disparo_bot +=1
+                if disparo_unico_bot == True and timer_disparo_bot == 75:
+                    recorrido = []
+                    turno_pasado = disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
+                    disparo_unico_bot = False
+                    timer_disparo_bot = 0
 
             #Game over o Empate
             if (jugadores_muertos+1) == num_jugadores or todos_sin_balas == True:
@@ -724,7 +746,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     interfaz.text_surface_game_over = interfaz.vGlobales.font.render(interfaz.text_game_over, True, interfaz.vGlobales.verde_oscuro)
                     interfaz.text_surface_game_over_rect = interfaz.text_surface_game_over.get_rect(center = ((interfaz.vGlobales.WIDTH/2) + 140,(interfaz.vGlobales.HEIGHT/2) - 30))
                     interfaz.interfaz()
-                    interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_over, interfaz.text_surface_game_over_rect)
+                    interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_game_printover, interfaz.text_surface_game_over_rect)
                     '''
                     interfaz.print_resultados(lista_tanques_OG,i,num_jugadores)
                     pygame.display.flip()
