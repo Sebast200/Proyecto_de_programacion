@@ -1,4 +1,4 @@
-import pygame, sys, globales, math
+import pygame, sys, globales, math, random
 from pygame.locals import *
 from pygame import mixer
 from boton import Button
@@ -333,77 +333,91 @@ class Interfazz():
         self.contadortienda = 0
         while compraron_todos == False:
             if self.contadortienda<num_jugadores:
-                #RECOLECCION DE DATOS
-                self.text_tienda = "Tienda de jugador " + str(self.contadortienda + 1)
-                self.text_tienda_surface = self.vGlobales.font.render(self.text_tienda,True,self.vGlobales.BLANCO)
-                self.text_tienda_surface_rect = self.text_tienda_surface.get_rect(center=(760,125))
-                #PROCESO DE IMPRESION
-                #IMPRESION DE TIENDA
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris_oscuro,(self.vGlobales.ancho_gris + 200,100,600,500))
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.negro_azulado,(self.vGlobales.ancho_gris + 200,100,600,500),5)
-                #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(865,395,100,30))
-                #Dibujo de rectangulos amarillos que van a estar debajo de los botones para vender
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(565,435,100,30))
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(715,435,100,30))
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(865,435,100,30))
-                #Dibujo de rectangulo rojo para el boton Volver
-                pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.rojo_oscuro,(690,550,140,40))
-                for boton in [self.boton_finalizar_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g, self.boton_vender_bala_c, self.boton_vender_bala_m, self.boton_vender_bala_g]:
-                    boton.update(self.vGlobales.PANTALLA)
-                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala1_tienda, 3)
-                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala2_tienda, 3)
-                pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala3_tienda, 3)
-                self.vGlobales.PANTALLA.blit(self.bala_g_img,(self.minibox_bala3_tienda.x + 17, self.minibox_bala3_tienda.y + 17))
-                self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2_tienda.x + 17, self.minibox_bala2_tienda.y + 17))
-                self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1_tienda.x + 17, self.minibox_bala1_tienda.y + 17))
-                #IMPRESION DE SALDO DE JUGADOR
-                self.text_saldo = "Saldo: $"+str(lista_tanques_OG[self.contadortienda].saldo)
-                self.text_saldo_surface = self.vGlobales.font.render(self.text_saldo,True,self.text_saldo_color)
-                self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(760,165))
-                self.vGlobales.PANTALLA.blit(self.text_saldo_surface,self.text_saldo_surface_rect)   
-                #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
-                self.vGlobales.PANTALLA.blit(self.text_tienda_surface,self.text_tienda_surface_rect)  
-                #IMPRESION DE TEXTO QUE MUESTRA LOS COSTOS DE LAS BALAS
-                self.vGlobales.PANTALLA.blit(self.text_costo_bala_c_surface,self.text_costo_bala_c_surface_rect)
-                self.vGlobales.PANTALLA.blit(self.text_costo_bala_m_surface,self.text_costo_bala_m_surface_rect)
-                self.vGlobales.PANTALLA.blit(self.text_costo_bala_g_surface,self.text_costo_bala_g_surface_rect)
-                #creacion e impresion de pequeñas cajas de texto que se van a encargar de mostrar la municion de cada bala
-                self.text_municion_bala1_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_c)
-                self.text_surface_municion_bala1_tienda = self.vGlobales.font4.render(self.text_municion_bala1_tienda, True,self.vGlobales.BLANCO)
-                self.text_surface_municion_bala1_tienda_rect = pygame.Rect(605,365,75,40)
-                self.text_municion_bala2_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_m)
-                self.text_surface_municion_bala2_tienda = self.vGlobales.font4.render(self.text_municion_bala2_tienda, True,self.vGlobales.BLANCO)
-                self.text_surface_municion_bala2_tienda_rect = pygame.Rect(745,365,75,40)
-                self.text_municion_bala3_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_g)
-                self.text_surface_municion_bala3_tienda = self.vGlobales.font4.render(self.text_municion_bala3_tienda, True,self.vGlobales.BLANCO)
-                self.text_surface_municion_bala3_tienda_rect = pygame.Rect(905,365,75,40)
-                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala1_tienda,self.text_surface_municion_bala1_tienda_rect)
-                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala2_tienda,self.text_surface_municion_bala2_tienda_rect)
-                self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala3_tienda,self.text_surface_municion_bala3_tienda_rect)
-                for event in pygame.event.get():
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        #Condicionales de botones
-                        if self.boton_finalizar_tienda.checkForInput(event.pos):
-                            self.contadortienda += 1
-                        if self.boton_comprar_bala_c.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_c)
-                        if self.boton_comprar_bala_m.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_m)
-                        if self.boton_comprar_bala_g.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].comprar_bala(bala_g)
-                        if self.boton_vender_bala_c.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].vender_bala(bala_c)
-                        if self.boton_vender_bala_m.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].vender_bala(bala_m)
-                        if self.boton_vender_bala_g.checkForInput(event.pos):
-                            lista_tanques_OG[self.contadortienda].vender_bala(bala_g)
-                    if event.type == pygame.QUIT:
-                        pygame.quit()
-                        sys.exit()
-                pygame.display.flip()
+                if lista_tanques_OG[self.contadortienda].bot == False:
+                    #RECOLECCION DE DATOS
+                    self.text_tienda = "Tienda de jugador " + str(self.contadortienda + 1)
+                    self.text_tienda_surface = self.vGlobales.font.render(self.text_tienda,True,self.vGlobales.BLANCO)
+                    self.text_tienda_surface_rect = self.text_tienda_surface.get_rect(center=(760,125))
+                    #PROCESO DE IMPRESION
+                    #IMPRESION DE TIENDA
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.gris_oscuro,(self.vGlobales.ancho_gris + 200,100,600,500))
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.negro_azulado,(self.vGlobales.ancho_gris + 200,100,600,500),5)
+                    #Dibujo de rectangulos verdes que van estar debajo del boton para comprar
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(565,395,100,30))
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(715,395,100,30))
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.verde,(865,395,100,30))
+                    #Dibujo de rectangulos amarillos que van a estar debajo de los botones para vender
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(565,435,100,30))
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(715,435,100,30))
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.amarillo,(865,435,100,30))
+                    #Dibujo de rectangulo rojo para el boton Volver
+                    pygame.draw.rect(self.vGlobales.PANTALLA,self.vGlobales.rojo_oscuro,(690,550,140,40))
+                    for boton in [self.boton_finalizar_tienda, self.boton_comprar_bala_c, self.boton_comprar_bala_m, self.boton_comprar_bala_g, self.boton_vender_bala_c, self.boton_vender_bala_m, self.boton_vender_bala_g]:
+                        boton.update(self.vGlobales.PANTALLA)
+                    pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala1_tienda, 3)
+                    pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala2_tienda, 3)
+                    pygame.draw.rect(self.vGlobales.PANTALLA, self.vGlobales.NEGRO, self.minibox_bala3_tienda, 3)
+                    self.vGlobales.PANTALLA.blit(self.bala_g_img,(self.minibox_bala3_tienda.x + 17, self.minibox_bala3_tienda.y + 17))
+                    self.vGlobales.PANTALLA.blit(self.bala_m_img,(self.minibox_bala2_tienda.x + 17, self.minibox_bala2_tienda.y + 17))
+                    self.vGlobales.PANTALLA.blit(self.bala_c_img,(self.minibox_bala1_tienda.x + 17, self.minibox_bala1_tienda.y + 17))
+                    #IMPRESION DE SALDO DE JUGADOR
+                    self.text_saldo = "Saldo: $"+str(lista_tanques_OG[self.contadortienda].saldo)
+                    self.text_saldo_surface = self.vGlobales.font.render(self.text_saldo,True,self.text_saldo_color)
+                    self.text_saldo_surface_rect = self.text_saldo_surface.get_rect(center=(760,165))
+                    self.vGlobales.PANTALLA.blit(self.text_saldo_surface,self.text_saldo_surface_rect)   
+                    #IMPRESION DE TEXTO QUE DICE TIENDA EN TIENDA
+                    self.vGlobales.PANTALLA.blit(self.text_tienda_surface,self.text_tienda_surface_rect)  
+                    #IMPRESION DE TEXTO QUE MUESTRA LOS COSTOS DE LAS BALAS
+                    self.vGlobales.PANTALLA.blit(self.text_costo_bala_c_surface,self.text_costo_bala_c_surface_rect)
+                    self.vGlobales.PANTALLA.blit(self.text_costo_bala_m_surface,self.text_costo_bala_m_surface_rect)
+                    self.vGlobales.PANTALLA.blit(self.text_costo_bala_g_surface,self.text_costo_bala_g_surface_rect)
+                    #creacion e impresion de pequeñas cajas de texto que se van a encargar de mostrar la municion de cada bala
+                    self.text_municion_bala1_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_c)
+                    self.text_surface_municion_bala1_tienda = self.vGlobales.font4.render(self.text_municion_bala1_tienda, True,self.vGlobales.BLANCO)
+                    self.text_surface_municion_bala1_tienda_rect = pygame.Rect(605,365,75,40)
+                    self.text_municion_bala2_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_m)
+                    self.text_surface_municion_bala2_tienda = self.vGlobales.font4.render(self.text_municion_bala2_tienda, True,self.vGlobales.BLANCO)
+                    self.text_surface_municion_bala2_tienda_rect = pygame.Rect(745,365,75,40)
+                    self.text_municion_bala3_tienda = "x" + str(lista_tanques_OG[self.contadortienda].unidades_g)
+                    self.text_surface_municion_bala3_tienda = self.vGlobales.font4.render(self.text_municion_bala3_tienda, True,self.vGlobales.BLANCO)
+                    self.text_surface_municion_bala3_tienda_rect = pygame.Rect(905,365,75,40)
+                    self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala1_tienda,self.text_surface_municion_bala1_tienda_rect)
+                    self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala2_tienda,self.text_surface_municion_bala2_tienda_rect)
+                    self.vGlobales.PANTALLA.blit(self.text_surface_municion_bala3_tienda,self.text_surface_municion_bala3_tienda_rect)
+                    for event in pygame.event.get():
+                        if event.type == pygame.MOUSEBUTTONDOWN:
+                            #Condicionales de botones
+                            if self.boton_finalizar_tienda.checkForInput(event.pos):
+                                self.contadortienda += 1
+                            if self.boton_comprar_bala_c.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].comprar_bala(bala_c)
+                            if self.boton_comprar_bala_m.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].comprar_bala(bala_m)
+                            if self.boton_comprar_bala_g.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].comprar_bala(bala_g)
+                            if self.boton_vender_bala_c.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].vender_bala(bala_c)
+                            if self.boton_vender_bala_m.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].vender_bala(bala_m)
+                            if self.boton_vender_bala_g.checkForInput(event.pos):
+                                lista_tanques_OG[self.contadortienda].vender_bala(bala_g)
+                        if event.type == pygame.QUIT:
+                            pygame.quit()
+                            sys.exit()
+                    pygame.display.flip()
+                else: #Compra automatica del bot
+                    while lista_tanques_OG[self.contadortienda].saldo > 0:
+                        item_comprar = random.randint(1, 3)
+                        if item_comprar == 1:
+                            lista_tanques_OG[self.contadortienda].unidades_c += 1
+                            lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_c
+                        if item_comprar == 2:
+                            lista_tanques_OG[self.contadortienda].unidades_m += 1
+                            lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_m
+                        if item_comprar == 3:
+                            lista_tanques_OG[self.contadortienda].unidades_g += 1
+                            lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_g
+                    self.contadortienda += 1
             else:                
                 return True       
 
@@ -451,7 +465,7 @@ class Interfazz():
         self.text_jugador1_resultado_surface = self.vGlobales.font4.render(self.text_jugador1_resultado,True,self.vGlobales.AZUL)
         self.text_jugador1_resultado_rect = self.text_jugador1_resultado_surface.get_rect(center=(420,300))
         #Texto que mostrara las kills del jugador 1
-        self.text_kills_jugador1 = str(lista_tanques_OG[0].kills)
+        self.text_kills_jugador1 = str(lista_tanques_OG[0].total_kills)
         self.text_kills_jugador1_surface = self.vGlobales.font4.render(self.text_kills_jugador1,True,self.vGlobales.BLANCO)
         self.text_kills_jugador1_rect = self.text_kills_jugador1_surface.get_rect(center=(800,300))
         #Texto que mostrara las veces que se mato el jugador 1
@@ -467,7 +481,7 @@ class Interfazz():
         self.text_jugador2_resultado_surface = self.vGlobales.font4.render(self.text_jugador2_resultado,True,self.vGlobales.ROJO)
         self.text_jugador2_resultado_rect = self.text_jugador2_resultado_surface.get_rect(center=(420,350))
         #Texto que mostrara las kills del jugador 2
-        self.text_kills_jugador2 = str(lista_tanques_OG[1].kills)
+        self.text_kills_jugador2 = str(lista_tanques_OG[1].total_kills)
         self.text_kills_jugador2_surface = self.vGlobales.font4.render(self.text_kills_jugador2,True,self.vGlobales.BLANCO)
         self.text_kills_jugador2_rect = self.text_kills_jugador2_surface.get_rect(center=(800,350))
         #Texto que mostrara las veces que se mato el jugador 2
@@ -487,7 +501,7 @@ class Interfazz():
             self.text_jugador3_resultado_rect = self.text_jugador3_resultado_surface.get_rect(center=(420,400))
             self.vGlobales.PANTALLA.blit(self.text_jugador3_resultado_surface,self.text_jugador3_resultado_rect)
             #Texto que mostrara las kills del jugador 3
-            self.text_kills_jugador3 = str(lista_tanques_OG[2].kills)
+            self.text_kills_jugador3 = str(lista_tanques_OG[2].total_kills)
             self.text_kills_jugador3_surface = self.vGlobales.font4.render(self.text_kills_jugador3,True,self.vGlobales.BLANCO)
             self.text_kills_jugador3_rect = self.text_kills_jugador3_surface.get_rect(center=(800,400))
             self.vGlobales.PANTALLA.blit(self.text_kills_jugador3_surface,self.text_kills_jugador3_rect)
@@ -508,7 +522,7 @@ class Interfazz():
             self.text_jugador4_resultado_rect = self.text_jugador4_resultado_surface.get_rect(center=(420,450))                            
             self.vGlobales.PANTALLA.blit(self.text_jugador4_resultado_surface,self.text_jugador4_resultado_rect)
             #Texto que mostrara las kills del jugador 4
-            self.text_kills_jugador4 = str(lista_tanques_OG[3].kills)
+            self.text_kills_jugador4 = str(lista_tanques_OG[3].total_kills)
             self.text_kills_jugador4_surface = self.vGlobales.font4.render(self.text_kills_jugador4,True,self.vGlobales.BLANCO)
             self.text_kills_jugador4_rect = self.text_kills_jugador4_surface.get_rect(center=(800,450))
             self.vGlobales.PANTALLA.blit(self.text_kills_jugador4_surface,self.text_kills_jugador4_rect)
@@ -529,7 +543,7 @@ class Interfazz():
             self.text_jugador5_resultado_rect = self.text_jugador5_resultado_surface.get_rect(center=(420,500))            
             self.vGlobales.PANTALLA.blit(self.text_jugador5_resultado_surface,self.text_jugador5_resultado_rect)
             #Texto que mostrara las kills del jugador 5
-            self.text_kills_jugador5 = str(lista_tanques_OG[4].kills)
+            self.text_kills_jugador5 = str(lista_tanques_OG[4].total_kills)
             self.text_kills_jugador5_surface = self.vGlobales.font4.render(self.text_kills_jugador5,True,self.vGlobales.BLANCO)
             self.text_kills_jugador5_rect = self.text_kills_jugador5_surface.get_rect(center=(800,500))
             self.vGlobales.PANTALLA.blit(self.text_kills_jugador5_surface,self.text_kills_jugador5_rect)
@@ -550,7 +564,7 @@ class Interfazz():
             self.text_jugador6_resultado_rect = self.text_jugador6_resultado_surface.get_rect(center=(420,550))            
             self.vGlobales.PANTALLA.blit(self.text_jugador6_resultado_surface,self.text_jugador6_resultado_rect)
             #Texto que mostrara las kills del jugador 6
-            self.text_kills_jugador6 = str(lista_tanques_OG[5].kills)
+            self.text_kills_jugador6 = str(lista_tanques_OG[5].total_kills)
             self.text_kills_jugador6_surface = self.vGlobales.font4.render(self.text_kills_jugador6,True,self.vGlobales.BLANCO)
             self.text_kills_jugador6_rect = self.text_kills_jugador6_surface.get_rect(center=(800,550))
             self.vGlobales.PANTALLA.blit(self.text_kills_jugador6_surface,self.text_kills_jugador6_rect)

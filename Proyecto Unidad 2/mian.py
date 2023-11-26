@@ -330,7 +330,7 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
                     if num_rondas > 1:
                         num_rondas -= 1
                 if BOTON_MAS2.checkForInput(MENU_MOUSE_POS):
-                    if num_rondas < 10:
+                    if num_rondas < 20  :
                         num_rondas += 1
                 #Creacion de botones para aumentar y disminuir la gravedad
                 if BOTON_MENOS3.checkForInput(MENU_MOUSE_POS):
@@ -434,13 +434,19 @@ def pre_game(num_rondas, num_personas, ronda_actual, gravedad, num_bots, viento_
     num_jugadores = num_personas + num_bots
     print("num_jugadores = ",num_jugadores)
     lista_tanques_OG = []
-    if num_personas == 0: lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, True))
-    else: lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, False))  
+    if num_personas == 0: 
+        lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, True))
+        lista_tanques_OG[0].id = 1
+    else: 
+        lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, False))
+        lista_tanques_OG[0].id = 1
     for i in range (num_jugadores-1):
         if i < num_bots:
             lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad, True))
+            lista_tanques_OG[i+1].id = i+2
         else:
             lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad, False))
+            lista_tanques_OG[i+1].id = i+2
     print("Cantidad de Jugadores: ",len(lista_tanques_OG))
     while True:
         DISPLAYSURF.blit(pre_game_img,(0,0))
@@ -550,7 +556,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Interfaz
             pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(0,0,vGlobales.ancho_gris,vGlobales.HEIGHT))
             interfaz.interfaz()
-          
+
             #proceso de cambio de turno
             tanques_suelo = False
             for i in range (num_jugadores):
@@ -601,8 +607,20 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 disparo_unico_bot = True
             
             
-                    
-            print(turno_anterior)
+            #Proceso nuevo de kills 
+            for i in range (len(lista_tanques_OG)):
+                if lista_tanques_OG[i].vida <= 0 and lista_tanques_OG[i].vivo == True: 
+                    lista_tanques_OG[i].vivo = False
+                    print(lista_tanques_OG[i].id)
+                    print(turno_anterior)
+                    print("Muerte")
+                    if turno_anterior == lista_tanques_OG[i].id:
+                        lista_tanques_OG[i].cantidad_suicidios += 1
+                        print("entro suicidio")
+                    else:
+                        lista_tanques_OG[turno_anterior-1].kills+=1
+                        print("entro kill")
+            
             #Saltar el turno de los jugadores muertos
             if lista_tanques_OG[turno_jugador-1].vida <= 0:
                 pasar_turno = True
@@ -614,8 +632,12 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             #Muerte por caida
             for i in range (num_jugadores):
                 if lista_tanques_OG[i].vida <= lista_tanques_OG[i].distancia_caida*gravedad/10 and not lista_tanques_OG[i].muerte_caida:
-                    lista_tanques_OG[turno_anterior-1].kills +=1
-                    lista_tanques_OG[i].muerte_caida = True
+                    if lista_tanques_OG[i] == lista_tanques_OG[turno_anterior-1] and lista_tanques_OG[i].suicidio == False:
+                        lista_tanques_OG[i].suicidio = True
+                    elif lista_tanques_OG[i].muerte_caida == False:
+                        lista_tanques_OG[turno_anterior-1].kills +=1
+                        lista_tanques_OG[i].muerte_caida = True
+                    #jugadores_muertos += 1 
             
             #bucle de eventos
             for event in pygame.event.get():
@@ -711,7 +733,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 pasar_turno = False
             pygame.display.flip()
 
-            #Disparo jugadores bot
+                #Disparo jugadores bot
             if lista_tanques_OG[turno_jugador-1].bot == True and lista_tanques_OG[turno_jugador-1].caida == False and turno_pasado == 1:
                 #disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
                 timer_disparo_bot +=1
@@ -720,6 +742,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     turno_pasado = disparo_bot(lista_tanques_OG[turno_jugador-1],turno_pasado,bala_c,bala_m,bala_g,gravedad,viento,recorrido)
                     disparo_unico_bot = False
                     timer_disparo_bot = 0
+
 
             #Game over o Empate
             if (jugadores_muertos+1) == num_jugadores or todos_sin_balas == True:
@@ -730,6 +753,8 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 10000
                     if lista_tanques_OG[i].kills > 0:
                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + (5000 * lista_tanques_OG[i].kills)
+                        lista_tanques_OG[i].total_kills += lista_tanques_OG[i].kills
+                        lista_tanques_OG[i].kills = 0
                         print("Saldo Jugador ", i+1," = ",lista_tanques_OG[i].saldo)
 
                     if lista_tanques_OG[i].suicidio == True: 

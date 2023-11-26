@@ -9,10 +9,12 @@ class Tankes (pygame.sprite.Sprite):
         self.vGlobales = globales.Globaless()
 
         #Atributos propios
+        self.id = 0
         self.vida = 100
         self.largo = 15
         self.alto = 10
         self.kills = 0
+        self.total_kills = 0
         self.suicidio = False
         self.cantidad_suicidios = 0
         self.caida = True
@@ -25,13 +27,14 @@ class Tankes (pygame.sprite.Sprite):
         self.color = self.vGlobales.BLANCO  #Por si el tanque llegase a salir de la pantalla se crea el self color para la colision
         self.unidades_c = 1
         self.unidades_m = 1
-        self.unidades_g = 1
+        self.unidades_g = 6
         self.gravedad = gravedad
         self.timepo = 0
         self.Yi = 100
         self.saldo = 10000
         self.bot = es_bot
         self.muerte_caida = False
+        self.vivo = True
 
     #actualiza la posicion del tanque
     def update(self):
