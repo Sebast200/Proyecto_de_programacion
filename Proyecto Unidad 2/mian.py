@@ -189,6 +189,14 @@ def disparo_bot(tanque, turno_pasado, bala_c, bala_m, bala_g, gravedad,viento, r
         if balas[i].caida == False:
             recorrido.clear()
         return turno_pasado
+    
+def shuffle_sort(arreglo, num_jugadores):
+    temp_variable = 0
+    for i in range (len(arreglo)):
+        j = random.randint(i+1,num_jugadores)
+        temp_variable = arreglo[i]
+        arreglo[i] = arreglo[j-1]
+        arreglo[j-1] = temp_variable
 
 #FUNCIONES PRINCIPALES
 #Pantalla de preparacion
@@ -368,7 +376,7 @@ def opciones(contador_soldado_anim):
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
         MENU_MOUSE_POS = pygame.mouse.get_pos()
         TEXTO_OPCIONES = vGlobales.font3.render("OPCIONES", True, vGlobales.NEGRO)
-        TEXTO_DESCRIPCION = vGlobales.font2.render("De momento no tenemos las opciones listas xd", True, vGlobales.NEGRO)
+        TEXTO_DESCRIPCION = vGlobales.font2.render("Opciones listas en proyecto de programacion II", True, vGlobales.NEGRO)
         OPCIONES_RECT = TEXTO_OPCIONES.get_rect(center=(640, 100))
         DESCRIPCION_RECT = TEXTO_DESCRIPCION.get_rect(center=(640,400))
 
@@ -402,7 +410,7 @@ def menu_principal():
     contador_soldado_anim = 0
     num_rondas = 2
     num_jugadores = 2
-    num_bots = 1
+    num_bots = 0
     pygame.display.set_caption("Menu")
     while True:
         DISPLAYSURF.blit(IMAGEN_DE_FONDO,(0,0))
@@ -611,8 +619,9 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
         pasar_turno = False
         #Arreglo de turnos por ronda
         ronda = []
-        viento = -1
+        viento = 0
         jugadores_muertos = num_jugadores
+        jugadores_muertos_ronda = 0
 
         #Variable que controla las particulas
         particula = Particulas()
@@ -625,10 +634,15 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
 
         #Variable timer del bot
         timer_disparo_bot = 0
-
-        tanques_suelo = False
         
+        game_over = 0
+
         turno_anterior = 0
+
+        for i in range(num_jugadores):
+            ronda.append(i+1)
+        print(ronda)
+        cantidad_turnos = num_jugadores-1
         while True:
             #Dibujo de la pantalla
             DISPLAYSURF.blit(fondo,(0,0))
@@ -646,37 +660,20 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             interfaz.interfaz()
 
             #proceso de cambio de turno
-            tanques_suelo = False
             for i in range (num_jugadores):
-                lista_tanques_OG[i].update()
-                if lista_tanques_OG[i].caida == True:
-                    tanques_suelo = True
-            if turno_pasado == 0 and not bala_c.caida and not bala_m.caida and not bala_g.caida and not tanques_suelo:
+                lista_tanques_OG[i].update()               
+            if turno_pasado == 0 and not bala_c.caida and not bala_m.caida and not bala_g.caida:
                 turno_anterior = turno_jugador
                 if viento_active == True:
                     viento = random.randint(-10,10)/10
                 else:
                     viento = 0
-                jugadores_muertos = num_jugadores
-                for i in range (len(lista_tanques_OG)):
-                    if lista_tanques_OG[i].vida >= 0:
-                        jugadores_muertos -= 1
-                print(jugadores_muertos)
-                if len(ronda) >= num_jugadores - jugadores_muertos:
-                    ronda = []
-                turno_jugador = random.randint(1,num_jugadores)
-                condition = True
-                while condition:
-                    print("condicion")
-                    if lista_tanques_OG[turno_jugador-1].vida <= 0:
-                        turno_jugador = random.randint(1,num_jugadores)
-                        print("vivo")
-                    else:
-                        condition = False
-                while turno_jugador in ronda:
-                    turno_jugador = random.randint(1,num_jugadores)
-                    print("vivo2")
-                ronda.append(turno_jugador)
+                turno_jugador = ronda[cantidad_turnos]
+                cantidad_turnos +=1
+                if cantidad_turnos == num_jugadores:
+                    cantidad_turnos = 0
+                    shuffle_sort(ronda,num_jugadores)
+                    print(ronda)
                 turno_pasado = 1
                 interfaz.text_jugador1 = "Jugador " + str(turno_jugador)
                 print("Jugador ", turno_jugador,"Es Bot?: ",lista_tanques_OG[turno_jugador-1].bot)
@@ -704,11 +701,14 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     print("Muerte")
                     if turno_anterior == lista_tanques_OG[i].id:
                         lista_tanques_OG[i].cantidad_suicidios += 1
+                        lista_tanques_OG[i].suicidio = True
+                        jugadores_muertos_ronda += 1
                         print("entro suicidio")
                     else:
                         lista_tanques_OG[turno_anterior-1].kills+=1
+                        jugadores_muertos_ronda += 1
                         print("entro kill")
-            
+    
             #Saltar el turno de los jugadores muertos
             if lista_tanques_OG[turno_jugador-1].vida <= 0:
                 pasar_turno = True
@@ -718,14 +718,14 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 pasar_turno = True
 
             #Muerte por caida
-            for i in range (num_jugadores):
+            '''for i in range (num_jugadores):
                 if lista_tanques_OG[i].vida <= lista_tanques_OG[i].distancia_caida*gravedad/10 and not lista_tanques_OG[i].muerte_caida:
                     if lista_tanques_OG[i] == lista_tanques_OG[turno_anterior-1] and lista_tanques_OG[i].suicidio == False:
                         lista_tanques_OG[i].suicidio = True
                     elif lista_tanques_OG[i].muerte_caida == False:
                         lista_tanques_OG[turno_anterior-1].kills +=1
                         lista_tanques_OG[i].muerte_caida = True
-                    #jugadores_muertos += 1 
+                    #jugadores_muertos += 1 '''
             
             #bucle de eventos
             for event in pygame.event.get():
@@ -756,6 +756,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     interfaz.escribir(event)
 
             
+                
             
             #Evento al seleccionar la municion
             if interfaz.minibox_bala1_active == True:
@@ -802,19 +803,22 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_altura_maxima, interfaz.text_surface_altura_maxima_rect)
             interfaz.vGlobales.PANTALLA.blit(interfaz.text_surface_distancia_maxima, interfaz.text_surface_distancia_maxima_rect)
             
-            # de explosion de las balas
-            if bala_c.explosion == 1:
+            #Animacion de explosion de las balas
+            if bala_c.explosion:
                 animacion_explosion(vGlobales.bala_chica, bala_c)
-            elif bala_m.explosion == 1:
+            elif bala_m.explosion:
                 animacion_explosion(vGlobales.bala_mediana, bala_m)
-            elif bala_g.explosion == 1:
+            elif bala_g.explosion:
                 animacion_explosion(vGlobales.bala_grande,bala_g)
+
             #Validacion cantidad de balas de cada jugador
             if bala_c.caida == False and bala_m.caida == False and bala_g.caida == False:
                 todos_sin_balas = validar_balas(lista_tanques_OG, num_jugadores)
+                
             #Creacion de condicional para ver si se debe crear una nueva parAnimaciontida o no
             if nueva_partida == True:
                 partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG)
+                
             #Creacion de condicional para ver si se debe pasar el turno o no
             if pasar_turno == True:
                 turno_pasado = 0
@@ -831,9 +835,8 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                     disparo_unico_bot = False
                     timer_disparo_bot = 0
 
-
             #Game over o Empate
-            if (jugadores_muertos+1) == num_jugadores or todos_sin_balas == True:
+            if game_over >= 70:
                 num_rondas = num_rondas - 1
                 ronda_actual += 1
                 print("rondas restantes: ", num_rondas)
@@ -843,15 +846,16 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + (5000 * lista_tanques_OG[i].kills)
                         lista_tanques_OG[i].total_kills += lista_tanques_OG[i].kills
                         lista_tanques_OG[i].kills = 0
-                        print("Saldo Jugador ", i+1," = ",lista_tanques_OG[i].saldo)
+                        print("suma por kill")
 
                     if lista_tanques_OG[i].suicidio == True: 
                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
-                        lista_tanques_OG[i].cantidad_suicidios =+ 1
+                        print("descuento por suicidio.")
                         lista_tanques_OG[i].suicidio = False
 
                     if lista_tanques_OG[i].saldo < 0:
                         lista_tanques_OG[i].saldo = 0
+                    print("Saldo Jugador ", i+1," = ",lista_tanques_OG[i].saldo)
                 while True:
                     #La idea es que se actualicen los datos de los tanques antes de mostrar la pantalla de resultados. voy a hacer unos cambios
                     '''
@@ -877,13 +881,22 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                                     lista_tanques_OG[i].suicidio = False
                                     lista_tanques_OG[i].vida = 100
                                     lista_tanques_OG[i].inmune = True
-                                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento, gravedad)
+                                    lista_tanques_OG[i].vivo = True
+                                    jugadores_muertos_ronda = 0
+                                partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad)
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
                                 fin_de_juego(lista_tanques_OG,num_jugadores)
                                 print("partida finalizada")
             RELOJ.tick(vGlobales.FPS)
+
+            tanques_suelo = False
+            for i in range (num_jugadores):
+                if lista_tanques_OG[i].caida == True:
+                    tanques_suelo = True
+            if (jugadores_muertos_ronda+1) == num_jugadores or todos_sin_balas == True and not tanques_suelo:
+                game_over += 1
     else:
         menu_principal()
 
@@ -895,3 +908,14 @@ menu_principal()
 #2.- linea 308 se cambio el sistema de turno y ahora es funcional (creo)
 #NUEVOS CAMBIOS (FRANCO ARENAS) 14-11-2023
 #1.- Linea 505 a 510 se cambiaron las condicionales que estaban antes, ya que estas a pesar de que funcionaban, a la hora de que se acabara la municion de la bala anteriormente seleccionada habia que elegir SI O SI otra con municion, de otra forma el jugador no va a poder hacer nada
+
+
+'''
+cantidad_jugadores = 0
+turno_jugador = randm(1,num_jugadores)
+cantidad_jugadores +=1
+if cantidad_jugadores == num_jugadores:
+    cantidad_jugadores = 0
+arreglo_turnos = [1,2,3,4]
+
+'''

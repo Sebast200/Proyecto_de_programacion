@@ -21,7 +21,7 @@ class Balas (pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = (500,-100)
         self.image.fill(self.vGlobales.celeste)
-        self.explosion = 0
+        self.explosion = False
         self.gravedad = gravedad
         self.shoot_impact = mixer.Sound("Proyecto Unidad 2/sonidos_musica/explosion.mp3")
         self.caida = False
@@ -34,7 +34,7 @@ class Balas (pygame.sprite.Sprite):
             self.caida_Bala(lista_tanques, num_jugadores, turno_jugador)
             #Moviemiento de la bala
             self.image.fill (self.vGlobales.NEGRO)
-            self.Xi = self.Xi + self.viento #Movimiento segun el viento
+            self.velx = self.velx + self.viento/7 #Movimiento segun el viento
             self.rect.x = self.Xi + (self.velx * self.timepo)*0.5 *0.8#Moviemiento segun el disparo 
             self.rect.y = self.Yi + (self.vely * self.timepo + 0.5 * self.gravedad * self.timepo**2)*0.7
             self.timepo += 0.12
@@ -42,7 +42,7 @@ class Balas (pygame.sprite.Sprite):
             return superficie
             
         else:
-            if(self.explosion == 1):
+            if(self.explosion == True):
                 superficie = self.destruccion_terreno(pixel_array, superficie) 
             self.retorno_bala()
             return superficie
@@ -51,7 +51,7 @@ class Balas (pygame.sprite.Sprite):
     def destruccion_terreno(self, pixel_array, nueva_superficie):
         pixel_array = self.rompe_terreno(pixel_array,self.tipo/2,self.rect.center)
         nueva_superficie = pixel_array.make_surface()
-        self.explosion=0
+        self.explosion= False
         return nueva_superficie
 
     #Ejecuta el disparo de bala
@@ -77,20 +77,20 @@ class Balas (pygame.sprite.Sprite):
             color = (color[0], color[1], color[2])
 
         #Verifica la colision con terreno o panel
-        if (color == self.vGlobales.grisclaro or color == self.vGlobales.grisclaro):
+        if (color == self.vGlobales.grisclaro and not self.explosion):
             self.shoot_impact.play()
             self.caida = False
-            self.explosion = 1
+            self.explosion = True
             if self.inmune_tank == False:
                 self.colision_explosion_tanque(lista_tanques, num_jugadores, turno_jugador)
         
         #Verifica los rangos de la pantalla
-        if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= self.vGlobales.ancho_gris ):
+        if (self.rect.x >= self.vGlobales.WIDTH or self.rect.x <= self.vGlobales.ancho_gris and not self.explosion ):
             self.shoot_impact.play()
             self.caida = False
         
         #Verifica suelo
-        if (self.rect.x < 0 and self.rect.y > 720):
+        if (self.rect.x < 0 and self.rect.y > 720 and not self.explosion):
             self.shoot_impact.play()
             self.caida = False
         
@@ -99,36 +99,27 @@ class Balas (pygame.sprite.Sprite):
             if lista_tanques[i].rect.x + lista_tanques[i].largo > self.rect.x and \
             lista_tanques[i].rect.x < self.rect.x + self.ancho and \
             lista_tanques[i].rect.y + lista_tanques[i].alto > self.rect.y and \
-            lista_tanques[i].rect.y < self.rect.y + self.alto:
+            lista_tanques[i].rect.y < self.rect.y + self.alto and not self.explosion:
                 self.shoot_impact.play()
                 self.caida = False
-                self.explosion = 1
+                self.explosion = True
                 if self.tipo == self.vGlobales.bala_chica:
                     self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_c
-                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
-                        #lista_tanques[turno_jugador].kills += 1
-                        if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
-                            lista_tanques[turno_jugador].suicidio = True
-                            #lista_tanques[turno_jugador].kills -= 1
                         
                 if self.tipo == self.vGlobales.bala_mediana:
                     self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_m
-                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
-                        #lista_tanques[turno_jugador].kills += 1
-                        if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
-                            lista_tanques[turno_jugador].suicidio = True
-                            #lista_tanques[turno_jugador].kills -= 1
+                    
                             
                 if self.tipo == self.vGlobales.bala_grande:
                     self.inmune_tank = True
                     lista_tanques[i].vida = lista_tanques[i].vida - self.vGlobales.daño_bala_g
-                    if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
+                    """if lista_tanques[i].vida <= 0:                             #Baja a tanque enemigo(kill)
                         #lista_tanques[turno_jugador].kills += 1
                         if lista_tanques[i] == lista_tanques[turno_jugador]:   #Baja a tanque propio(suicidio)
                             lista_tanques[turno_jugador].suicidio = True
-                            #lista_tanques[turno_jugador].kills -= 1
+                            #lista_tanques[turno_jugador].kills -= 1"""
 
         #Altura maxima
         if self.altaura_max < lista_tanques[turno_jugador].rect.y - self.rect.y:

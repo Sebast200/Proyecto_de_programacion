@@ -406,17 +406,23 @@ class Interfazz():
                             sys.exit()
                     pygame.display.flip()
                 else: #Compra automatica del bot
-                    while lista_tanques_OG[self.contadortienda].saldo > 0:
+                    contador_compra = 0
+                    while contador_compra < 10:
                         item_comprar = random.randint(1, 3)
-                        if item_comprar == 1:
+                        if item_comprar == 1 and lista_tanques_OG[self.contadortienda].saldo > self.vGlobales.costo_bala_c:
                             lista_tanques_OG[self.contadortienda].unidades_c += 1
                             lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_c
-                        if item_comprar == 2:
+                            contador_compra += 1
+                        if item_comprar == 2 and lista_tanques_OG[self.contadortienda].saldo > self.vGlobales.costo_bala_m:
                             lista_tanques_OG[self.contadortienda].unidades_m += 1
                             lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_m
-                        if item_comprar == 3:
+                            contador_compra += 1
+                        if item_comprar == 3 and lista_tanques_OG[self.contadortienda].saldo > self.vGlobales.costo_bala_g:
                             lista_tanques_OG[self.contadortienda].unidades_g += 1
                             lista_tanques_OG[self.contadortienda].saldo -= self.vGlobales.costo_bala_g
+                            contador_compra += 1
+                        else:
+                            contador_compra += 1
                     self.contadortienda += 1
             else:                
                 return True       
