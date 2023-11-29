@@ -256,7 +256,10 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
         BOTON_ACTIVAR_VIENTO = Button(image=None,pos=(265,485), text_input="Si", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
         #Boton para desactivar viento
         BOTON_DESACTIVAR_VIENTO = Button(image=None,pos=(340,485), text_input="No", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
-        
+        #Boton para cambiar los valores de la configuracion por defecto
+        BOTON_DEFECTO = Button(image=None,pos=(520,650), text_input="Defecto", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)
+        #Boton para cambiar los valores de la configuracion al maximo
+        BOTON_MAXIMO = Button(image=None,pos=(800,650), text_input="Maximo", font=vGlobales.font2, base_color=vGlobales.NEGRO, hovering_color=vGlobales.gris)        
         contador_soldado_anim = soldado_durmiendo_anim(contador_soldado_anim,850,430)
         #IMPRESION DE RECTANGULOS PARA BOTONES
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(495,175,50,50))
@@ -271,6 +274,8 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(310,385,50,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(360,385,80,50))
         pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(440,385,50,50))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(420,610,205,70))
+        pygame.draw.rect(DISPLAYSURF,vGlobales.grisclaro,(700,610,205,70))        
         
         if viento_active == False:
             pygame.draw.rect(DISPLAYSURF,vGlobales.gris_oscuro,(235,455,70,60))
@@ -291,7 +296,7 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
         DISPLAYSURF.blit(TEXTO_NUM_GRAVEDAD, TEXTO_NUM_GRAVEDAD_RECT)
         DISPLAYSURF.blit(TEXTO_VIENTO, TEXTO_VIENTO_RECT)
         
-        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_MENOS3, BOTON_MAS3, BOTON_MENOS4, BOTON_MAS4, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO]:
+        for boton in [BOTON_VOLVER, BOTON_JUGAR, BOTON_MENOS1, BOTON_MAS1, BOTON_MAS2, BOTON_MENOS2, BOTON_MENOS3, BOTON_MAS3, BOTON_MENOS4, BOTON_MAS4, BOTON_ACTIVAR_VIENTO, BOTON_DESACTIVAR_VIENTO, BOTON_DEFECTO, BOTON_MAXIMO]:
             boton.changeColor(MENU_MOUSE_POS)
             boton.update(DISPLAYSURF)
 
@@ -344,6 +349,15 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
                     viento_active = True
                 if BOTON_DESACTIVAR_VIENTO.checkForInput(MENU_MOUSE_POS):
                     viento_active = False
+                #Creacion de condicicionales para los botones de valores por defecto y maximo
+                if BOTON_DEFECTO.checkForInput(MENU_MOUSE_POS):
+                    num_jugadores = random.randint(0,2)
+                    num_bots = 2 - num_jugadores
+                    num_rondas = 1
+                if BOTON_MAXIMO.checkForInput(MENU_MOUSE_POS):
+                    num_jugadores = random.randint(0,6)
+                    num_bots = 6 - num_jugadores
+                    num_rondas = 20
 
         pygame.display.update()
 
@@ -453,8 +467,82 @@ def pre_game(num_rondas, num_personas, ronda_actual, gravedad, num_bots, viento_
         for event in pygame.event.get():#Comenzar el juego
             if event.type == pygame.MOUSEBUTTONDOWN:
                 partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad)
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
         pygame.display.flip()
-
+#Pantalla de resultados finales
+def fin_de_juego(lista_tanques_OG, num_jugadores):
+    fin_de_juego_img = pygame.image.load("Proyecto Unidad 2/imagenes/BG_END_GAME.png")
+    #nose que musica poner asi que si tienen algun tema que quieran poner en los resultados finales ponganla nomas c:
+    while True:        
+        #Lo primero que se va a mostrar es el fondo de pantalla
+        DISPLAYSURF.blit(fin_de_juego_img,(0,0))
+        #Creacion de texto que dira "FIN DEL JUEGO"
+        TEXTO_FIN_DEL_JUEGO = vGlobales.font2.render("FIN DEL JUEGO",True,vGlobales.BLANCO)
+        TEXTO_FIN_DEL_JUEGO_RECT = TEXTO_FIN_DEL_JUEGO.get_rect(center=(vGlobales.WIDTH/2,50))
+        #Creacion de texto que dira "El ganador es:"
+        TEXTO_EL_GANADOR_ES = vGlobales.font5.render("El ganador es:",True,vGlobales.BLANCO)
+        TEXTO_EL_GANADOR_ES_RECT = TEXTO_EL_GANADOR_ES.get_rect(center=(170,250))
+        #Aqui mi idea es mostrar la skin del tanque ganador junto con un texto que tenga su color y todo eso xd
+        #Aqui se buscara quien es el jugador con mas kills, si hay mas de uno con las mismas mayores cantidades de kills, es empate
+        contador = 0
+        tanque_ganador = [0]
+        mas_kills = -1
+        #Primero se hace un bucle para verificar quien tiene mas kills
+        while contador<len(lista_tanques_OG):
+            if lista_tanques_OG[contador].total_kills>mas_kills:
+                tanque_ganador[0] = contador + 1
+                mas_kills =  lista_tanques_OG[contador].total_kills
+            contador += 1
+        #Luego se hace el bucle otra vez pero esta vez es para verificar si hay otro tanque que tenga la misma cantidad de kills
+        contador = 0
+        while contador<len(lista_tanques_OG):
+            if lista_tanques_OG[contador].total_kills == mas_kills and (contador + 1) != tanque_ganador[0]:
+                tanque_ganador.append(contador+1)
+                #Acto seguido, al ver que ya hay mas de un jugador con la misma cantidad de bajas, si o si es EMPATE, por lo que no es necesario seguir calculando
+                contador = len(lista_tanques_OG)
+            contador += 1
+        if len(tanque_ganador) == 1:
+            if tanque_ganador[0]==1:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 1",True,vGlobales.AZUL)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin1.png")
+            if tanque_ganador[0]==2:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 2",True,vGlobales.ROJO)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin2.png")
+            if tanque_ganador[0]==3:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 3",True,vGlobales.amarillo)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin3.png")
+            if tanque_ganador[0]==4:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 4",True,vGlobales.celeste)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin4.png")
+            if tanque_ganador[0]==5:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 5",True,vGlobales.morado)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin5.png")
+            if tanque_ganador[0]==6:
+                TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Jugador 6",True,vGlobales.naranjo)
+                IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin6.png")
+        else:
+            TEXTO_JUGADOR_GANADOR = vGlobales.font5.render("Empate",True,vGlobales.BLANCO)
+            IMAGEN_JUGADOR_GANADOR = pygame.image.load("Proyecto Unidad 2/imagenes/skin7.png")
+        TAMANIO_IMAGEN_JUGADOR_GANADOR = IMAGEN_JUGADOR_GANADOR.get_size()
+        IMAGEN_JUGADOR_GANADOR = pygame.transform.scale(IMAGEN_JUGADOR_GANADOR, (TAMANIO_IMAGEN_JUGADOR_GANADOR[0] * 3, TAMANIO_IMAGEN_JUGADOR_GANADOR[1] * 3))
+        TEXTO_JUGADOR_GANADOR_RECT = TEXTO_JUGADOR_GANADOR.get_rect(center = (170,460))
+        #IMPRESION DE TEXTOS E IMAGENES
+        DISPLAYSURF.blit(TEXTO_FIN_DEL_JUEGO,TEXTO_FIN_DEL_JUEGO_RECT)
+        DISPLAYSURF.blit(TEXTO_EL_GANADOR_ES,TEXTO_EL_GANADOR_ES_RECT)
+        DISPLAYSURF.blit(TEXTO_JUGADOR_GANADOR,TEXTO_JUGADOR_GANADOR_RECT)
+        DISPLAYSURF.blit(IMAGEN_JUGADOR_GANADOR,(120,320))
+        #IMPRESION DE RESULTADOS FINALES
+        interfaz.print_resultados_finales(lista_tanques_OG,num_jugadores)
+        for event in pygame.event.get():
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                menu_principal()
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                sys.exit()
+        pygame.display.flip()
+    
 #Pantalla del juego
 def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad):
     if num_rondas > 0:
@@ -793,7 +881,7 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                                 print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
-                                menu_principal()
+                                fin_de_juego(lista_tanques_OG,num_jugadores)
                                 print("partida finalizada")
             RELOJ.tick(vGlobales.FPS)
     else:
