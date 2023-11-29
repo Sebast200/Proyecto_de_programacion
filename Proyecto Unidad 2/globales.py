@@ -67,6 +67,7 @@ class Globaless():
         self.font2 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",50)
         self.font3 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",100)
         self.font4 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",20)
+        self.font5 = pygame.font.Font("Proyecto unidad 2/font/Pixellari.ttf",40)
 
     def generar_terreno(self):
         if self.seleccion_terreno == 0:
