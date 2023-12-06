@@ -298,7 +298,7 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
                         num_jugadores -= 1
                 if BOTON_MAS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores < 6 and suma_jugadores < 6:
-                        num_jugadores += 1)
+                        num_jugadores += 1
                 #Creacion de condicionales para los botones de suma y resta de numero de bots
                 if BOTON_MENOS4.checkForInput(MENU_MOUSE_POS):
                     if num_bots > 0 and suma_jugadores > 2:
@@ -417,7 +417,6 @@ def menu_principal():
 
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):#Pantalla con instrucciones
                     preparacion(num_rondas,num_jugadores,num_bots,contador_soldado_anim)
-                    # pre_game(num_rondas, num_jugadores) 
 
         pygame.display.update()
 
