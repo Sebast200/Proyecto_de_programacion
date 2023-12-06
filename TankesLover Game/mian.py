@@ -288,30 +288,24 @@ def preparacion(num_rondas, num_jugadores, num_bots, contador_soldado_anim):
                 sys.exit()
                 
             if event.type == pygame.MOUSEBUTTONDOWN: #Volver al menu principal
-                print(suma_jugadores)
                 if BOTON_VOLVER.checkForInput(MENU_MOUSE_POS):
                     menu_principal()
                 if BOTON_JUGAR.checkForInput(MENU_MOUSE_POS):
-                    print(suma_jugadores)
                     pre_game(num_rondas,num_jugadores, ronda_actual, gravedad+5, num_bots,viento_active)
                 #Creacion de condicionales para los botones de suma y resta de numero de jugadores
                 if BOTON_MENOS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores > 0 and suma_jugadores > 2:
                         num_jugadores -= 1
-                        print(suma_jugadores)
                 if BOTON_MAS1.checkForInput(MENU_MOUSE_POS):
                     if num_jugadores < 6 and suma_jugadores < 6:
-                        num_jugadores += 1
-                        print(suma_jugadores)
+                        num_jugadores += 1)
                 #Creacion de condicionales para los botones de suma y resta de numero de bots
                 if BOTON_MENOS4.checkForInput(MENU_MOUSE_POS):
                     if num_bots > 0 and suma_jugadores > 2:
                         num_bots -=1
-                        print(suma_jugadores)
                 if BOTON_MAS4.checkForInput(MENU_MOUSE_POS):
                     if num_bots < 6 and suma_jugadores < 6:
                         num_bots += 1
-                        print(suma_jugadores)
                 #Creacion de condicionales para los botones de suma y resta de numero de rondas
                 if BOTON_MENOS2.checkForInput(MENU_MOUSE_POS):
                     if num_rondas > 1:
@@ -433,7 +427,6 @@ def pre_game(num_rondas, num_personas, ronda_actual, gravedad, num_bots, viento_
     mixer.music.load("sonidos_musica/pre_game_bgm.mp3")
     mixer.music.play(-1)
     num_jugadores = num_personas + num_bots
-    print("num_jugadores = ",num_jugadores)
     lista_tanques_OG = []
     if num_personas == 0: 
         lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint(vGlobales.ancho_gris + 10, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + vGlobales.ancho_gris - 100), gravedad, True))
@@ -448,7 +441,6 @@ def pre_game(num_rondas, num_personas, ronda_actual, gravedad, num_bots, viento_
         else:
             lista_tanques_OG.append(tanque.Tankes(vGlobales.gris,random.randint((vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores + lista_tanques_OG[i].rect.x, (vGlobales.WIDTH-vGlobales.ancho_gris)/num_jugadores * (i+2) + vGlobales.ancho_gris - 30), gravedad, False))
             lista_tanques_OG[i+1].id = i+2
-    print("Cantidad de Jugadores: ",len(lista_tanques_OG))
     while True:
         DISPLAYSURF.blit(pre_game_img,(0,0))
         for event in pygame.event.get():#Comenzar el juego
@@ -539,7 +531,6 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
         DISPLAYSURF.blit(text_ronda, text_ronda_rect)
         pygame.display.flip()
         pygame.time.delay(600)
-        print("Ronda n° ",num_rondas)
         pygame.display.set_caption("Partida")
         #Musica de la partida
         mixer.music.load("sonidos_musica/init_game.mp3")
@@ -617,7 +608,6 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
 
         for i in range(num_jugadores):
             ronda.append(i+1)
-        print(ronda)
         cantidad_turnos = num_jugadores-1
         while True:
             #Dibujo de la pantalla
@@ -648,10 +638,8 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                 if cantidad_turnos == num_jugadores:
                     cantidad_turnos = 0
                     shuffle_sort(ronda,num_jugadores)
-                    print(ronda)
                 turno_pasado = 1
                 interfaz.text_jugador1 = "Jugador " + str(turno_jugador)
-                print("Jugador ", turno_jugador,"Es Bot?: ",lista_tanques_OG[turno_jugador-1].bot)
                 if turno_jugador == 1:
                     interfaz.text_surface_jugador1 = interfaz.vGlobales.font.render(interfaz.text_jugador1, True, interfaz.vGlobales.AZUL)
                 if turno_jugador == 2:
@@ -670,18 +658,13 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             for i in range (len(lista_tanques_OG)):
                 if lista_tanques_OG[i].vida <= 0 and lista_tanques_OG[i].vivo == True: 
                     lista_tanques_OG[i].vivo = False
-                    print(lista_tanques_OG[i].id)
-                    print(turno_anterior)
-                    print("Muerte")
                     if turno_anterior == lista_tanques_OG[i].id:
                         lista_tanques_OG[i].cantidad_suicidios += 1
                         lista_tanques_OG[i].suicidio = True
                         jugadores_muertos_ronda += 1
-                        print("entro suicidio")
                     else:
                         lista_tanques_OG[turno_anterior-1].kills+=1
                         jugadores_muertos_ronda += 1
-                        print("entro kill")
     
             #Saltar el turno de los jugadores muertos
             if lista_tanques_OG[turno_jugador-1].vida <= 0:
@@ -805,23 +788,19 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
             if game_over >= 70:
                 num_rondas = num_rondas - 1
                 ronda_actual += 1
-                print("rondas restantes: ", num_rondas)
                 for i in range(num_jugadores):
                     lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + 10000
                     if lista_tanques_OG[i].kills > 0:
                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo + (5000 * lista_tanques_OG[i].kills)
                         lista_tanques_OG[i].total_kills += lista_tanques_OG[i].kills
                         lista_tanques_OG[i].kills = 0
-                        print("suma por kill")
 
                     if lista_tanques_OG[i].suicidio == True: 
                         lista_tanques_OG[i].saldo = lista_tanques_OG[i].saldo - 5000
-                        print("descuento por suicidio.")
                         lista_tanques_OG[i].suicidio = False
 
                     if lista_tanques_OG[i].saldo < 0:
                         lista_tanques_OG[i].saldo = 0
-                    print("Saldo Jugador ", i+1," = ",lista_tanques_OG[i].saldo)
                 
                 while True:
                     interfaz.print_resultados(lista_tanques_OG,i,num_jugadores)
@@ -842,11 +821,9 @@ def partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_ac
                                     lista_tanques_OG[i].vivo = True
                                     jugadores_muertos_ronda = 0
                                 partida(num_rondas, num_jugadores, ronda_actual, lista_tanques_OG, viento_active, gravedad)
-                                print("otra ronda")
                         if event.type == pygame.MOUSEBUTTONDOWN:
                             if num_rondas == 0:
                                 fin_de_juego(lista_tanques_OG,num_jugadores)
-                                print("partida finalizada")
             RELOJ.tick(vGlobales.FPS)
 
             tanques_suelo = False
